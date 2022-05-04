@@ -16,11 +16,11 @@ namespace ft
 				Iterator 										_base;
 
 			public:
-				typedef Iterator															base_iterator_type;
-				typedef typename it_traits::value_type				value_type;
+				typedef Iterator								base_iterator_type;
+				typedef typename it_traits::value_type			value_type;
 				typedef typename it_traits::difference_type		difference_type;
-				typedef typename it_traits::reference					reference;
-				typedef typename it_traits::pointer						pointer;
+				typedef typename it_traits::reference			reference;
+				typedef typename it_traits::pointer				pointer;
 				typedef typename it_traits::iterator_category	iterator_category;
 
 

@@ -7,53 +7,53 @@
 namespace ft
 {
 	template < typename IT > // IT is a pointer
-		class normal_iterator : public ft::iterator<ft::random_access_iterator_tag, IT>
-		{
-			protected:
-				typedef typename ft::iterator_traits<IT>		iterator_traits;
-				IT 																					_ptr;
+	class normal_iterator : public ft::iterator<ft::random_access_iterator_tag, IT>
+	{
+		protected:
+			typedef typename ft::iterator_traits<IT>			iterator_traits;
+			IT 													_ptr;
 
-			public:
+		public:
 
-				typedef IT																					iterator_type;
-				typedef typename iterator_traits::value_type				value_type;
-				typedef typename iterator_traits::difference_type		difference_type;
-				typedef typename iterator_traits::reference					reference;
-				typedef typename iterator_traits::pointer						pointer;
-				typedef typename iterator_traits::iterator_category	iterator_category;
+			typedef IT											iterator_type;
+			typedef typename iterator_traits::value_type		value_type;
+			typedef typename iterator_traits::difference_type	difference_type;
+			typedef typename iterator_traits::reference			reference;
+			typedef typename iterator_traits::pointer			pointer;
+			typedef typename iterator_traits::iterator_category	iterator_category;
 
 
 // CONSTRUCTORS / DESTRUCTOR
-			normal_iterator(iterator_type ptr = NULL) : _ptr(ptr) {};
-			template<typename U>
-			normal_iterator(const normal_iterator<U> &iterator) : _ptr(iterator.base()) {};
-			~normal_iterator() {};
-			normal_iterator & operator=(const normal_iterator &rhs) { _ptr = rhs.base(); return (*this); }
+		normal_iterator(iterator_type ptr = NULL) : _ptr(ptr) {};
+		template<typename U>
+		normal_iterator(const normal_iterator<U> &iterator) : _ptr(iterator.base()) {};
+		~normal_iterator() {};
+		normal_iterator	&	operator=(const normal_iterator &rhs) { _ptr = rhs.base(); return (*this); }
 
 // FORWARD INCLUDED
 
-			reference					operator*() const { return (*_ptr); }
-			pointer						operator->() const { return (_ptr); }
-			normal_iterator & operator++() { _ptr++; return (*this); }
-			normal_iterator		operator++(int) { normal_iterator cpy(*this); operator++(); return (cpy); }
+		reference			operator*() const { return (*_ptr); }
+		pointer				operator->() const { return (_ptr); }
+		normal_iterator	&	operator++() { _ptr++; return (*this); }
+		normal_iterator		operator++(int) { normal_iterator cpy(*this); operator++(); return (cpy); }
 
 // BIDIRECTIONAL INCLUDED
 
-			normal_iterator &	operator--() { _ptr--; return (*this); }
-			normal_iterator  	operator--(int) { normal_iterator cpy(*this); operator--(); return (cpy); }
+		normal_iterator	&	operator--() { _ptr--; return (*this); }
+		normal_iterator		operator--(int) { normal_iterator cpy(*this); operator--(); return (cpy); }
 
 // RANDOM ACCESS INCLUDED
 
-			normal_iterator & operator+=(difference_type n) { _ptr += n; return (*this); }
-			normal_iterator   operator+(difference_type n) const { return (normal_iterator(_ptr + n)); }
-			normal_iterator & operator-=(difference_type n) { _ptr -= n; return (*this); }
-			normal_iterator   operator-(difference_type n) const { return (normal_iterator(_ptr - n)); }
-			difference_type   operator-(const normal_iterator &rhs) const { return (_ptr - rhs.base()); }
-			reference         operator[](difference_type n) const { return (_ptr[n]); }
+		normal_iterator	&	operator+=(difference_type n) { _ptr += n; return (*this); }
+		normal_iterator		operator+(difference_type n) const { return (normal_iterator(_ptr + n)); }
+		normal_iterator	&	operator-=(difference_type n) { _ptr -= n; return (*this); }
+		normal_iterator		operator-(difference_type n) const { return (normal_iterator(_ptr - n)); }
+		difference_type		operator-(const normal_iterator &rhs) const { return (_ptr - rhs.base()); }
+		reference			operator[](difference_type n) const { return (_ptr[n]); }
 
-			const iterator_type & base() const { return (_ptr); }
+		const iterator_type & base() const { return (_ptr); }
 
-		}; // normal_iterator class
+	}; // normal_iterator class
 
 	// ITERATOR FUNCTIONS
 

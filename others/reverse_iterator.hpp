@@ -8,7 +8,7 @@ namespace ft
 {
 	// reverse_iterator herite de la class ft::iterator de iterator_traits
 	template < typename IT > // IT is a pointer
-	class reverse_iterator : public ft::iterator<ft::random_access_iterator_tag, IT>
+	class reverse_iterator : public ft::iterator_core<ft::random_access_iterator_tag, IT>
 	{
 		protected:
 			// on utilise aussi ft::iterator_traits comme base pour les attributs public de reverse_iterator
@@ -28,8 +28,6 @@ namespace ft
 
 			// basic constructor
 			reverse_iterator(iterator_type ptr = NULL) : _ptr(ptr) {}
-			// explicit constructor
-			explicit reverse_iterator (iterator_type it) : _ptr(it) {}
 			// templated  constructor
 			template <class U>
 			reverse_iterator(const reverse_iterator<U>& rev_it) : _ptr(rev_it.ptr()) {}

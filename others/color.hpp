@@ -1,5 +1,6 @@
 #ifndef COLOR_HPP
 # define COLOR_HPP
+#include <string.h>
 
 # define C_DEBUG YELLOW
 # define BLACK              "\033[30m"
@@ -311,5 +312,6 @@
 
 # define MINUS_STR "----------------------------------------------------------------------------------------------------"
 # define TEST "\033[36;01m(%s:%d:0) \033[31;01m%s\033[0m %.*s>\033[35;01m%d\033[0m\n", __FILE__, __LINE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) + strlen(__FILE__) + 3)), MINUS_STR, __LINE__
+# define _TEST_ "debug line: " << __LINE__ << " in file: " << __FILE__ << " at " << __FUNCTION__
 
 #endif

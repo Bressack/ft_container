@@ -27,9 +27,41 @@ void print_add_area(T *ptr, size_t s)
 
 int main(void)
 {
-    int i = 0;
-    ft::vector<int> toto(10, 10);
-
+    {
+        ft::vector<int> toto;
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(10,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(100,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(10000,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(63,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(5,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
+    {
+        ft::vector<int> toto(13,10);
+        std::cout << "capacity: " << toto.capacity() << std::endl;
+        std::cout << "size    : " << toto.size() << std::endl;
+    }
     return (0);
 }
 

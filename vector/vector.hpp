@@ -102,17 +102,29 @@ namespace ft
             // void resize (size_type n, value_type val = value_type()) {};
             size_type capacity() const { return(_capacity); };
             bool empty() const { return(!_size ? true : false); };
-            void reserve (size_type n) {
+            void reserve (size_type n)
+            {
                 if (n > max_size())
                     throw std::length_error("vector::reserve");
                 if (n < _capacity)
                     return;
+
                 size_type old_capacity = _capacity;
                 _capacity = n * 2;
+                // on alloue une nouvelle memoire et si possible proche de l'ancienne
                 pointer newp = _allocator.allocate(n, _array_ptr);
                 if (_array_ptr)
-                    _allocator.construct(&newp, _array_ptr);
-                _allocator.deallocate(_array_ptr, old_capacity);
+                {
+                    pointer tmp_o = _array_ptr;
+                    pointer tmp_n = newp;
+                    for (size_t i = 0; i < _size; i++)
+                    {
+                        _allocator.construct(tmp_n, *tmp_o);
+                        tmp_o++;
+                        tmp_n++;
+                    }
+                    _allocator.deallocate(_array_ptr, old_capacity);
+                }
                 _array_ptr = newp;
             };
         // Element access
@@ -169,30 +181,51 @@ namespace ft
                 erase(end() - 1);
             };
             // single element (1)
-            iterator insert (iterator position, const value_type& val) {
+            iterator insert(iterator position, const value_type &val)
+            {
                 difference_type pos = position - begin();
 
                 insert(position, 1, val);
                 return (iterator(begin() + pos));
             };
-            // fill (2)
-            void insert (iterator position, size_type n, const value_type& val) {
-                vector tmp;
-                iterator it = begin();
 
-                for (;it != position; it++)
-                    tmp.push_back(*it);
+            // fill (2)
+            void insert(iterator position, size_type n, const value_type &val)
+            {
+                vector v;
+                size_type new_size = _size + n;
+                size_type new_capacity = new_size;
+
+                // trick
+                if (_capacity < new_capacity)
+                {
+                    if (new_capacity <= _size * 2)
+                        new_capacity = _size * 2;
+                }
+                else
+                    new_capacity = _capacity;
+
+                v.reserve(new_capacity);
+                _capacity = new_capacity;
+
+                iterator it = begin();
+                for (; it != position; it++)
+                    v.push_back(*it);
                 while (n--)
-                    tmp.push_back(val);
+                    v.push_back(val);
                 for (; it != end(); it++)
-                    tmp.push_back(*it);
-                // _allocator.destroy()
-                swap(tmp);
+                    v.push_back(*it);
+
+                swap(v);
+                _size = new_size;
             };
+
             // range (3)
             template <class InputIterator>
-            void insert (iterator position, InputIterator first, InputIterator last) {
-                vector tmp;
+            void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator())
+            {
+                (void)it_type;
+                vector v;
                 InputIterator first_cpy = first;
                 int n = 0;
 
@@ -210,20 +243,21 @@ namespace ft
                 }
                 else
                     new_capacity = _capacity;
-                tmp.reserve(new_capacity);
+                v.reserve(new_capacity);
                 _capacity = new_capacity;
 
                 iterator it = begin();
                 for (; it != position; it++)
-                    tmp.push_back(*it);
+                    v.push_back(*it);
                 while (first != last)
-                    tmp.push_back(*(first++));
+                    v.push_back(*(first++));
                 for (; it != end(); it++)
-                    tmp.push_back(*it);
+                    v.push_back(*it);
 
-                swap(tmp);
+                swap(v);
                 _size = new_size;
             };
+
             iterator erase (iterator position)
             {
                 return (erase(position, position + 1));

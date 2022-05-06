@@ -187,12 +187,27 @@ void test__resize(T _) {}
 
 template < typename T >
 void test__capacity(T _) {
-    {NS::vector<T> toto(10, 20); print_vector(&toto);
-    std::cout << toto.capacity() << std::endl;}
-    {NS::vector<T> toto; print_vector(&toto);
-    std::cout << toto.capacity() << std::endl;}
-    {NS::vector<T> toto(5); print_vector(&toto);
-    std::cout << toto.capacity() << std::endl;}
+    T a[20] = { 0,1,2,3,4,5,6,7,8,9,10,20,35,89,741,2587,258895,65156651,65165165165,6516516516516516 };
+    for (int i = 0 ; i < 20 ; i++)
+    {
+        try
+        {
+            NS::vector<T> toto(a[i]);
+            // print_vector(&toto);
+            std::cout << toto.max_size() << "" << toto.capacity() << std::endl;
+            toto.clear()
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+    }
+    // {NS::vector<T> toto(10, 20); print_vector(&toto);
+    // std::cout << toto.capacity() << std::endl;}
+    // {NS::vector<T> toto; print_vector(&toto);
+    // std::cout << toto.capacity() << std::endl;}
+    // {NS::vector<T> toto(5); print_vector(&toto);
+    // std::cout << toto.capacity() << std::endl;}
 }
 
 template < typename T >
@@ -334,18 +349,18 @@ void ptitle(std::string title)
 
 int main(void)
 {
-    try { ptitle("test__contructor_default"); __test__(test__contructor_default) } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
-    try { ptitle("test__contructor_fill");    __test__(test__contructor_fill)    } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
-    try { ptitle("test__contructor_range");   __test__(test__contructor_range)   } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
-    try { ptitle("test__contructor_copy");    __test__(test__contructor_copy)    } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__contructor_default"); __test__(test__contructor_default) } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__contructor_fill");    __test__(test__contructor_fill)    } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__contructor_range");   __test__(test__contructor_range)   } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__contructor_copy");    __test__(test__contructor_copy)    } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
 
     // try { ptitle("test__begin");              __test__(test__begin)              } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__end");                __test__(test__end)                } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__rbegin");             __test__(test__rbegin)             } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__rend");               __test__(test__rend)               } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
-    try { ptitle("test__size");               __test__(test__size)               } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__size");               __test__(test__size)               } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__max_size");           __test__(test__max_size)           } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
-    try { ptitle("test__resize");             __test__(test__resize)             } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
+    // try { ptitle("test__resize");             __test__(test__resize)             } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     try { ptitle("test__capacity");           __test__(test__capacity)           } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__empty");              __test__(test__empty)              } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }
     // try { ptitle("test__reserve");            __test__(test__reserve)            } catch(const std::exception& e) { std::cerr << e.what() << '\n'; }

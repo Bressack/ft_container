@@ -71,7 +71,9 @@ namespace ft
 
             vector &operator=(const vector &x)
             {
+                std::cout << _TEST_ << std::endl;
                 assign(x.begin(), x.end());
+                std::cout << _TEST_ << std::endl;
                 return (*this);
             };
 
@@ -86,8 +88,11 @@ namespace ft
             };
 
         // Iterators
+            // return an iterator on the first allocated element
             iterator begin() { return (iterator(&(front()))); };
+            // return an const iterator on the first allocated element
             const_iterator begin() const { return (const_iterator(&(front()))); };
+            // return an iterator on the last allocated element (after the last elem)
             iterator end() { return (iterator(&(back()) + 1)); };
             const_iterator end() const { return (const_iterator(&(back()) + 1)); };
 
@@ -108,21 +113,28 @@ namespace ft
                     throw std::length_error("vector::reserve");
                 if (n < _capacity)
                     return;
-
+                std::cout << _TEST_ << std::endl;
                 size_type old_capacity = _capacity;
+                std::cout << _TEST_ << std::endl;
                 _capacity = n * 2;
-                // on alloue une nouvelle memoire et si possible proche de l'ancienne
-                pointer newp = _allocator.allocate(n, _array_ptr);
+                std::cout << _TEST_ << std::endl;
+                pointer tmp = _allocator.allocate(100);
+                std::cout << tmp << std::endl;
+                std::cout << n << ", " << _array_ptr << std::endl;
+                pointer newp = _allocator.allocate(n);
+                std::cout << _TEST_ << std::endl;
                 if (_array_ptr)
                 {
                     pointer tmp_o = _array_ptr;
                     pointer tmp_n = newp;
+                    std::cout << _TEST_ << std::endl;
                     for (size_t i = 0; i < _size; i++)
                     {
                         _allocator.construct(tmp_n, *tmp_o);
                         tmp_o++;
                         tmp_n++;
                     }
+                    std::cout << _TEST_ << std::endl;
                     _allocator.deallocate(_array_ptr, old_capacity);
                 }
                 _array_ptr = newp;
@@ -147,31 +159,59 @@ namespace ft
                 return (_array_ptr[n]);
             };
         // Modifiers
+            // // range (1)
+            // template <class InputIterator>
+            // void assign (InputIterator first, InputIterator last) {
+            //     size_type capacity_save = _capacity;
+
+            //     clear();
+            //     insert(begin(), first, last);
+            //     if (_capacity < capacity_save)
+            //         _capacity = capacity_save;
+            // };
             // range (1)
             template <class InputIterator>
-            void assign (InputIterator first, InputIterator last) {
-                size_type capacity_save = _capacity;
+            void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator())
+            {
+                std::cout << _TEST_ << std::endl;
+                (void)it_type;
+                size_type init_capacity = _capacity;
+                std::cout << _TEST_ << std::endl;
 
                 clear();
+                std::cout << _TEST_ << std::endl;
                 insert(begin(), first, last);
-                if (_capacity < capacity_save)
-                    _capacity = capacity_save;
+                std::cout << _TEST_ << std::endl;
+                if (_capacity < init_capacity)
+                    _capacity = init_capacity;
+                std::cout << _TEST_ << std::endl;
             };
-            // fill (2)
-            void assign (size_type n, const value_type& val) {
-                try
-                {
-                    size_type capacity_save = _capacity;
+            // // fill (2)
+            // void assign (size_type n, const value_type& val) {
+            //     try
+            //     {
+            //         size_type capacity_save = _capacity;
 
-                    clear();
-                    insert(begin(), n, val);
-                    if (_capacity < capacity_save)
-                    _capacity = capacity_save;
-                }
-                catch(const std::exception& e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
+            //         clear();
+            //         insert(begin(), n, val);
+            //         if (_capacity < capacity_save)
+            //         _capacity = capacity_save;
+            //     }
+            //     catch(const std::exception& e)
+            //     {
+            //         std::cerr << e.what() << '\n';
+            //     }
+            // };
+            // fill (2)
+            void assign(size_type n, const value_type &val)
+            {
+                std::cout << _TEST_ << std::endl;
+                size_type init_capacity = _capacity;
+
+                clear();
+                insert(begin(), n, val);
+                if (_capacity < init_capacity)
+                    _capacity = init_capacity;
             };
             void push_back (const value_type& val) {
                 reserve(++_size);
@@ -192,6 +232,7 @@ namespace ft
             // fill (2)
             void insert(iterator position, size_type n, const value_type &val)
             {
+                std::cout << _TEST_ << std::endl;
                 vector v;
                 size_type new_size = _size + n;
                 size_type new_capacity = new_size;
@@ -224,17 +265,19 @@ namespace ft
             template <class InputIterator>
             void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator())
             {
+                std::cout << _TEST_ << std::endl;
                 (void)it_type;
                 vector v;
                 InputIterator first_cpy = first;
+                std::cout << _TEST_ << std::endl;
                 int n = 0;
 
                 for (; first_cpy != last; first_cpy++)
                     n++; // == size of range to insert
-
+                std::cout << _TEST_ << std::endl;
                 size_type new_size = _size + n;
                 size_type new_capacity = new_size;
-
+                std::cout << _TEST_ << std::endl;
                 // trick
                 if (_capacity < new_capacity)
                 {
@@ -243,9 +286,11 @@ namespace ft
                 }
                 else
                     new_capacity = _capacity;
+                std::cout << _TEST_ << std::endl;
                 v.reserve(new_capacity);
+                std::cout << _TEST_ << std::endl;
                 _capacity = new_capacity;
-
+                std::cout << _TEST_ << std::endl;
                 iterator it = begin();
                 for (; it != position; it++)
                     v.push_back(*it);
@@ -253,7 +298,7 @@ namespace ft
                     v.push_back(*(first++));
                 for (; it != end(); it++)
                     v.push_back(*it);
-
+                std::cout << _TEST_ << std::endl;
                 swap(v);
                 _size = new_size;
             };

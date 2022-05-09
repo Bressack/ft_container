@@ -1,5 +1,5 @@
 #include "vector.hpp"
-#define TESTED_TYPE int
+#define TESTED_TYPE std::string
 
 #ifndef NS
 # define NS std
@@ -30,43 +30,42 @@ void	printSize(NS::vector<T> const &vct, bool print_content = true)
 }
 
 
+template <class T, class Alloc>
+void	cmp(const NS::vector<T, Alloc> &lhs, const NS::vector<T, Alloc> &rhs)
+{
+	static int i = 0;
+
+	std::cout << "############### [" << i++ << "] ###############"   << std::endl;
+	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
+	std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
+	std::cout << "gt: " << (lhs >  rhs) << " | ge: " << (lhs >= rhs) << std::endl;
+}
+
+
 int		main(void)
 {
-	NS::vector<TESTED_TYPE> vct(5);
-	NS::vector<TESTED_TYPE>::iterator it = vct.begin(), ite = vct.end();
+	NS::vector<TESTED_TYPE> vct(8);
+	NS::vector<TESTED_TYPE> vct2;
+	NS::vector<TESTED_TYPE>::iterator it = vct.begin();
 
-	std::cout << "len: " << (ite - it) << std::endl;
-	for (; it != ite; ++it)
-		*it = (ite - it);
+	for (unsigned long int i = 0; i < vct.size(); ++i)
+		it[i] = std::string((vct.size() - i), i + 65);
+	printSize(vct, true);
 
-	it = vct.begin();
-	NS::vector<TESTED_TYPE> vct_range(it, --(--ite));
-	for (int i = 0; it != ite; ++it)
-		*it = ++i * 5;
+	std::cout << "push_back():\n" << std::endl;
 
-	it = vct.begin();
-	NS::vector<TESTED_TYPE> vct_copy(vct);
-	for (int i = 0; it != ite; ++it)
-		*it = ++i * 7;
-	vct_copy.push_back(42);
-	vct_copy.push_back(21);
+	vct.push_back("One long string");
+	vct2.push_back("Another long string");
 
-	std::cout << "\t-- PART ONE --" << std::endl;
 	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
+	printSize(vct2);
 
-    std::cout << _TEST_ << std::endl;
-	vct = vct_copy;
-    std::cout << _TEST_ << std::endl;
-	vct_copy = vct_range;
-    std::cout << _TEST_ << std::endl;
-	vct_range.clear();
+	vct.pop_back();
+	vct2.pop_back();
 
-	std::cout << "\t-- PART TWO --" << std::endl;
 	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
+	printSize(vct2);
+
 	return (0);
 }
 

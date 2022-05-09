@@ -1,8 +1,6 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include <deque>
-# include <vector>
 # include <cstddef>
 # include <stdexcept>
 # include <ostream>
@@ -57,7 +55,8 @@ namespace ft
 
             // range (3)
             template <class InputIterator> // enable if "not integral" = simplification pour "enable_if iterator"
-            vector(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator(), const allocator_type &alloc = allocator_type()) : _allocator(alloc), _size(0), _capacity(0), _array_ptr(NULL)
+            vector(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value,
+                InputIterator>::type it_type = InputIterator(), const allocator_type &alloc = allocator_type()) : _allocator(alloc), _size(0), _capacity(0), _array_ptr(NULL)
             {
                 (void)it_type;
                 assign(first, last);
@@ -71,9 +70,7 @@ namespace ft
 
             vector &operator=(const vector &x)
             {
-                std::cout << _TEST_ << std::endl;
                 assign(x.begin(), x.end());
-                std::cout << _TEST_ << std::endl;
                 return (*this);
             };
 
@@ -104,40 +101,47 @@ namespace ft
         // Capacity
             size_type size() const { return(_size); };
             size_type max_size() const { return (_allocator.max_size()); };
-            // void resize (size_type n, value_type val = value_type()) {};
+            void resize (size_type n, value_type val = value_type()) {
+                if (n > size())
+                    insert(end(), n - size(), val);
+                else if (n < _size)
+                    erase(begin() + n, end());
+            };
             size_type capacity() const { return(_capacity); };
             bool empty() const { return(!_size ? true : false); };
             void reserve (size_type n)
             {
+                // old capacity
+                size_type init_capacity = _capacity;
+                // old ptr saved to deallocate it at the end
+                pointer init_start = _array_ptr;
+
+                // if ask memory over max_size() exception
                 if (n > max_size())
                     throw std::length_error("vector::reserve");
-                if (n < _capacity)
-                    return;
-                std::cout << _TEST_ << std::endl;
-                size_type old_capacity = _capacity;
-                std::cout << _TEST_ << std::endl;
-                _capacity = n * 2;
-                std::cout << _TEST_ << std::endl;
-                pointer tmp = _allocator.allocate(100);
-                std::cout << tmp << std::endl;
-                std::cout << n << ", " << _array_ptr << std::endl;
-                pointer newp = _allocator.allocate(n);
-                std::cout << _TEST_ << std::endl;
-                if (_array_ptr)
+                // if the current memory is large enough, just return else,
+                // allocate more momory and recontructs old memory in the new one
+                if (n > _capacity)
                 {
-                    pointer tmp_o = _array_ptr;
-                    pointer tmp_n = newp;
-                    std::cout << _TEST_ << std::endl;
+                    // std::vector always alloc the double of the asked memory
+                    if (n <= _size * 2)
+                        n = _size * 2;
+                    pointer curr_old = init_start;
+                    // alloc new area of memory
+                    _array_ptr = _allocator.allocate(n);
+                    pointer curr_new = _array_ptr;
+                    // write old area in the new one
                     for (size_t i = 0; i < _size; i++)
                     {
-                        _allocator.construct(tmp_n, *tmp_o);
-                        tmp_o++;
-                        tmp_n++;
+                        _allocator.construct(curr_new, *curr_old);
+                        curr_old++;
+                        curr_new++;
                     }
-                    std::cout << _TEST_ << std::endl;
-                    _allocator.deallocate(_array_ptr, old_capacity);
+                    // free the old area
+                    _allocator.deallocate(init_start, init_capacity);
+                    // update new capacity
+                    _capacity = n;
                 }
-                _array_ptr = newp;
             };
         // Element access
             reference front() { return (*_array_ptr); };
@@ -159,53 +163,21 @@ namespace ft
                 return (_array_ptr[n]);
             };
         // Modifiers
-            // // range (1)
-            // template <class InputIterator>
-            // void assign (InputIterator first, InputIterator last) {
-            //     size_type capacity_save = _capacity;
-
-            //     clear();
-            //     insert(begin(), first, last);
-            //     if (_capacity < capacity_save)
-            //         _capacity = capacity_save;
-            // };
             // range (1)
             template <class InputIterator>
-            void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator())
+            void assign(InputIterator first, InputIterator last, typename ft::enable_if< !ft::is_integral< InputIterator >::value, InputIterator >::type it_type = InputIterator())
             {
-                std::cout << _TEST_ << std::endl;
                 (void)it_type;
                 size_type init_capacity = _capacity;
-                std::cout << _TEST_ << std::endl;
 
                 clear();
-                std::cout << _TEST_ << std::endl;
                 insert(begin(), first, last);
-                std::cout << _TEST_ << std::endl;
                 if (_capacity < init_capacity)
                     _capacity = init_capacity;
-                std::cout << _TEST_ << std::endl;
             };
-            // // fill (2)
-            // void assign (size_type n, const value_type& val) {
-            //     try
-            //     {
-            //         size_type capacity_save = _capacity;
-
-            //         clear();
-            //         insert(begin(), n, val);
-            //         if (_capacity < capacity_save)
-            //         _capacity = capacity_save;
-            //     }
-            //     catch(const std::exception& e)
-            //     {
-            //         std::cerr << e.what() << '\n';
-            //     }
-            // };
             // fill (2)
             void assign(size_type n, const value_type &val)
             {
-                std::cout << _TEST_ << std::endl;
                 size_type init_capacity = _capacity;
 
                 clear();
@@ -214,7 +186,8 @@ namespace ft
                     _capacity = init_capacity;
             };
             void push_back (const value_type& val) {
-                reserve(++_size);
+                 reserve(_size + 1);
+                _size++;
                 _allocator.construct(&(_array_ptr[_size - 1]), val);
             };
             void pop_back() {
@@ -232,7 +205,6 @@ namespace ft
             // fill (2)
             void insert(iterator position, size_type n, const value_type &val)
             {
-                std::cout << _TEST_ << std::endl;
                 vector v;
                 size_type new_size = _size + n;
                 size_type new_capacity = new_size;
@@ -265,19 +237,15 @@ namespace ft
             template <class InputIterator>
             void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type it_type = InputIterator())
             {
-                std::cout << _TEST_ << std::endl;
                 (void)it_type;
                 vector v;
                 InputIterator first_cpy = first;
-                std::cout << _TEST_ << std::endl;
                 int n = 0;
 
                 for (; first_cpy != last; first_cpy++)
                     n++; // == size of range to insert
-                std::cout << _TEST_ << std::endl;
                 size_type new_size = _size + n;
                 size_type new_capacity = new_size;
-                std::cout << _TEST_ << std::endl;
                 // trick
                 if (_capacity < new_capacity)
                 {
@@ -286,11 +254,8 @@ namespace ft
                 }
                 else
                     new_capacity = _capacity;
-                std::cout << _TEST_ << std::endl;
                 v.reserve(new_capacity);
-                std::cout << _TEST_ << std::endl;
                 _capacity = new_capacity;
-                std::cout << _TEST_ << std::endl;
                 iterator it = begin();
                 for (; it != position; it++)
                     v.push_back(*it);
@@ -298,7 +263,6 @@ namespace ft
                     v.push_back(*(first++));
                 for (; it != end(); it++)
                     v.push_back(*it);
-                std::cout << _TEST_ << std::endl;
                 swap(v);
                 _size = new_size;
             };
@@ -338,23 +302,47 @@ namespace ft
         // Allocator
             allocator_type get_allocator() const { return (_allocator); };
     };
+    // Non-member function overloads
+    template <class T, class Alloc>
+    bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        if (lhs.size() != rhs.size())
+            return (0);
+        return (ft::ft_equal(lhs.begin(), lhs.end(), rhs.begin()));
+    }
+
+    template <class T, class Alloc>
+    bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    template <class T, class Alloc>
+    bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+    }
+
+    template <class T, class Alloc>
+    bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(rhs < lhs);
+    }
+
+    template <class T, class Alloc>
+    bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return (rhs < lhs);
+    }
+
+    template <class T, class Alloc>
+    bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+    template <class T, class Alloc>
+    void swap(vector<T, Alloc> &x, vector<T, Alloc> &y) { x.swap(y); }
 
 } // namespace ft
-
-// Non-member function overloads
-// template <class T, class Alloc>
-// bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-// template <class T, class Alloc>
-// void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
 #endif

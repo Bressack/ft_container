@@ -195,7 +195,7 @@ void test__capacity(T _) {
             NS::vector<T> toto(a[i]);
             // print_vector(&toto);
             std::cout << toto.max_size() << "" << toto.capacity() << std::endl;
-            toto.clear()
+            toto.clear();
         }
         catch(const std::exception& e)
         {

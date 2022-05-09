@@ -79,31 +79,31 @@ namespace ft
 	template <typename T>
 	inline bool operator!=(const iterator<T> &lhs, const iterator<T> &rhs) { return !operator==(lhs, rhs); }
 
-	template <typename T, typename U>
+	template <typename T, typename U> // important pour comparaison entre const et non const
 	inline bool operator!=(const iterator<T> &lhs, const iterator<U> &rhs) { return !operator==(lhs, rhs); }
 
 	template <typename T>
 	inline bool operator<(const iterator<T> &lhs, const iterator<T> &rhs) { return (lhs.ptr() < rhs.ptr()); }
 
-	template <typename T, typename U>
+	template <typename T, typename U> // important pour comparaison entre const et non const
 	inline bool operator<(const iterator<T> &lhs, const iterator<U> &rhs) { return (lhs.ptr() < rhs.ptr()); }
 
 	template <typename T>
 	inline bool operator>(const iterator<T> &lhs, const iterator<T> &rhs) { return (operator<(rhs, lhs) && operator!=(rhs, lhs)); }
 
-	template <typename T, typename U>
+	template <typename T, typename U> // important pour comparaison entre const et non const
 	inline bool operator>(const iterator<T> &lhs, const iterator<U> &rhs) { return (operator<(rhs, lhs) && operator!=(rhs, lhs)); }
 
 	template <typename T>
 	inline bool operator<=(const iterator<T> &lhs, const iterator<T> &rhs) { return !operator>(lhs, rhs); }
 
-	template <typename T, typename U>
+	template <typename T, typename U> // important pour comparaison entre const et non const
 	inline bool operator<=(const iterator<T> &lhs, const iterator<U> &rhs) { return !operator>(lhs, rhs); }
 
 	template <typename T>
 	inline bool operator>=(const iterator<T> &lhs, const iterator<T> &rhs) { return !operator<(lhs, rhs); }
 
-	template <typename T, typename U>
+	template <typename T, typename U> // important pour comparaison entre const et non const
 	inline bool operator>=(const iterator<T> &lhs, const iterator<U> &rhs) { return !operator<(lhs, rhs); }
 
 	template <typename T>

@@ -7,11 +7,11 @@
 # include <stdexcept>
 # include <ostream>
 # include <iostream>
-# include " color.hpp"
-# include " utils.hpp"
-# include " iterator_traits.hpp"
-# include " reverse_iterator.hpp"
-# include " enable_if.hpp"
+# include "../shared/color.hpp"
+# include "../shared/utils.hpp"
+# include "../shared/iterator_traits.hpp"
+# include "../shared/reverse_iterator.hpp"
+# include "../shared/enable_if.hpp"
 # include "normal_iterator.hpp"
 
 

@@ -7,10 +7,20 @@
 # include <ostream>
 # include <iostream>
 # include "../others/pair.hpp"
+# include "../others/color.hpp"
+# include "../others/utils.hpp"
+# include "../others/iterator_traits.hpp"
+# include "../others/reverse_iterator.hpp"
+# include "../others/enable_if.hpp"
+# include "../others/iterator.hpp"
+# include "../others/is_integral.hpp"
+
 
 namespace ft
 {
-    template < class K, class V, class Alloc = std::allocator<ft::pair<K,V> > >
+    struct node;
+
+    template < class K, class V, class Alloc = std::allocator<struct node> >
     class tree
     {
         public:
@@ -32,17 +42,47 @@ namespace ft
             typedef size_t                                          size_type;              // an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 
         private:
-            typedef struct  s_node
+            struct node
             {
-                ft::pair<>
-                pointer     parent;
-                pointer     right;
-                pointer     left;
-            }               node;
-            Alloc           _allocator;
-            size_type       _size;
-            pointer         _root;
+                ft::pair<K,V>   pair;   // pair of key value
+                pointer         parent; // pointer to a node
+                pointer         right;  // pointer to a node
+                pointer         left;   // pointer to a node
+            };
+            Alloc               _allocator;
+            size_type           _size;
+            pointer             _root;
 
         public:
+            tree();
+            ~tree();
+
+            void    empty() { return (!_root); };
+            void    size() { return (_size); };
+            void    max_size() { return (_allocator.max_size()); };
+            
+            void    push(K key, V value)
+            {
+                ft::pair<K,V> pair(key, value);
+                push(pair);
+            }
+            void    push(ft::pair<K,V> pair)
+            {
+                if (!_root)
+                    _root = 
+            }
+            node    new_node(ft::pair<K,V> pair)
+            {
+                node n;
+
+                n
+            }
+            void    find();
+            void    remove();
+            void    swap() {  };
+            void    clear();
+
+
+
     };
 }

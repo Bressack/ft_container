@@ -67,13 +67,11 @@ namespace ft
             {
                 *this = x;
             };
-
             vector &operator=(const vector &x)
             {
                 assign(x.begin(), x.end());
                 return (*this);
             };
-
             ~vector()
             {
                 if (_array_ptr)
@@ -266,12 +264,10 @@ namespace ft
                 swap(v);
                 _size = new_size;
             };
-
             iterator erase (iterator position)
             {
                 return (erase(position, position + 1));
             };
-
             iterator erase (iterator first, iterator last)
             {
                 pointer ret = &(*first);
@@ -289,7 +285,6 @@ namespace ft
                 }
                 return (iterator(ret));
             };
-
             void swap(vector &x)
             {
                 ft::ft_swap(_array_ptr, x._array_ptr);
@@ -297,7 +292,6 @@ namespace ft
                 ft::ft_swap(_capacity, x._capacity);
                 ft::ft_swap(_allocator, x._allocator);
             };
-
             void clear() { erase(begin(), end()); };
         // Allocator
             allocator_type get_allocator() const { return (_allocator); };

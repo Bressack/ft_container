@@ -1,88 +1,71 @@
 #pragma once
 
-# include <deque>
-# include <vector>
-# include <cstddef>
-# include <stdexcept>
-# include <ostream>
-# include <iostream>
-# include "../others/pair.hpp"
-# include "../others/color.hpp"
-# include "../others/utils.hpp"
-# include "../others/iterator_traits.hpp"
-# include "../others/reverse_iterator.hpp"
-# include "../others/enable_if.hpp"
-# include "../others/iterator.hpp"
-# include "../others/is_integral.hpp"
-
+#include "../vector/vector.hpp"
+#include "../others/pair.hpp"
+#include "node.hpp"
 
 namespace ft
 {
-    struct node;
-
-    template < class K, class V, class Alloc = std::allocator<struct node> >
+    // template< class K, class V, class Container = ft::vector<ft::pair<K,ft::node<V> > > >
+    template< class K, class V, class Container = ft::vector<ft::node<K,V> > >
     class tree
     {
         public:
-        /// Member types
-            typedef K                                               key_type;               // The type of keys
-            typedef V                                               value_type;             // The type of values
-            typedef Alloc                                           allocator_type;         // The second template parameter (Alloc)	defaults to: allocator<value_type>
-            typedef typename Alloc::reference                       reference;              // allocator_type::reference	for the default allocator: value_type&
-            typedef typename Alloc::const_reference                 const_reference;        // allocator_type::const_reference	for the default allocator: const value_type&
-            typedef typename Alloc::pointer                         pointer;                // allocator_type::pointer	for the default allocator: value_type*
-            typedef typename Alloc::const_pointer                   const_pointer;          // allocator_type::const_pointer	for the default allocator: const value_type*
+            typedef K                                           key_type;
+            typedef V                                           value_type;
+            typedef Container                                   container_type;
+            typedef size_t                                      size_type;
 
-            typedef typename ft::iterator<pointer>                  iterator;               // a random access iterator to value_type	convertible to const_iterator
-            typedef typename ft::iterator<const_pointer>            const_iterator;         // a random access iterator to const value_type
-            typedef typename ft::reverse_iterator<iterator>         reverse_iterator;       // reverse_iterator<iterator>
-            typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator; // reverse_iterator<const_iterator>
+            typedef ft::node<key_type, value_type>              node_type;
+            typedef ft::node<key_type, value_type>*             node_pointer;
 
-            typedef ptrdiff_t                                       difference_type;        // a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
-            typedef size_t                                          size_type;              // an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
+        protected:
+            container_type  _drawer;
 
         private:
-            struct node
-            {
-                ft::pair<K,V>   pair;   // pair of key value
-                pointer         parent; // pointer to a node
-                pointer         right;  // pointer to a node
-                pointer         left;   // pointer to a node
-            };
-            Alloc               _allocator;
-            size_type           _size;
-            pointer             _root;
+            node_pointer    _root;
+
+            node_pointer find_new_parent(node_pointer child)
+            { // PAS FINI
+                if (empty())
+                    _root = child;
+                else
+                {
+                    node_pointer tmp = _root;
+
+                    while (1)
+                    {
+                        if (child->_key < tmp->_key)
+                            if (tmp->_left)
+                                tmp = tmp->_left;
+                            else
+                                return tmp;
+                        else
+                            if (tmp->right)
+                                tmp = tmp->_right;
+                            else
+                                return tmp;
+                    }
+                }
+            }
 
         public:
-            tree();
-            ~tree();
+            tree() {};
+            ~tree() {};
 
-            void    empty() { return (!_root); };
-            void    size() { return (_size); };
-            void    max_size() { return (_allocator.max_size()); };
-            
-            void    push(K key, V value)
+            bool                empty() { return (c.empty()); }
+            size_type           size() const { return (c.size()); }
+            size_type           max_size() const { return (c.max_size()); }
+            size_type           capacity() const { return(c.capacity()); }
+
+            // (1) push pair
+            pair_type           push(const pair_type & pair)
             {
-                ft::pair<K,V> pair(key, value);
-                push(pair);
+                
             }
-            void    push(ft::pair<K,V> pair)
-            {
-                if (!_root)
-                    _root = 
-            }
-            node    new_node(ft::pair<K,V> pair)
-            {
-                node n;
-
-                n
-            }
-            void    find();
-            void    remove();
-            void    swap() {  };
-            void    clear();
-
-
-
+            // (2) push key + value
+            pair_type           push(const key_type & key, const value_type & value)
+            { return (push(pair_type(key, value))); }
+            void                pop();
     };
 }

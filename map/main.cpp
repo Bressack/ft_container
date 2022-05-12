@@ -6,8 +6,9 @@ struct all
 {
     int a;
     int b;
+    int c;
     
-    all(int _a, int _b) : a(_a), b(_b) {};
+    all(int _a, int _b, int _c) : a(_a), b(_b), c(_c) {};
     ~all() {};
 };
 
@@ -17,9 +18,11 @@ int main(void)
 
     ft::tree<int,all>    t;
 
-    all a(21, 42);
+    all a(rand(), rand(), rand());
     
-    t.push(a);
+    t.push(ft::pair<int,all>(rand(), a));
+
+    t::
     
     return (0);
 }

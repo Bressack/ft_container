@@ -22,12 +22,15 @@ namespace ft
             typedef Container         container_type;
             typedef size_t            size_type;
 
+            // iterator
+
             // node types
             typedef Node              node_type;
             typedef Node*             node_pointer;
+            typedef Node&             node_reference;
 
             // drawer type
-            typedef container_type::iterator    drawer_iterator;
+            typedef typename container_type::iterator    drawer_iterator;
 
         protected:
             container_type  _drawer; // node storage
@@ -35,7 +38,7 @@ namespace ft
         private:
             node_pointer    _root; // tree entrypoint (pointer to drawer nodes)
 
-            node_pointer find_new_parent(node_pointer child)
+            void    find_new_parent(node_pointer child)
             {
                 if (empty())
                     _root = child;
@@ -46,37 +49,45 @@ namespace ft
                     while (1) // si inf loop c'est qu'on a un ptit soucis :/
                     {
                         if (child->_value.first < tmp->_value.first)
-                            if (tmp->_left) tmp = tmp->_left else tmp->_left = child, break;
+                            if (tmp->_left) tmp = tmp->_left; else { tmp->_left = child; break; }
                         else
-                            if (tmp->right) tmp = tmp->_right else tmp->_right = child, break;
+                            if (tmp->_right) tmp = tmp->_right; else { tmp->_right = child; break; }
                     }
                 }
             }
 
-            // drawer tools
-            drawer_iterator find_drawer_free_place();
+            /// drawer tools
+
+            // function to find a free place in the drawer to the new node
+            node_pointer    find_drawer_free_place(const node_value & value)
+            {
+                _drawer.push_back(Node(value));
+                return (&_drawer.back());
+            }
+
+            // print the drawer content
+            void            
 
 
         public:
             tree() {};
             ~tree() {};
 
-            bool                empty() { return (c.empty()); }
-            size_type           size() const { return (c.size()); }
-            size_type           max_size() const { return (c.max_size()); }
-            size_type           capacity() const { return(c.capacity()); }
+            bool                empty() { return (_drawer.empty()); }
+            size_type           size() const { return (_drawer.size()); }
+            size_type           max_size() const { return (_drawer.max_size()); }
+            size_type           capacity() const { return(_drawer.capacity()); }
 
             // (1) push pair
-            node_type           push(const pair_type & pair)
+            node_pointer           push(const node_value & value)
             {
-                Node            new_node(pair);
-                node_pointer parent = find_new_parent(new_node);
-
-                
+                node_pointer    new_node = find_drawer_free_place(value);
+                find_new_parent(new_node);
+                return (new_node);
             }
             // (2) push key + value
-            pair_type           push(const key_type & key, const value_type & value)
-            { return (push(pair_type(key, value))); }
+            node_value           push(const key_type & key, const value_type & value)
+            { return (push(node_value(key, value))); }
             void                pop();
     };
 }

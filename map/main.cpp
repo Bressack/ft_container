@@ -22,7 +22,7 @@ int main(void)
     
     t.push(ft::pair<int,all>(rand(), a));
 
-    t::
+    t.print_tree();
     
     return (0);
 }

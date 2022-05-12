@@ -65,10 +65,6 @@ namespace ft
                 return (&_drawer.back());
             }
 
-            // print the drawer content
-            void            
-
-
         public:
             tree() {};
             ~tree() {};
@@ -89,5 +85,19 @@ namespace ft
             node_value           push(const key_type & key, const value_type & value)
             { return (push(node_value(key, value))); }
             void                pop();
+
+            // print the drawer content
+            void            print_drawer_content(void)
+            {
+
+            }
+
+            void            print_tree(node_reference root) { print_tree(&root); }
+            void            print_tree(node_pointer root = _root, int deep = 0, int pad = 2)
+            {
+                std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.first << " )" << std::endl;
+                if (root->_right) print_tree(root->_right, deep + 1);
+                if (root->_left)  print_tree(root->_left, deep + 1);
+            }
     };
 }

@@ -38,48 +38,67 @@ namespace ft
         private:
             node_pointer    _root; // tree entrypoint (pointer to drawer nodes)
 
-            void    find_new_parent(node_pointer child)
+            node_pointer    find_parent(const node_value & value)
             {
-                if (empty())
-                    _root = child;
-                else
-                {
-                    node_pointer tmp = _root;
+                
+                node_pointer tmp = _root;
 
-                    while (1) // si inf loop c'est qu'on a un ptit soucis :/
-                    {
-                        if (child->_value.first < tmp->_value.first)
-                            if (tmp->_left) tmp = tmp->_left; else { tmp->_left = child; break; }
-                        else
-                            if (tmp->_right) tmp = tmp->_right; else { tmp->_right = child; break; }
-                    }
+                if (tmp == NULL)
+                    return NULL;
+                while (1) // si inf loop c'est qu'on a un ptit soucis :/
+                {
+                    if (child->_value.first < tmp->_value.first)
+                        if (tmp->_left) tmp = tmp->_left; else return tmp->_left;
+                    else
+                        if (tmp->_right) tmp = tmp->_right; else return tmp->_right;
                 }
             }
 
             /// drawer tools
 
-            // function to find a free place in the drawer to the new node
+            void            assign_child_to_parent(node_pointer parent, const node_pointer child)
+            {
+                if (child->_value.first < parent->_value.first)
+                {
+                    parent->_left = child;
+                    parent->depth -= 1;
+                }
+                else
+                {
+                    parent->_right = child;
+                    parent->depth += 1;
+                }
+                child->parent = parent;
+            }
+
             node_pointer    find_drawer_free_place(const node_value & value)
             {
+                // find a parent
+                node_pointer parent = find_parent(value)
+                // create new node in drawer and brings together parent and child
                 _drawer.push_back(Node(value));
-                return (&_drawer.back());
+                node_pointer child = &_drawer.back();
+                if (parent != NULL)
+                    assign_child_to_parent(parent, child);
+                else
+                    _root = child;
+                return (child);
             }
 
         public:
-            tree() {};
-            ~tree() {};
+            tree() : _root(NULL) {};
+            ~tree() { clear(); };
 
             bool                empty() { return (_drawer.empty()); }
             size_type           size() const { return (_drawer.size()); }
             size_type           max_size() const { return (_drawer.max_size()); }
             size_type           capacity() const { return(_drawer.capacity()); }
+            void                clear() { _drawer.clear(); }
 
             // (1) push pair
             node_pointer           push(const node_value & value)
             {
-                node_pointer    new_node = find_drawer_free_place(value);
-                find_new_parent(new_node);
-                return (new_node);
+                return (find_drawer_free_place(value));
             }
             // (2) push key + value
             node_value           push(const key_type & key, const value_type & value)
@@ -89,15 +108,18 @@ namespace ft
             // print the drawer content
             void            print_drawer_content(void)
             {
-
+                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
+                    std::cout << "[" << (*it)._value.first << " -> " << (*it)._value.second << "]" << std::endl;
             }
 
             void            print_tree(node_reference root) { print_tree(&root); }
-            void            print_tree(node_pointer root = _root, int deep = 0, int pad = 2)
+            void            print_tree(node_pointer root = NULL, int deep = 0, int pad = 2)
             {
-                std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.first << " )" << std::endl;
-                if (root->_right) print_tree(root->_right, deep + 1);
-                if (root->_left)  print_tree(root->_left, deep + 1);
+                if (root == NULL)
+                    root = _root;
+                std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.second << " )" << std::endl;
+                if (root->_left)  { std::cout << std::setw(deep * pad) << "" << "left  child:" << std::endl; print_tree(root->_left, deep + 1); }
+                if (root->_right) { std::cout << std::setw(deep * pad) << "" << "right child:" << std::endl; print_tree(root->_right, deep + 1); }
             }
     };
 }

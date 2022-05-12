@@ -47,41 +47,43 @@ namespace ft
                     return NULL;
                 while (1) // si inf loop c'est qu'on a un ptit soucis :/
                 {
-                    if (child->_value.first < tmp->_value.first)
-                        if (tmp->_left) tmp = tmp->_left; else return tmp->_left;
+                    if (value.first < tmp->_value.first)
+                        if (tmp->_left) tmp = tmp->_left; else break;
                     else
-                        if (tmp->_right) tmp = tmp->_right; else return tmp->_right;
+                        if (tmp->_right) tmp = tmp->_right; else break;
                 }
+                return tmp;
             }
 
             /// drawer tools
 
-            void            assign_child_to_parent(node_pointer parent, const node_pointer child)
+            void            assign_child_to_parent(node_pointer parent, node_pointer child)
             {
+                std::cout << child << ", " << &child->_value.first << ", " << parent << ", " << &parent->_value.first << std::endl;
                 if (child->_value.first < parent->_value.first)
                 {
                     parent->_left = child;
-                    parent->depth -= 1;
+                    parent->_depth -= 1;
                 }
                 else
                 {
                     parent->_right = child;
-                    parent->depth += 1;
+                    parent->_depth += 1;
                 }
-                child->parent = parent;
+                child->_parent = parent;
             }
 
             node_pointer    find_drawer_free_place(const node_value & value)
             {
                 // find a parent
-                node_pointer parent = find_parent(value)
+                node_pointer parent = find_parent(value);
                 // create new node in drawer and brings together parent and child
                 _drawer.push_back(Node(value));
                 node_pointer child = &_drawer.back();
-                if (parent != NULL)
-                    assign_child_to_parent(parent, child);
-                else
+                if (parent == NULL)
                     _root = child;
+                else
+                    assign_child_to_parent(parent, child);
                 return (child);
             }
 
@@ -95,13 +97,23 @@ namespace ft
             size_type           capacity() const { return(_drawer.capacity()); }
             void                clear() { _drawer.clear(); }
 
-            // (1) push pair
-            node_pointer           push(const node_value & value)
+            bool                is_key_unique(const node_value & value)
             {
+                key_type key = value.first;
+                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
+                    if ((*it)._value.first == key) // TOTO use key_compare as Tess
+                        return false;
+                return true;
+            }
+            // (1) push pair
+            node_pointer        push(const node_value & value)
+            {
+                if (is_key_unique(value) == false)
+                    return NULL;
                 return (find_drawer_free_place(value));
             }
             // (2) push key + value
-            node_value           push(const key_type & key, const value_type & value)
+            node_value          push(const key_type & key, const value_type & value)
             { return (push(node_value(key, value))); }
             void                pop();
 
@@ -118,8 +130,10 @@ namespace ft
                 if (root == NULL)
                     root = _root;
                 std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.second << " )" << std::endl;
-                if (root->_left)  { std::cout << std::setw(deep * pad) << "" << "left  child:" << std::endl; print_tree(root->_left, deep + 1); }
-                if (root->_right) { std::cout << std::setw(deep * pad) << "" << "right child:" << std::endl; print_tree(root->_right, deep + 1); }
+                std::cout << std::setw(deep * pad) << "" << "left  child:" << std::endl;
+                if (root->_left)  { print_tree(root->_left, deep + 1); }
+                std::cout << std::setw(deep * pad) << "" << "right child:" << std::endl;
+                if (root->_right) { print_tree(root->_right, deep + 1); }
             }
     };
 }

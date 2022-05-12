@@ -26,20 +26,14 @@ int main(void)
     ft::tree<int,int>    t;
 
     all a(10, 100, 1000);
-    std::cout << _TEST_ << std::endl;
     
-    t.push(ft::pair<int,int>(4, rand()));
-    std::cout << _TEST_ << std::endl;
-    t.push(ft::pair<int,int>(2, rand()));
-    t.print_drawer_content();
-    std::cout << _TEST_ << std::endl;
-    t.push(ft::pair<int,int>(6, rand()));
-    std::cout << _TEST_ << std::endl;
-    t.push(ft::pair<int,int>(3, rand()));
-    std::cout << _TEST_ << std::endl;
-    t.push(ft::pair<int,int>(8, rand()));
-    std::cout << _TEST_ << std::endl;
-    t.print_tree();
+    for (int i = 0; i < 30000; i++)
+    {
+        t.push(ft::pair<int,int>(rand(), rand()));
+        std::cout << i << std::endl;
+    }
+    // t.print_tree();
+    // t.print_drawer_content();
     
     return (0);
 }

@@ -7,47 +7,55 @@
 namespace ft
 {
     // template< class K, class V, class Container = ft::vector<ft::pair<K,ft::node<V> > > >
-    template< class K, class V, class Container = ft::vector<ft::node<K,V> > >
-    class tree
+    template<   class K,
+                class V,
+                class Pair = ft::pair<K,V>,
+                class Node = ft::node<Pair>,
+                class Container = ft::vector<Node>
+    > class tree
     {
         public:
-            typedef K                                           key_type;
-            typedef V                                           value_type;
-            typedef Container                                   container_type;
-            typedef size_t                                      size_type;
+            // tree type
+            typedef K                 key_type;
+            typedef V                 value_type;
+            typedef Pair              node_value;
+            typedef Container         container_type;
+            typedef size_t            size_type;
 
-            typedef ft::node<key_type, value_type>              node_type;
-            typedef ft::node<key_type, value_type>*             node_pointer;
+            // node types
+            typedef Node              node_type;
+            typedef Node*             node_pointer;
+
+            // drawer type
+            typedef container_type::iterator    drawer_iterator;
 
         protected:
-            container_type  _drawer;
+            container_type  _drawer; // node storage
 
         private:
-            node_pointer    _root;
+            node_pointer    _root; // tree entrypoint (pointer to drawer nodes)
 
             node_pointer find_new_parent(node_pointer child)
-            { // PAS FINI
+            {
                 if (empty())
                     _root = child;
                 else
                 {
                     node_pointer tmp = _root;
 
-                    while (1)
+                    while (1) // si inf loop c'est qu'on a un ptit soucis :/
                     {
-                        if (child->_key < tmp->_key)
-                            if (tmp->_left)
-                                tmp = tmp->_left;
-                            else
-                                return tmp;
+                        if (child->_value.first < tmp->_value.first)
+                            if (tmp->_left) tmp = tmp->_left else tmp->_left = child, break;
                         else
-                            if (tmp->right)
-                                tmp = tmp->_right;
-                            else
-                                return tmp;
+                            if (tmp->right) tmp = tmp->_right else tmp->_right = child, break;
                     }
                 }
             }
+
+            // drawer tools
+            drawer_iterator find_drawer_free_place();
+
 
         public:
             tree() {};
@@ -59,8 +67,11 @@ namespace ft
             size_type           capacity() const { return(c.capacity()); }
 
             // (1) push pair
-            pair_type           push(const pair_type & pair)
+            node_type           push(const pair_type & pair)
             {
+                Node            new_node(pair);
+                node_pointer parent = find_new_parent(new_node);
+
                 
             }
             // (2) push key + value

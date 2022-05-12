@@ -83,5 +83,6 @@
         "variant": "cpp",
         "__functional_base": "cpp",
         "algorithm": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

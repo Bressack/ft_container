@@ -25,9 +25,9 @@ int main(void)
 
     ft::tree<int,int>    t;
 
-    all a(10, 100, 1000);
+    // all a(10, 100, 1000);
     
-    for (int i = 0; i < 30000; i++)
+    for (int i = 0; i < 3000; i++)
     {
         t.push(ft::pair<int,int>(rand(), rand()));
         std::cout << i << std::endl;

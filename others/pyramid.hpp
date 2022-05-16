@@ -159,14 +159,6 @@ namespace ft
             size_type vacant() const { return (_capacity - _size); };
             bool empty() const { return(!_size ? true : false); };
             bool full() const { return (_size == _capacity); };
-// 26
-// 8
-// 9
-
-// [ 2] [][] 6
-// [ 7] [][][][][][][*] 0
-// [14] [][][][][][][][][][][][][][*]
-// [23] [*][][][*][][][][][][][][][][][][][][][][][][][]
 
             // Element access
             reference front() { return (_array_ptr.front().front()); };

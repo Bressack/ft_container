@@ -7,14 +7,13 @@
 namespace ft
 {
 	// iterator herite de la class ft::iterator de iterator_traits
-	template < typename IT, typename PIT > // IT is a pointer and PIT is a pointer of the parent
+	template < typename IT, typename SIT> // IT is a pointer and SIT is a pointer of child
 	class ripped_iterator : public ft::iterator_core<ft::random_access_iterator_tag, IT>
 	{
 		protected:
 			// on utilise aussi ft::iterator_traits comme ptr pour les attributs public de ripped_iterator
 			typedef typename ft::iterator_traits<IT>	iterator_traits;
 			IT											_ptr;
-			PIT											_pptr;
 
 		public:
 			typedef IT											iterator_type;
@@ -25,7 +24,8 @@ namespace ft
 			typedef typename iterator_traits::pointer			pointer;
 			typedef typename iterator_traits::iterator_category	iterator_category;
 
-			// CONSTRUCTORS / DESTRUCTOR
+			// CONSTRUCTORS /X\ DESTRUCTOR
+
 
 			// basic constructor
 			ripped_iterator(iterator_type ptr = NULL) : _ptr(ptr) {};

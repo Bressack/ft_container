@@ -1,139 +1,72 @@
 #pragma once
 
-#include "../vector/vector.hpp"
-#include "../others/pair.hpp"
-#include "node.hpp"
+# include "../others/color.hpp"
+# include "../others/utils.hpp"
+# include "../others/reverse_iterator.hpp"
+# include "../others/pair.hpp"
+# include "node.hpp"
 
 namespace ft
 {
-    // template< class K, class V, class Container = ft::vector<ft::pair<K,ft::node<V> > > >
-    template<   class K,
-                class V,
-                class Pair = ft::pair<K,V>,
-                class Node = ft::node<Pair>,
-                class Container = ft::vector<Node>
-    > class tree
+    template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
+    class tree
     {
         public:
-            // tree type
-            typedef K                 key_type;
-            typedef V                 value_type;
-            typedef Pair              node_value;
-            typedef Container         container_type;
-            typedef size_t            size_type;
 
-            // iterator
+            typedef Key                                     key_type;
+            typedef T                                       mapped_type;
+            typedef Compare                                 key_compare;
+            typedef Alloc                                   allocator_type;
+            typedef ft::pair<key_type, mapped_type>         value_type;
+            typedef ft::tree_iterator<value_type>           iterator;
+            typedef ft::const_tree_iterator<value_type>     const_iterator;
+            typedef ft::reverse_iterator<iterator>          reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
-            // node types
-            typedef Node              node_type;
-            typedef Node*             node_pointer;
-            typedef Node&             node_reference;
+            typedef ft::node<value_type>                    node_type;
+            typedef ft::node<value_type>*                   node_pointer;
 
-            // drawer type
-            typedef typename container_type::iterator    drawer_iterator;
+            typedef size_t                                  size_type;
+        
+            typedef	typename allocator_type::template rebind<node_type>::other	node_alloc_type;
 
-        protected:
-            container_type  _drawer; // node storage
+            tree() {}
+            virtual ~tree() {}
+
+            tree& operator=(const tree &x) {}
 
         private:
-            node_pointer    _root; // tree entrypoint (pointer to drawer nodes)
 
-            node_pointer    find_parent(const node_value & value)
-            {
-                
-                node_pointer tmp = _root;
+            node_pointer    _end;
+            node_pointer    _root;
+            int             _size;
 
-                if (tmp == NULL)
-                    return NULL;
-                while (1) // si inf loop c'est qu'on a un ptit soucis :/
-                {
-                    if (value.first < tmp->_value.first)
-                        if (tmp->_left) tmp = tmp->_left; else break;
-                    else
-                        if (tmp->_right) tmp = tmp->_right; else break;
-                }
-                return tmp;
-            }
+            // destroy a node and all its childs
+            void clear_node (node_pointer node) {}
+            
+            // destroy all the tree
+            void clear_tree () {}
 
-            /// drawer tools
+            // deep copy a node with all its child and add it to the tree
+            void copy_node (node_pointer node) {}
 
-            void            assign_child_to_parent(node_pointer parent, node_pointer child)
-            {
-                std::cout << child << ", " << &child->_value.first << ", " << parent << ", " << &parent->_value.first << std::endl;
-                if (child->_value.first < parent->_value.first)
-                {
-                    parent->_left = child;
-                    parent->_depth -= 1;
-                }
-                else
-                {
-                    parent->_right = child;
-                    parent->_depth += 1;
-                }
-                child->_parent = parent;
-            }
+            // calculate the depth of a node
+            int depth (const node_pointer node) const
 
-            node_pointer    find_drawer_free_place(const node_value & value)
-            {
-                // find a parent
-                node_pointer parent = find_parent(value);
-                // create new node in drawer and brings together parent and child
-                _drawer.push_back(Node(value));
-                node_pointer child = &_drawer.back();
-                if (parent == NULL)
-                    _root = child;
-                else
-                    assign_child_to_parent(parent, child);
-                return (child);
-            }
+            // update the end node to point it to root and root parent point to it
+            void update_end () {}
 
-        public:
-            tree() : _root(NULL) {};
-            ~tree() { clear(); };
+            // find the minimum node of the tree (with the smallest key)
+            node_pointer maximum (node_pointer node) const {}
+            
+            // find the maximum node of the tree (with the higher key)
+            node_pointer minimum (node_pointer node) const {}
 
-            bool                empty() { return (_drawer.empty()); }
-            size_type           size() const { return (_drawer.size()); }
-            size_type           max_size() const { return (_drawer.max_size()); }
-            size_type           capacity() const { return(_drawer.capacity()); }
-            void                clear() { _drawer.clear(); }
+            // find a parent for a node
+            node_pointer find_future_parent (const value_type &value) const
 
-            bool                is_key_unique(const node_value & value)
-            {
-                key_type key = value.first;
-                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
-                    if ((*it)._value.first == key) // TOTO use key_compare as Tess
-                        return false;
-                return true;
-            }
-            // (1) push pair
-            node_pointer        push(const node_value & value)
-            {
-                if (is_key_unique(value) == false)
-                    return NULL;
-                return (find_drawer_free_place(value));
-            }
-            // (2) push key + value
-            node_value          push(const key_type & key, const value_type & value)
-            { return (push(node_value(key, value))); }
-            void                pop();
-
-            // print the drawer content
-            void            print_drawer_content(void)
-            {
-                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
-                    std::cout << "[" << (*it)._value.first << " -> " << (*it)._value.second << "]" << std::endl;
-            }
-
-            void            print_tree(node_reference root) { print_tree(&root); }
-            void            print_tree(node_pointer root = NULL, int deep = 0, int pad = 2)
-            {
-                if (root == NULL)
-                    root = _root;
-                std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.second << " )" << std::endl;
-                std::cout << std::setw(deep * pad) << "" << "left  child:" << std::endl;
-                if (root->_left)  { print_tree(root->_left, deep + 1); }
-                std::cout << std::setw(deep * pad) << "" << "right child:" << std::endl;
-                if (root->_right) { print_tree(root->_right, deep + 1); }
-            }
+            // add 
+            int simple_add (const value_type &value)
     };
-}
+
+};

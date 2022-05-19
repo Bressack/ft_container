@@ -15,18 +15,18 @@ namespace ft
 		class tree_iterator : public ft::bidirectional_iterator_tag
 		{
 			protected:
-				typedef	ft::node<T>*																	node_pointer;
+				typedef ft::node<T>*									node_pointer;
 				typedef iterator<ft::bidirectional_iterator_tag, T> 	iterator_type;
 
-				node_pointer															_node;
+				node_pointer											_node;
 
 			public:
 
-				typedef	typename iterator_traits<iterator_type>::value_type						value_type;
-				typedef	typename iterator_traits<iterator_type>::difference_type			difference_type;
-				typedef	typename iterator_traits<iterator_type>::pointer							pointer;
-				typedef	typename iterator_traits<iterator_type>::reference						reference;
-				typedef	ft::bidirectional_iterator_tag																iterator_category;
+				typedef	typename iterator_traits<iterator_type>::value_type			value_type;
+				typedef	typename iterator_traits<iterator_type>::difference_type	difference_type;
+				typedef	typename iterator_traits<iterator_type>::pointer			pointer;
+				typedef	typename iterator_traits<iterator_type>::reference			reference;
+				typedef	ft::bidirectional_iterator_tag								iterator_category;
 
 				tree_iterator() : _node(NULL)
 				{};
@@ -90,35 +90,24 @@ namespace ft
 					}
 					while (node->_parent && node->_parent->_right != node)
 						node = node->_parent;
-					if (node->_parent)
 						node = node->_parent;
 					return (node);
 				}
 
 			public:
 
-				node_pointer		base() const { return (_node); };
+				node_pointer	base() const { return (_node); };
 
-				tree_iterator&		operator++()
-				{
-					_node = next(_node);
-					return (*this);
-				}
-
-				tree_iterator&		operator--()
-				{
-					_node = prev(_node);
-					return (*this);
-				}
-
-				tree_iterator		operator++(int)		{ tree_iterator	tmp = (*this); ++(*this); return (tmp); };
-				tree_iterator		operator--(int)		{ tree_iterator	tmp = (*this); --(*this); return (tmp); };
-				reference				operator*()	const	{ return (_node->_value); };
-				pointer					operator->() const { return (&(_node->_value)); };
-				bool						operator==	(const tree_iterator& lhs) { return (_node == lhs.base()); };
-				bool						operator!=	(const tree_iterator& lhs) { return (_node != lhs.base()); };
-				bool						operator==	(const const_tree_iterator<T>& lhs) { return (_node == lhs.base()); };
-				bool						operator!=	(const const_tree_iterator<T>& lhs) { return (_node != lhs.base()); };
+				tree_iterator&	operator++()									{ _node = next(_node); return (*this); }
+				tree_iterator	operator++(int)									{ tree_iterator	tmp = (*this); ++(*this); return (tmp); };
+				tree_iterator&	operator--()									{ _node = prev(_node); return (*this); }
+				tree_iterator	operator--(int)									{ tree_iterator	tmp = (*this); --(*this); return (tmp); };
+				reference		operator*()		const							{ return (_node->_value); };
+				pointer			operator->() 	const 							{ return (&(_node->_value)); };
+				bool			operator==(const tree_iterator& lhs) 			{ return (_node == lhs.base()); };
+				bool			operator==(const const_tree_iterator<T>& lhs) 	{ return (_node == lhs.base()); };
+				bool			operator!=(const tree_iterator& lhs) 			{ return (_node != lhs.base()); };
+				bool			operator!=(const const_tree_iterator<T>& lhs) 	{ return (_node != lhs.base()); };
 
 		}; //tree_iterator
 

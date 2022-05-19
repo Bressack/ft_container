@@ -244,7 +244,7 @@ class avl_tree
         if (node->_right != NULL)
           node->_right->_parent = node->_parent;
       }
-      else// si node left
+      else // si node left
       {
         node->_value = successor->_value;
         if (successor->_parent->_left == successor)

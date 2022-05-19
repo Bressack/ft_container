@@ -1,88 +1,158 @@
 #pragma once
 
-# include <deque>
-# include <vector>
-# include <cstddef>
-# include <stdexcept>
-# include <ostream>
-# include <iostream>
-# include "../others/pair.hpp"
-# include "../others/color.hpp"
-# include "../others/utils.hpp"
-# include "../others/iterator_traits.hpp"
-# include "../others/reverse_iterator.hpp"
-# include "../others/enable_if.hpp"
-# include "../others/iterator.hpp"
-# include "../others/is_integral.hpp"
-
+#include "../vector/vector.hpp"
+#include "../others/pair.hpp"
+#include "node.hpp"
 
 namespace ft
 {
-    struct node;
-
-    template < class K, class V, class Alloc = std::allocator<struct node> >
-    class tree
+    // template< class K, class V, class Container = ft::vector<ft::pair<K,ft::node<V> > > >
+    template<   class K,
+                class V,
+                class Pair = ft::pair<K,V>,
+                class Node = ft::node<Pair>,
+                class Alloc = std::allocator<>
+    > class tree
     {
         public:
-        /// Member types
-            typedef K                                               key_type;               // The type of keys
-            typedef V                                               value_type;             // The type of values
-            typedef Alloc                                           allocator_type;         // The second template parameter (Alloc)	defaults to: allocator<value_type>
-            typedef typename Alloc::reference                       reference;              // allocator_type::reference	for the default allocator: value_type&
-            typedef typename Alloc::const_reference                 const_reference;        // allocator_type::const_reference	for the default allocator: const value_type&
-            typedef typename Alloc::pointer                         pointer;                // allocator_type::pointer	for the default allocator: value_type*
-            typedef typename Alloc::const_pointer                   const_pointer;          // allocator_type::const_pointer	for the default allocator: const value_type*
+            // tree type
+            typedef K                               key_type;
+            typedef V                               value_type;
+            typedef Pair                            node_value;
+            typedef size_t                          size_type;
 
-            typedef typename ft::iterator<pointer>                  iterator;               // a random access iterator to value_type	convertible to const_iterator
-            typedef typename ft::iterator<const_pointer>            const_iterator;         // a random access iterator to const value_type
-            typedef typename ft::reverse_iterator<iterator>         reverse_iterator;       // reverse_iterator<iterator>
-            typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator; // reverse_iterator<const_iterator>
+            // iterator
+            typedef typename ft::tree_iterator<node_value>   iterator;
 
-            typedef ptrdiff_t                                       difference_type;        // a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
-            typedef size_t                                          size_type;              // an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
+            // node types
+            typedef Node                            node_type;
+            typedef Node*                           node_pointer;
+            typedef Node&                           node_reference;
 
         private:
-            struct node
+            node_pointer    _root; // tree entrypoint
+
+            // create and destroy node
+            node_pointer    create_node(const node_value & value) { return (new Node(value)); }
+            void            destroy_node(node_pointer & node) { if (node) delete node; node = NULL; }
+
+            node_pointer    find_parent(const node_value & value)
             {
-                ft::pair<K,V>   pair;   // pair of key value
-                pointer         parent; // pointer to a node
-                pointer         right;  // pointer to a node
-                pointer         left;   // pointer to a node
-            };
-            Alloc               _allocator;
-            size_type           _size;
-            pointer             _root;
+                
+                node_pointer tmp = _root;
+
+                if (tmp == NULL)
+                    return NULL;
+                while (1) // si inf loop c'est qu'on a un ptit soucis :/
+                {
+                    if (value.first < tmp->_value.first)
+                        if (tmp->_left) tmp = tmp->_left; else break;
+                    else
+                        if (tmp->_right) tmp = tmp->_right; else break;
+                }
+                return tmp;
+            }
+
+            /// drawer tools
+
+            void            assign_child_to_parent(node_pointer parent, node_pointer child)
+            {
+                std::cout << child << ", " << &child->_value.first << ", " << parent << ", " << &parent->_value.first << std::endl;
+                if (child->_value.first < parent->_value.first)
+                {
+                    parent->_left = child;
+                    parent->_depth -= 1;
+                }
+                else
+                {
+                    parent->_right = child;
+                    parent->_depth += 1;
+                }
+                child->_parent = parent;
+            }
+
+            node_pointer    find_drawer_free_place(const node_value & value)
+            {
+                // find a parent
+                node_pointer parent = find_parent(value);
+                // create new node in drawer and brings together parent and child
+                node_pointer child = create_node(value);
+                if (parent == NULL)
+                    _root = child;
+                else
+                    assign_child_to_parent(parent, child);
+                return (child);
+            }
 
         public:
-            tree();
-            ~tree();
+            tree() : _root(NULL) {};
+            ~tree() { clear(); };
 
-            void    empty() { return (!_root); };
-            void    size() { return (_size); };
-            void    max_size() { return (_allocator.max_size()); };
-            
-            void    push(K key, V value)
+
+            // capacity
+            bool                empty() { return (_drawer.empty()); }
+            size_type           size() const { return (_drawer.size()); }
+            size_type           max_size() const { return (_drawer.max_size()); }
+            size_type           capacity() const { return(_drawer.capacity()); }
+            void                clear() { _drawer.clear(); }
+
+            bool                keycmp(const key_type & k1, const key_type & key) { return (k1 == k2); }
+            bool                keycmp(iterator it, const key_type & k2) { return ((*it)._value.first == key) }
+
+            node_pointer        search(const key_type & key)
             {
-                ft::pair<K,V> pair(key, value);
-                push(pair);
+                iterator    it = begin();
+
+                while (keycmp(it, key) == false)
+                    it++;
+                if (it != end())
+                    return (it);
+                return (NULL);
             }
-            void    push(ft::pair<K,V> pair)
+
+            bool                is_key_unique(const node_value & value)
             {
-                if (!_root)
-                    _root = 
+                key_type key = value.first;
+                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
+                    if ((*it)._value.first == key) // TOTO use key_compare as Tess
+                        return false;
+                return true;
             }
-            node    new_node(ft::pair<K,V> pair)
+            // (1) push pair
+            node_pointer        push(const node_value & value)
             {
-                node n;
-
-                n
+                if (is_key_unique(value) == false)
+                    return NULL;
+                return (find_drawer_free_place(value));
             }
-            void    find();
-            void    remove();
-            void    swap() {  };
-            void    clear();
+            // (2) push key + value
+            node_value          push(const key_type & key, const value_type & value)
+            { return (push(node_value(key, value))); }
+            void                pop(const key_type & key)
+            {
+                node_pointer    node = search(key);
 
+                if (node)
+                    
+            }
 
+            // print the drawer content
+            void            print_drawer_content(void)
+            {
+                for ( drawer_iterator it = _drawer.begin(); it != _drawer.end() ; it++ )
+                    std::cout << "[" << (*it)._value.first << " -> " << (*it)._value.second << "]" << std::endl;
+            }
 
+            void            print_tree(node_reference root) { print_tree(&root); }
+            void            print_tree(node_pointer root = NULL, int deep = 0, int pad = 2)
+            {
+                if (root == NULL)
+                    root = _root;
+                std::cout << std::setw(deep * pad) << "" << "[ " << root->_value.first << " ] ( " << root->_value.second << " )" << std::endl;
+                std::cout << std::setw(deep * pad) << "" << "left  child:" << std::endl;
+                if (root->_left)  { print_tree(root->_left, deep + 1); }
+                std::cout << std::setw(deep * pad) << "" << "right child:" << std::endl;
+                if (root->_right) { print_tree(root->_right, deep + 1); }
+            }
     };
 }

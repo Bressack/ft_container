@@ -6,23 +6,23 @@ namespace ft
     class node
     {
         public:
-            node *      _parent;
-            node *      _left;
-            node *      _right;
-            T           _value;
-            char        _depth;
+            node *      parent;
+            node *      left;
+            node *      right;
+            T           value;
+            char        depth;
 
             // (1) default
             node()
-            : _value(), _parent(NULL), _left(NULL), _right(NULL), _depth(0)
+            : value(), parent(NULL), left(NULL), right(NULL), depth(0)
             {};
             // (2) fill
-            node(const T & value)
-            : _value(value), _parent(NULL), _left(NULL), _right(NULL), _depth(0)
+            node(const T & _value)
+            : value(_value), parent(NULL), left(NULL), right(NULL), depth(0)
             {};
             // (3) fill and link to parent
-            node(const T & value, node<T> * parent)
-            : _value(value), _parent(parent), _left(NULL), _right(NULL), _depth(0)
+            node(const T & _value, node<T> * _parent)
+            : value(_value), parent(_parent), left(NULL), right(NULL), depth(0)
             {};
     };
 }

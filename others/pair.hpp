@@ -27,6 +27,12 @@ namespace ft
 		};
 	}; // pair struct
 
+	template <typename T1, typename T2>
+	std::ostream	&operator<<(std::ostream &o, const pair<T1,T2>& p) {
+		o << std::string("[") << p.first << ", " << p.second << "]";
+		return o;
+	}
+
 	template <class T1, class T2>
 	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{ return lhs.first == rhs.first && lhs.second == rhs.second; }

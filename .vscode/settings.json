@@ -82,7 +82,8 @@
         "typeindex": "cpp",
         "variant": "cpp",
         "__functional_base": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "queue": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

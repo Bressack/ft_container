@@ -25,6 +25,7 @@ namespace ft
 			}
 			return (*this);
 		};
+		virtual ~pair() {}
 	}; // pair struct
 
 	template <typename T1, typename T2>
@@ -57,7 +58,7 @@ namespace ft
 	bool operator>= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{ return !(lhs < rhs); }
 
-	template <class T1,class T2>
+	template <class T1, class T2>
 	ft::pair<T1,T2> make_pair (T1 x, T2 y)
 	{ return ( ft::pair<T1,T2>(x,y) ); };
 

@@ -7,6 +7,8 @@
 # include "display_tree.hpp"
 # include "node.hpp"
 # include <iostream>
+# include <vector>
+
 
 #define TTEST {std::cout << _TEST_ << std::endl;}
 
@@ -21,7 +23,8 @@ namespace diff
 enum NODE_KEY_COMPARE_RES {
     SMALLER,
     HIGHER,
-    NOTALLOCATED
+    NOTALLOCATED,
+    EQUAL
 };
 
 namespace ft
@@ -46,7 +49,7 @@ namespace ft
 
             typedef size_t                                  size_type;
 
-            typedef	typename allocator_type::template rebind<node_type>::other	node_alloc_type;
+            typedef typename allocator_type::template rebind<node_type>::other	node_alloc_type;
 
         private: // ATTRIBUTS
 
@@ -111,12 +114,35 @@ namespace ft
                     return (NOTALLOCATED);
                 if (node->value.first > ref->value.first)
                     return (HIGHER);
-                else
+                if (node->value.first < ref->value.first)
                     return (SMALLER);
+                if (node->value.first == ref->value.first)
+                    return (EQUAL);
+                return (NOTALLOCATED);
+            }
+
+            node_pointer    search(const value_type & value)
+            {
+                node_type node(value);
+                node_pointer tmp = _root;
+
+                while (1)
+                {
+                    enum NODE_KEY_COMPARE_RES diff = node_key_compare(tmp, &node);
+                    if (diff == NOTALLOCATED)
+                        break ;
+                    else if (diff == HIGHER)
+                        tmp = tmp->right;
+                    else if (diff == SMALLER)
+                        tmp = tmp->left;
+                    else if (diff == EQUAL)
+                        return (tmp);
+                }
+                return (NULL);
             }
 
             // find the minimum node of the tree (with the smallest key)
-            node_pointer minimum (node_pointer node) const
+            node_pointer    minimum (node_pointer node) const
             {
                 if (node)
                 {
@@ -127,7 +153,7 @@ namespace ft
             }
 
             // find the maximum node of the tree (with the higher key)
-            node_pointer maximum (node_pointer node) const
+            node_pointer    maximum (node_pointer node) const
             {
                 if (node)
                 {
@@ -137,7 +163,7 @@ namespace ft
                 return (node);
             }
 
-            node_pointer prev_value(node_pointer node) const // find the prev close up value of a node
+            node_pointer    prev_value(node_pointer node) const // find the prev close up value of a node
             {
                 // first left then full right
                 node = node->left;
@@ -146,7 +172,8 @@ namespace ft
                         node = node->right;
                 return (node);
             }
-            node_pointer next_value(node_pointer node) const // find the next close up value of a node
+
+            node_pointer    next_value(node_pointer node) const // find the next close up value of a node
             {
                 // first right then full left
                 node = node->right;
@@ -157,7 +184,7 @@ namespace ft
             }
 
             // find a parent for a node
-            node_pointer find_future_parent (const node_pointer & node, bool assign = false)
+            node_pointer    find_future_parent (const node_pointer & node, bool assign = false)
             {
                 node_pointer tmp = _root;
                 enum NODE_KEY_COMPARE_RES res = NOTALLOCATED;
@@ -192,21 +219,65 @@ namespace ft
                 }
             }
 
+            void            update_tree_depth(node_pointer node)
+            {
+                while (1)
+                {
+                    node_pointer parent = node->parent;
+                    if (!parent)
+                        break ;
+                    else if (parent->left == node)
+                        parent->update_depth(LEFT);
+                    else if (parent->right == node)
+                        parent->update_depth(RIGHT);
+                    node = parent;
+                }
+            }
+
+            void            tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
+            {
+                if (!node)
+                    return ;
+                v.push_back(node);
+                tree_to_vector(v, node->left);
+                tree_to_vector(v, node->right);
+            }
+
+            bool            is_tree_legal(void)
+            {
+                bool islegal = true;
+                std::vector<node_pointer> v;
+                typename std::vector<node_pointer>::iterator it;
+
+                tree_to_vector(v, _root);
+                it = v.begin();
+                while (it != v.end())
+                {
+                    if (search((*it)->value) == NULL)
+                    {
+                        islegal = false;
+                        std::cout << "unreachable node -> " << (*it)->value.first << std::endl;
+                    }
+                    it++;
+                }
+                return (islegal);
+            }
+
             // add
-            void add (const value_type & value)
+            void            add (const value_type & value)
             {
                 node_pointer new_node = create_node(value);
                 if (_root == NULL)
                     _root = new_node;
                 else
                     find_future_parent(new_node, true);
-                new_node->update_depth();
+                update_tree_depth(new_node);
                 // find_future_parent(create_node(value), true);
                 // balance_tree()
             }
 
-            void print_tree(void) { print_tree(_root); }
-            void print_tree(node_pointer tmp, int deep = 0)
+            void            print_tree(void) { print_tree(_root); }
+            void            print_tree(node_pointer tmp, int deep = 0)
             {
                 if (!tmp)
                     return ;
@@ -218,7 +289,7 @@ namespace ft
                 print_tree(tmp->right, deep + 1);
             }
 
-            void    display(void)
+            void            display(void)
             {
                 _dt.tree_draw(_root);
             }

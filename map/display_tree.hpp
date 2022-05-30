@@ -25,7 +25,7 @@ namespace ft
                 static const std::string null_str = std::string(NULL_STR_DOT);
 
                 if (n)
-                    return (std::to_string(n->value.first));
+                    return (std::to_string(n->value.first) + std::string(" [") + std::to_string(n->get_depth()) + std::string("]"));
                 return (null_str);
             }
 

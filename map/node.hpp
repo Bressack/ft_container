@@ -2,6 +2,11 @@
 
 namespace ft
 {
+    enum e_child {
+        RIGHT,
+        LEFT
+    };
+
     template < class T >
     class node
     {
@@ -12,6 +17,8 @@ namespace ft
             T           value;
 
         private:
+            // +1 if child come from right
+            // -1 if child come from left
             int         _depth;
 
         public:
@@ -29,9 +36,16 @@ namespace ft
             : parent(_parent), left(NULL), right(NULL), value(_value), _depth(0)
             {};
 
-            int    get_depth(void) { return (_depth); }
-            void   update_depth() { update_depth(0); }
-            void   update_depth(int depth_updated)
+            void     update_depth(enum e_child child)
+            {
+                if (child == RIGHT)
+                    _depth += 1;
+                else if (child == LEFT)
+                    _depth -= 1;
+            }
+            int     get_depth(void) { return (_depth); }
+            void    update_depth() { update_depth(0); }
+            void    update_depth(int depth_updated)
             {
                 _depth += depth_updated;
                 if (parent)

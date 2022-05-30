@@ -1,13 +1,64 @@
 digraph BST {
     node [fontname="Arial"];
     null1 [shape=point];
-    "1" -> "null1"
-    "1" -> "2";
+    "0 [19]" -> "null1"
+    "0 [19]" -> "1 [18]";
     null2 [shape=point];
-    "2" -> "null2"
-    "2" -> "3";
+    "1 [18]" -> "null2"
+    "1 [18]" -> "2 [17]";
     null3 [shape=point];
-    "3" -> "null3"
+    "2 [17]" -> "null3"
+    "2 [17]" -> "3 [16]";
     null4 [shape=point];
-    "3" -> "null4"
+    "3 [16]" -> "null4"
+    "3 [16]" -> "4 [15]";
+    null5 [shape=point];
+    "4 [15]" -> "null5"
+    "4 [15]" -> "5 [14]";
+    null6 [shape=point];
+    "5 [14]" -> "null6"
+    "5 [14]" -> "6 [13]";
+    null7 [shape=point];
+    "6 [13]" -> "null7"
+    "6 [13]" -> "7 [12]";
+    null8 [shape=point];
+    "7 [12]" -> "null8"
+    "7 [12]" -> "8 [11]";
+    null9 [shape=point];
+    "8 [11]" -> "null9"
+    "8 [11]" -> "9 [10]";
+    null10 [shape=point];
+    "9 [10]" -> "null10"
+    "9 [10]" -> "10 [9]";
+    null11 [shape=point];
+    "10 [9]" -> "null11"
+    "10 [9]" -> "11 [8]";
+    null12 [shape=point];
+    "11 [8]" -> "null12"
+    "11 [8]" -> "12 [7]";
+    null13 [shape=point];
+    "12 [7]" -> "null13"
+    "12 [7]" -> "13 [6]";
+    null14 [shape=point];
+    "13 [6]" -> "null14"
+    "13 [6]" -> "14 [5]";
+    null15 [shape=point];
+    "14 [5]" -> "null15"
+    "14 [5]" -> "15 [4]";
+    null16 [shape=point];
+    "15 [4]" -> "null16"
+    "15 [4]" -> "16 [3]";
+    null17 [shape=point];
+    "16 [3]" -> "null17"
+    "16 [3]" -> "17 [2]";
+    null18 [shape=point];
+    "17 [2]" -> "null18"
+    "17 [2]" -> "18 [1]";
+    null19 [shape=point];
+    "18 [1]" -> "null19"
+    "18 [1]" -> "19 [0]";
+    null20 [shape=point];
+    "19 [0]" -> "null20"
+    null21 [shape=point];
+    "19 [0]" -> "null21"
 }

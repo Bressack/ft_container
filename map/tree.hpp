@@ -163,7 +163,7 @@ namespace ft
                 return (node);
             }
 
-            node_pointer    prev_value(node_pointer node) const // find the prev close up value of a node
+            node_pointer    prev_value (node_pointer node) const // find the prev close up value of a node
             {
                 // first left then full right
                 node = node->left;
@@ -173,7 +173,7 @@ namespace ft
                 return (node);
             }
 
-            node_pointer    next_value(node_pointer node) const // find the next close up value of a node
+            node_pointer    next_value (node_pointer node) const // find the next close up value of a node
             {
                 // first right then full left
                 node = node->right;
@@ -219,7 +219,7 @@ namespace ft
                 }
             }
 
-            void            update_tree_depth(node_pointer node)
+            void            update_tree_depth (node_pointer node)
             {
                 while (1)
                 {
@@ -263,6 +263,27 @@ namespace ft
                 return (islegal);
             }
 
+            void            balance_tree (const node_pointer node)
+            {
+                if (node == NULL) 
+                    return ;
+
+                int depth = node->get_depth();
+                if (depth == 2)
+                {
+                    if (node->right->get_depth() == -1)
+                        right_rotate(node->right);
+                    left_rotate(node);
+                }
+                else if (depth == -2)
+                {
+                    if (node->left->get_depth() == 1)
+                        left_rotate(node->left);
+                    right_rotate(node);
+                }
+                balance_tree(node->parent);
+            }
+
             // add
             void            add (const value_type & value)
             {
@@ -272,8 +293,7 @@ namespace ft
                 else
                     find_future_parent(new_node, true);
                 update_tree_depth(new_node);
-                // find_future_parent(create_node(value), true);
-                // balance_tree()
+                balance_tree(new_node);
             }
 
             void            print_tree(void) { print_tree(_root); }

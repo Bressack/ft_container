@@ -18,9 +18,9 @@ int main(void)
 
     int len = sizeof(a) / sizeof(a[0]);
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 3; i++)
     {
-        t.add(ft::pair<int,int>(i, 0));
+        t.add(ft::pair<int,int>(a[i], 0));
         // t.print_tree();
     }
 

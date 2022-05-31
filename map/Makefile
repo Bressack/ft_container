@@ -1,7 +1,14 @@
 all:
+	@ rm tree.dot
 	@ clang++ -I . main.cpp
-	@ # dot -Tpng /tmp/tree.dot -o tree.png
+	@ # dot -Tpng tree.dot -o tree.png
 	@ ./a.out
+
+debug:
+	@ rm tree.dot
+	@ clang++ -g3 -I . main.cpp
+	@ # dot -Tpng tree.dot -o tree.png
+	@ lldb ./a.out
 
 init:
 	@ (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \

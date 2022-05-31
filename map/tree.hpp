@@ -219,22 +219,7 @@ namespace ft
                 }
             }
 
-            void            update_tree_depth (node_pointer node)
-            {
-                while (1)
-                {
-                    node_pointer parent = node->parent;
-                    if (!parent)
-                        break ;
-                    else if (parent->left == node)
-                        parent->update_depth(LEFT);
-                    else if (parent->right == node)
-                        parent->update_depth(RIGHT);
-                    node = parent;
-                }
-            }
-
-            void            tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
+            void            tree_to_vector (std::vector<node_pointer> & v, node_pointer node)
             {
                 if (!node)
                     return ;
@@ -243,7 +228,7 @@ namespace ft
                 tree_to_vector(v, node->right);
             }
 
-            bool            is_tree_legal(void)
+            bool            is_tree_legal (void)
             {
                 bool islegal = true;
                 std::vector<node_pointer> v;
@@ -263,21 +248,94 @@ namespace ft
                 return (islegal);
             }
 
+            void            right_rotate (node_pointer node)
+            {
+                if (node == NULL)
+                    return;
+
+                node_pointer left_child = node->left;
+
+                if (node->parent != NULL)
+                {
+                    if (node->parent->left == node)
+                        node->parent->left = left_child;
+                    else
+                        node->parent->right = left_child;
+                }
+                if (left_child)
+                {
+                    left_child->parent = node->parent;
+
+                    if (left_child->right != NULL)
+                        left_child->right->parent = node;
+                    node->left = left_child->right;
+
+                    node->parent = left_child;
+                    left_child->right = node;
+                }
+                    if (node == _root)
+                        _root = left_child;
+            }
+            void            left_rotate (node_pointer node)
+            {
+                if (node == NULL)
+                    return;
+
+                node_pointer right_child = node->right;
+
+                if (node->parent != NULL)
+                {
+                    if (node->parent->right == node)
+                        node->parent->right = right_child;
+                    else
+                        node->parent->left = right_child;
+                }
+                if (right_child)
+                {
+                    right_child->parent = node->parent;
+
+                    if (right_child->left != NULL)
+                        right_child->left->parent = node;
+                    node->right = right_child->left;
+
+                    node->parent = right_child;
+                    right_child->left = node;
+                }
+                if (node == _root)
+                    _root = right_child;
+            }
+
+
+            int             get_node_depth (node_pointer node)
+            {
+                if (node == NULL)
+                    return (0);
+
+                int left_depth = get_node_depth(node->left);
+                int right_depth = get_node_depth(node->right);
+                return 1 + ((left_depth > right_depth) ? left_depth : right_depth);
+            }
+
+            int             get_node_depth_diff (node_pointer node)
+            {
+                return (get_node_depth(node->right) - get_node_depth(node->left));
+            }
+
             void            balance_tree (const node_pointer node)
             {
-                if (node == NULL) 
+                if (node == NULL)
                     return ;
 
-                int depth = node->get_depth();
-                if (depth == 2)
+                int depth_node = get_node_depth_diff(node);
+                if (depth_node == 2)
                 {
-                    if (node->right->get_depth() == -1)
+                    if (get_node_depth_diff(node->right) == -1)
                         right_rotate(node->right);
                     left_rotate(node);
                 }
-                else if (depth == -2)
+                else if (depth_node == -2)
                 {
-                    if (node->left->get_depth() == 1)
+                    if (get_node_depth_diff(node->left) == 1)
                         left_rotate(node->left);
                     right_rotate(node);
                 }
@@ -292,7 +350,6 @@ namespace ft
                     _root = new_node;
                 else
                     find_future_parent(new_node, true);
-                update_tree_depth(new_node);
                 balance_tree(new_node);
             }
 
@@ -304,7 +361,7 @@ namespace ft
 
                 for (size_t i = 0; i < deep; i++)
                     std::cout << "|   ";
-                std::cout << tmp->value << " - " << tmp->get_depth() << std::endl;
+                std::cout << tmp->value << " - " << tmp->_depth << std::endl;
                 print_tree(tmp->left, deep + 1);
                 print_tree(tmp->right, deep + 1);
             }

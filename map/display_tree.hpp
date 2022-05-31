@@ -20,12 +20,27 @@ namespace ft
 
         private:
 
+            int             get_node_depth (node_type *node)
+            {
+                if (node == NULL)
+                    return (0);
+
+                int left_depth = get_node_depth(node->left);
+                int right_depth = get_node_depth(node->right);
+                return 1 + ((left_depth > right_depth) ? left_depth : right_depth);
+            }
+
+            int             get_node_depth_diff (node_type *node)
+            {
+                return (get_node_depth(node->right) - get_node_depth(node->left));
+            }
+
             std::string get_value(node_type *n)
             {
                 static const std::string null_str = std::string(NULL_STR_DOT);
 
                 if (n)
-                    return (std::to_string(n->value.first) + std::string(" [") + std::to_string(n->get_depth()) + std::string("]"));
+                    return (std::to_string(n->value.first) + std::string(" [") + std::to_string(get_node_depth_diff(n)) + std::string("]"));
                 return (null_str);
             }
 

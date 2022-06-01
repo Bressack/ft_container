@@ -1,11 +1,11 @@
 all:
-	@ rm tree.dot
+	@ rm -f tree.dot
 	@ clang++ -I . main.cpp
 	@ # dot -Tpng tree.dot -o tree.png
 	@ ./a.out
 
 debug:
-	@ rm tree.dot
+	@ rm -f tree.dot
 	@ clang++ -g3 -I . main.cpp
 	@ # dot -Tpng tree.dot -o tree.png
 	@ lldb ./a.out

@@ -80,9 +80,22 @@ namespace ft
 
             void    destroy_node(node_pointer & node)
             {
-                if (node != NULL)
-                    delete(node);
-                node = NULL;
+                // ici on decoupe l'arbre en trois:
+                //  - l'arbre parent (dessus de la node a del)
+                //  - l'arbre enfant gauche de la node
+                //  - l'arbre enfant droite de la node
+
+
+                // get node depth
+                // if depth < 0
+                //     
+
+                // if depth >= 0
+
+
+                // if (node != NULL)
+                //     delete(node);
+                // node = NULL;
             }
 
             // destroy a node and all its childs

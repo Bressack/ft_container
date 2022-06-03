@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string>
 
 #include <iostream>
 #include <fstream>
@@ -15,8 +16,15 @@ namespace ft
     template < class T >
     class displaytree
     {
+        private:
+            std::string     fname;
+
         public:
             typedef T           node_type;
+
+            displaytree(std::string fname) { this->fname = fname; };
+            displaytree() { this->fname = std::string("tree"); };
+            ~displaytree() {};
 
         private:
 
@@ -101,10 +109,9 @@ namespace ft
                 // int		stream;
                 std::ofstream    stream;
 
-                remove("tree.dot");
-                remove("tree.png");
-                stream.open ("tree.dot");
-                // stream = open("/tmp/tree.dot", (O_CREAT | O_RDWR), 0644);
+                remove(std::string(this->fname + std::string(".dot")).c_str());
+                remove(std::string(this->fname + std::string(".png")).c_str());
+                stream.open (std::string(this->fname + std::string(".dot")).c_str());
                 if (!stream)
                 {
                     std::cout << C_G_MAGENTA << "warning:" << C_G_WHITE

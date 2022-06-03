@@ -21,7 +21,7 @@ namespace diff
 }
 
 enum NODE_KEY_COMPARE_RES {
-    SMALLER,
+    LOWER,
     HIGHER,
     NOTALLOCATED,
     EQUAL
@@ -75,27 +75,60 @@ namespace ft
             */
             node_pointer    create_node(const value_type & value, node_pointer parent = NULL)
             {
+                _size += 1;
                 return(new node_type(value, parent));
             }
 
             void    destroy_node(node_pointer & node)
             {
-                // ici on decoupe l'arbre en trois:
-                //  - l'arbre parent (dessus de la node a del)
-                //  - l'arbre enfant gauche de la node
-                //  - l'arbre enfant droite de la node
+                if (node != NULL)
+                    delete node;
+                node = NULL;
+            }
 
+            void    remove_node(const value_type & value)
+            {
+                remove_node(search(value));
+            }
 
-                // get node depth
-                // if depth < 0
-                //     
+            void    remove_node(node_pointer node)
+            {
+                if (node == NULL)
+                    return ;
 
-                // if depth >= 0
+                node_pointer left_save = node->left;
+                node_pointer right_save = node->right;
 
+                // On trouve le plus grand des plus petits.
+                node_pointer substitute = maximum(node->left);
 
-                // if (node != NULL)
-                //     delete(node);
-                // node = NULL;
+                // S'il n'y a pas de substitute, on escamote le node.
+                if (substitute == NULL)
+                {
+                    if (node == _root)
+                        _root = node->right;
+                    else if (node->parent->left == node)
+                        node->parent->left = node->right;
+                    else
+                        node->parent->right = node->right;
+                    if (node->right != NULL)
+                        node->right->parent = node->parent;
+                }
+                else	// J'ai un maximum des minima.
+                {
+                    node->value = substitute->value;
+                    if (substitute->parent->left == substitute)
+                        substitute->parent->left = substitute->left;
+                    else
+                        substitute->parent->right = substitute->left;
+                    if (substitute->left != NULL)
+                        substitute->left->parent = substitute->parent;
+                    node = substitute;
+                }
+                destroy_node(node);
+                _size -= 1;
+                balance_tree(left_save);
+                balance_tree(right_save);
             }
 
             // destroy a node and all its childs
@@ -114,12 +147,6 @@ namespace ft
             // deep copy a node with all its child and add it to the tree
             // void copy_node (node_pointer node) {}
 
-            // calculate the depth of a node
-            // int depth (const node_pointer node) const {}
-
-            // update the end node to point it to root and root parent point to it
-            // void update_end () {}
-
             // compare two nodes with their keys
             enum NODE_KEY_COMPARE_RES node_key_compare(node_pointer ref, node_pointer node)
             {
@@ -128,7 +155,7 @@ namespace ft
                 if (node->value.first > ref->value.first)
                     return (HIGHER);
                 if (node->value.first < ref->value.first)
-                    return (SMALLER);
+                    return (LOWER);
                 if (node->value.first == ref->value.first)
                     return (EQUAL);
                 return (NOTALLOCATED);
@@ -146,7 +173,7 @@ namespace ft
                         break ;
                     else if (diff == HIGHER)
                         tmp = tmp->right;
-                    else if (diff == SMALLER)
+                    else if (diff == LOWER)
                         tmp = tmp->left;
                     else if (diff == EQUAL)
                         return (tmp);
@@ -199,6 +226,9 @@ namespace ft
             // find a parent for a node
             node_pointer    find_future_parent (const node_pointer & node, bool assign = false)
             {
+                if (!node)
+                    return (NULL);
+
                 node_pointer tmp = _root;
                 enum NODE_KEY_COMPARE_RES res = NOTALLOCATED;
 
@@ -206,7 +236,7 @@ namespace ft
                 {
                     res = node_key_compare(tmp, node);
 
-                    if (res == SMALLER) {
+                    if (res == LOWER) {
                         if (!tmp->left) {
                             if (assign == true)
                             {
@@ -307,6 +337,7 @@ namespace ft
                     if (node == _root)
                         _root = left_child;
             }
+
             void            left_rotate (node_pointer node)
             {
                 if (node == NULL)
@@ -336,7 +367,6 @@ namespace ft
                     _root = right_child;
             }
 
-
             int             get_node_depth (node_pointer node)
             {
                 if (node == NULL)
@@ -349,6 +379,8 @@ namespace ft
 
             int             get_node_depth_diff (node_pointer node)
             {
+                if (node == NULL)
+                    return (0);
                 return (get_node_depth(node->right) - get_node_depth(node->left));
             }
 
@@ -358,13 +390,13 @@ namespace ft
                     return ;
 
                 int depth_node = get_node_depth_diff(node);
-                if (depth_node == 2)
+                if (depth_node >= 2)
                 {
                     if (get_node_depth_diff(node->right) == -1)
                         right_rotate(node->right);
                     left_rotate(node);
                 }
-                else if (depth_node == -2)
+                else if (depth_node <= -2)
                 {
                     if (get_node_depth_diff(node->left) == 1)
                         left_rotate(node->left);

@@ -1,12 +1,16 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
+#include "tree_iterator.hpp"
+#include "pair.hpp"
+
+
 namespace ft
 {
     template <class Key,
               class T,
               class Compare = std::less<Key>,
-              class Allocator = std::allocator<ft::pair<const Key, T>>>
+              class Allocator = std::allocator<ft::pair<const Key, T> > >
     class Map
     {
         protected:
@@ -22,8 +26,6 @@ namespace ft
             typedef typename allocator_type::size_type         size_type;
             typedef typename allocator_type::difference_type   difference_type;
 
-            typedef implementation - defined iterator;
-            typedef implementation - defined const_iterator;
             typedef std::reverse_iterator<iterator> reverse_iterator;
             typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -58,18 +60,18 @@ namespace ft
             size_type size() const;
             size_type max_size() const;
             mapped_type& operator[] (const key_type& k);
-            // single element (1)	
+            // single element (1)
             pair<iterator,bool> insert (const value_type& val);
-            // with hint (2)	
+            // with hint (2)
             iterator insert (iterator position, const value_type& val);
-            // range (3)	
+            // range (3)
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last);
-            // (1)	
+            // (1)
             void erase (iterator position);
-            // (2)	
+            // (2)
             size_type erase (const key_type& k);
-            // (3)	
+            // (3)
             void erase (iterator first, iterator last);
             void swap (map& x);
             void clear();

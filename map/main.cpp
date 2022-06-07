@@ -19,46 +19,65 @@ int main(void)
 
     ft::tree<int,int>    t;
 
-    // t.add(ft::pair<int,int>(42, 21));
-
     // int a[] = { 1,33,17,21,47,25,29,10,7,35,14,50,19,18,37,6,8,9,12,39,24,16,28,13,11,49,41,22,44,30,27,48,34,15,43,46,20,42,40,23,31,4,45,3,38,32,26,2,5,36 };
     // int a[] = { 1,3,6,2,8,5,7,9,4,0 };
     // int a[] = { 1,2,3 };
-    int a[2000] = { 0 };
+    int a[25] = { 0 };
 
     int len = sizeof(a) / sizeof(a[0]);
+    bool islegal;
 
+    int ind = 0;
     for (int i = 0; i < len; i++)
-        a[i] = i;
+    {
+        ind = rand() % len;
+        std::cout << "[ CREATE ] i:" << i << "|" << ind << std::endl;
+        a[i] = ind;
+    }
+    islegal = t.is_tree_legal();
+    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
 
     shuffle_array(&a[0], len);
 
     for (int i = 0; i < len; i++)
-        t.add(ft::pair<int,int>(rand() % len, 0));
+    {
+        ind = rand() % len;
+        std::cout << "[ INSERT ] i:" << i << "|" << ind << std::endl;
+        t.add(ft::pair<int,int>(ind, 0));
+    }
+    islegal = t.is_tree_legal();
+    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
 
-    for (int i = 0; i < len / 10; i++)
-        t.remove_node(ft::pair<int,int>(rand() % len, 0));
 
-    for (int i = 0; i < len / 10; i++)
-        t.add(ft::pair<int,int>(rand() % len, 0));
+    for (int i = 0; i < len; i++)
+    {
+        ind = rand() % len;
+        std::cout << "[ REMOVE ] i:" << i << "|" << ind << std::endl;
+        t.remove_node(ft::pair<int,int>(ind, 0));
+    }
+    islegal = t.is_tree_legal();
+    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
 
-    for (int i = 0; i < len / 10; i++)
-        t.remove_node(ft::pair<int,int>(rand() % len, 0));
 
-    for (int i = 0; i < len / 10; i++)
-        t.add(ft::pair<int,int>(rand() % len, 0));
+    for (int i = 0; i < len; i++)
+    {
+        ind = rand() % len;
+        std::cout << "[ INSERT ] i:" << i << "|" << ind << std::endl;
+        t.add(ft::pair<int,int>(ind, 0));
+    }
+    islegal = t.is_tree_legal();
+    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
 
-    for (int i = 0; i < len / 10; i++)
-        t.remove_node(ft::pair<int,int>(rand() % len, 0));
 
-    for (int i = 0; i < len / 10; i++)
-        t.add(ft::pair<int,int>(rand() % len, 0));
+    for (int i = 0; i < len; i++)
+    {
+        ind = rand() % len;
+        std::cout << "[ REMOVE ] i:" << i << "|" << ind << std::endl;
+        t.remove_node(ft::pair<int,int>(ind, 0));
+    }
+    islegal = t.is_tree_legal();
+    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
 
-    for (int i = 0; i < len / 10; i++)
-        t.remove_node(ft::pair<int,int>(rand() % len, 0));
-
-    for (int i = 0; i < len / 10; i++)
-        t.add(ft::pair<int,int>(rand() % len, 0));
 
 
     // const ft::pair<int,int> val_0(123, 0); t.remove_node(val_0);
@@ -71,8 +90,8 @@ int main(void)
     // const ft::pair<int,int> val_7(1999, 0); t.remove_node(val_7);
 
     // t.print_tree();
-    bool islegal = t.is_tree_legal();
+    islegal = t.is_tree_legal();
     std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
-    // t.display();
+    t.display();
     return (0);
 }

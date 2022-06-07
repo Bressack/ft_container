@@ -27,7 +27,6 @@ namespace ft
             ~displaytree() {};
 
         private:
-
             int             get_node_depth (node_type *node)
             {
                 if (node == NULL)

@@ -2,10 +2,6 @@
 
 namespace ft
 {
-    enum e_child {
-        RIGHT,
-        LEFT
-    };
 
     template < class T >
     class node
@@ -16,27 +12,19 @@ namespace ft
             node *      right;
             T           value;
 
-            // +1 if child come from right
-            // -1 if child come from left
-            // int         _depth;
-
         public:
 
             // (1) default
             node()
-            : parent(NULL), left(NULL), right(NULL), value(NULL)//, _depth(0)
+            : parent(NULL), left(NULL), right(NULL), value(NULL)
             {};
             // (2) fill
             node(const T & _value)
-            : parent(NULL), left(NULL), right(NULL), value(_value)//, _depth(0)
+            : parent(NULL), left(NULL), right(NULL), value(_value)
             {};
             // (3) fill and link to parent
             node(const T & _value, node<T> * _parent)
-            : parent(_parent), left(NULL), right(NULL), value(_value)//, _depth(0)
+            : parent(_parent), left(NULL), right(NULL), value(_value)
             {};
-
-            // int     get_depth(void) { return (_depth); }
-            // void    set_depth(int depth) { _depth = depth; }
-
     };
 }

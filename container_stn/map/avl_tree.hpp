@@ -28,7 +28,7 @@ class avl_tree
 
     typedef size_t                                  size_type;
 
-    typedef	typename allocator_type::template rebind<node_type>::other	node_alloc_type;
+    typedef typename allocator_type::template rebind<node_type>::other	node_alloc_type;
 
     class value_compare : public std::binary_function<value_type, value_type, bool>
     {

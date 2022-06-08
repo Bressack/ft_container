@@ -61,7 +61,7 @@ namespace ft
             size_type max_size() const;
             mapped_type& operator[] (const key_type& k);
             // single element (1)
-            pair<iterator,bool> insert (const value_type& val);
+            ft::pair<iterator,bool> insert (const value_type& val);
             // with hint (2)
             iterator insert (iterator position, const value_type& val);
             // range (3)
@@ -73,7 +73,7 @@ namespace ft
             size_type erase (const key_type& k);
             // (3)
             void erase (iterator first, iterator last);
-            void swap (map& x);
+            void swap (::map& x);
             void clear();
             key_compare key_comp() const;
             value_compare value_comp() const;
@@ -84,8 +84,8 @@ namespace ft
             const_iterator lower_bound (const key_type& k) const;
             iterator upper_bound (const key_type& k);
             const_iterator upper_bound (const key_type& k) const;
-            pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
-            pair<iterator,iterator>             equal_range (const key_type& k);
+            ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+            ft::pair<iterator,iterator>             equal_range (const key_type& k);
             allocator_type get_allocator() const;
     };
 }

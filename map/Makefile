@@ -1,12 +1,12 @@
 all:
 	@ rm -f tree.dot
-	@ clang++ -Werror -O0 -I . main.cpp
+	@ clang++ -Wall -Wextra -Werror -O0 -I . main.cpp
 	@ # dot -Tpng tree.dot -o tree.png
 	@ ./a.out
 
 debug:
 	@ rm -f tree.dot
-	@ clang++ -Werror -O0 -g3 -I . main.cpp
+	@ clang++ -Wall -Wextra -Werror -O0 -g3 -fsanitize=address -I . main.cpp
 	@ # dot -Tpng tree.dot -o tree.png
 	@ lldb ./a.out
 

@@ -11,8 +11,10 @@
 # include <memory>
 # include <functional>
 # include <stdio.h>
+# include <stdlib.h>
+# include <stdarg.h>
 
-# define TTEST(X) {std::cout << _TEST_ << "  " << X << std::endl;}
+# define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
 
 namespace ft
 {
@@ -75,7 +77,7 @@ namespace ft
             virtual ~tree() { /*clear_tree();*/ }
 
         /* ***************************************************************** *\
-        |                         METHODS DEFINITION                          |
+       |                         METHODS DEFINITION                            |
         \* ***************************************************************** */
 
         private:
@@ -104,55 +106,7 @@ namespace ft
 // 'ft::tree<int, int>::node_pointer (ft::tree<int, int>::*)(const ft::tree<int, int>::node_pointer &)'
 
         public:
-            node_pointer        lower_bound(const key_type & key)
-            {
-                node_pointer    tmp = _root;
-                node_pointer    kandida = NULL;
-
-                while (1)
-                {
-                    if (tmp == NULL)
-                        return (kandida);
-                    if (tmp->value.first > key)
-                        kandida = tmp;
-                    if (__compare(key, tmp) == true)
-                        tmp = tmp->left;
-                    else
-                        tmp = tmp->right;
-                }
-            }
-            node_pointer        upper_bound(const key_type & key)
-            {
-                node_pointer    tmp = _root;
-                node_pointer    kandida = NULL;
-
-                while (1)
-                {
-                    if (tmp == NULL)
-                        return (kandida);
-                    if (tmp->value.first >= key)
-                        kandida = tmp;
-                    if (__compare(key, tmp) == true)
-                        tmp = tmp->left;
-                    else
-                        tmp = tmp->right;
-                }
-            }
-            // capacity
-            bool                empty(void)
-            {
-                return (_size == 0);
-            }
-
-            size_type           size(void)
-            {
-                return (_size);
-            }
-            size_type           max_size(void)
-            {
-                return (_allocator.max_size());
-            }
-            // modifiers
+            // tools
             void                infix_apply(const node_pointer & node, node_pointer(tree::*f)(const node_pointer &))
             {
                 if (node == NULL)
@@ -163,6 +117,22 @@ namespace ft
                 if (node->right)
                     infix_apply(node->right, f);
             }
+
+            // capacity
+            bool                empty(void)
+            {
+                return (_size == 0);
+            }
+            size_type           size(void)
+            {
+                return (_size);
+            }
+            size_type           max_size(void)
+            {
+                return (_allocator.max_size());
+            }
+
+            // modifiers
             node_pointer        insert(const node_pointer & node)
             {
                 if (empty() == true) // tree is empty
@@ -193,27 +163,6 @@ namespace ft
                 return (insert(value_type(key, value)));
             }
 
-            // node_pointer        remove(node_pointer & node) // METHODS NOT OPTI :) pas ouf
-            // {
-            //     if (node == NULL)
-            //         return (NULL);
-
-            //     node_pointer left_save = node->left;
-            //     node_pointer right_save = node->right;
-
-            //     // detach the node of the tree
-            //     if (node->parent->left == node)
-            //         node->parent->left = NULL;
-            //     else
-            //         node->parent->right = NULL;
-            //     _size -= 1;
-            //     __deallocate_node(node);
-
-            //     // reinsert left and right childs
-            //     infix_apply(left_save, &tree::insert);
-            //     infix_apply(right_save, &tree::insert);
-            //     return (NULL);
-            // }
             node_pointer        remove(node_pointer & node)
             {
                 if (node == NULL)
@@ -274,11 +223,13 @@ namespace ft
             node_pointer        remove(value_type & value)
             {
                 node_pointer tmp = search(value);
+                TTEST("remove value {k:%d, v:%d}", value.first, value.second);
                 return (remove(tmp));
             }
             node_pointer        remove(key_type & key)
             {
                 node_pointer tmp = search(key);
+                TTEST("remove key %d", key);
                 return (remove(tmp));
             }
 
@@ -290,7 +241,6 @@ namespace ft
                 *a = *b;
                 *b = tmp;
             }
-
             void                clear_node(node_pointer & node)
             {
                 infix_apply(node, &__deallocate_node);
@@ -302,17 +252,49 @@ namespace ft
             }
 
             // accessors
-            // [1] search a node
+            node_pointer        lower_bound(const key_type & key)
+            {
+                node_pointer    tmp = _root;
+                node_pointer    kandida = NULL;
+
+                while (1)
+                {
+                    if (tmp == NULL)
+                        return (kandida);
+                    if (tmp->value.first > key)
+                        kandida = tmp;
+                    if (__compare(key, tmp) == true)
+                        tmp = tmp->left;
+                    else
+                        tmp = tmp->right;
+                }
+            }
+            node_pointer        upper_bound(const key_type & key)
+            {
+                node_pointer    tmp = _root;
+                node_pointer    kandida = NULL;
+
+                while (1)
+                {
+                    if (tmp == NULL)
+                        return (kandida);
+                    if (tmp->value.first >= key)
+                        kandida = tmp;
+                    if (__compare(key, tmp) == true)
+                        tmp = tmp->left;
+                    else
+                        tmp = tmp->right;
+                }
+            }
+
             node_pointer        search(const node_pointer & node) const
             {
                 return (search(node->value.first));
             }
-            // [2] search a value
             node_pointer        search(const value_type & value) const
             {
                 return (search(value.first));
             }
-            // [3] search a key
             node_pointer        search(const key_type & key) const
             {
                 node_pointer tmp = _root;
@@ -320,24 +302,25 @@ namespace ft
                 while (1)
                 {
                     if (tmp == NULL)
-                        {TTEST("return (NULL)");return (NULL);}
+                        {TTEST("no match found");return (NULL);}
                     if (tmp->value.first == key)
-                        {TTEST("return (tmp)");return (tmp);}
+                        {TTEST("node found: {k:%d, v:%d}", tmp->value.first, tmp->value.second);return (tmp);}
                     if (__compare(key, tmp) == true)
-                        {TTEST("tmp = tmp->left");tmp = tmp->left;}
+                        {TTEST("{add:%p, k:%d, v:%d} go left to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->left, tmp->left ? tmp->left->value.first : 0, tmp->left ? tmp->left->value.second : 0);tmp = tmp->left;}
                     else
-                        {TTEST("tmp = tmp->right");tmp = tmp->right;}
+                        {TTEST("{add:%p, k:%d, v:%d} go right to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->right, tmp->right ? tmp->right->value.first : 0, tmp->right ? tmp->right->value.second : 0);tmp = tmp->right;}
                 }
             }
 
-            node_pointer        minimum (node_pointer node) const
-            {
-                ;
-            }
-            node_pointer        maximum (node_pointer node) const
-            {
-                ;
-            }
+            // node_pointer        minimum (node_pointer node) const
+            // {
+            //     ;
+            // }
+
+            // node_pointer        maximum (node_pointer node) const
+            // {
+            //     ;
+            // }
 
             node_pointer        prev_value (node_pointer node) const
             {
@@ -361,7 +344,7 @@ namespace ft
             }
 
         private:
-            future_parent    __find_future_parent (const node_pointer & node) const
+            future_parent       __find_future_parent (const node_pointer & node) const
             {
                 node_pointer tmp = _root;
 
@@ -474,6 +457,7 @@ namespace ft
                     return (0);
                 return (__get_node_depth(node->right) - __get_node_depth(node->left));
             }
+
             bool                __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
             bool                __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
             bool                __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
@@ -512,13 +496,15 @@ namespace ft
             bool                __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
         // DEVTOOLS
-        public:
+        private:
             node_pointer        __content_print(const node_pointer & node)
             {
                 if (node)
                     std::cout << node->value.first << " ";
                 return (NULL);
             }
+
+        public:
             void                infix_content_print(void) // call
             {
                 infix_apply(_root, &tree::__content_print);

@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/mnt/nfs/homes/tharchen/Prog/ft_container'
+make: Leaving directory '/mnt/nfs/homes/tharchen/Prog/ft_container'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

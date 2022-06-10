@@ -10,6 +10,7 @@
 # include <vector>
 # include <memory>
 # include <functional>
+# include <stdio.h>
 
 namespace ft
 {
@@ -37,6 +38,7 @@ namespace ft
             typedef ft::pair<key_type, mapped_type>             value_type;
             typedef ft::node<value_type>                        node_type;
             typedef ft::node<value_type>*                       node_pointer;
+            typedef ft::pair<node_pointer, node_pointer*>       future_parent;
 
             // ALLOCATOR
             typedef Alloc                                       allocator_type;
@@ -67,7 +69,7 @@ namespace ft
         \* ***************************************************************** */
 
         public:
-            tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {infix_content_print();}
+            tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {}
             virtual ~tree() { /*clear_tree();*/ }
 
         /* ***************************************************************** *\
@@ -88,7 +90,7 @@ namespace ft
             void                __deallocate_node(node_pointer & node)
             {
                 if (node != NULL)
-                    _allocator.deallocate(node);
+                    _allocator.deallocate(node, sizeof(node_type));
                 node = NULL;
             }
 
@@ -117,11 +119,13 @@ namespace ft
             // modifiers
             void                infix_apply(const node_pointer & node, node_pointer(tree::*f)(const node_pointer &))
             {
-                // if (node->left)
-                //     infix_apply(node->left, f);
+                if (node == NULL)
+                    return ;
+                if (node->left)
+                    infix_apply(node->left, f);
                 (this->*f)(node);
-                // if (node->right)
-                    // infix_apply(node->right, f);
+                if (node->right)
+                    infix_apply(node->right, f);
             }
             node_pointer        insert(const node_pointer & node)
             {
@@ -129,10 +133,12 @@ namespace ft
                     _root = node;
                 else // tree is not empty
                 {
-                    node->parent = __find_future_parent(node);
-                    _size += 1;
+                    future_parent parent = __find_future_parent(node);
+                    node->parent = parent.first;
+                    *parent.second = node;
                     __balance_tree(node);
                 }
+                _size += 1;
                 return (node);
             }
             node_pointer        insert(const value_type & value)
@@ -140,7 +146,10 @@ namespace ft
                 // check if the tree already contain a node with a key equivalent, if so, return an pointer to the node
                 node_pointer tmp = search(value);
                 if (tmp != NULL)
+                {
+                    std::cout << "node already insered" << std::endl;
                     return (tmp);
+                }
                 return (insert(__allocate_node(value)));
             }
             node_pointer        insert(const key_type & key, const mapped_type & value)
@@ -148,8 +157,11 @@ namespace ft
                 return (insert(value_type(key, value)));
             }
 
-            node_pointer        remove(const node_pointer & node) // METHODS NOT OPTI :) pas ouf
+            node_pointer        remove(node_pointer & node) // METHODS NOT OPTI :) pas ouf
             {
+                if (node == NULL)
+                    return (NULL);
+
                 node_pointer left_save = node->left;
                 node_pointer right_save = node->right;
 
@@ -162,16 +174,20 @@ namespace ft
                 __deallocate_node(node);
 
                 // reinsert left and right childs
-                infix_apply(left_save, &insert);
-                infix_apply(right_save, &insert);
+                infix_apply(left_save, &tree::insert);
+                infix_apply(right_save, &tree::insert);
+                return (NULL);
             }
-            node_pointer        remove(const value_type & value)
+            node_pointer        remove(value_type & value)
             {
-                remove(search(value));
+                node_pointer tmp = search(value);
+                return (remove(tmp));
             }
-            node_pointer        remove(const key_type & key)
+            node_pointer        remove(key_type & key)
             {
-                remove(search(key));
+                node_pointer tmp = search(key);
+                std::cout << tmp << std::endl;
+                return (remove(tmp));
             }
 
             void                clear_node(node_pointer & node)
@@ -188,17 +204,29 @@ namespace ft
             // [1] search a node
             node_pointer        search(const node_pointer & node) const
             {
-                return (search(node->value->first));
+                return (search(node->value.first));
             }
             // [2] search a value
             node_pointer        search(const value_type & value) const
             {
-                return (search(value->first));
+                return (search(value.first));
             }
             // [3] search a key
             node_pointer        search(const key_type & key) const
             {
-                ;
+                node_pointer tmp = _root;
+
+                while (1)
+                {
+                    if (tmp == NULL)
+                        return (NULL);
+                    if (tmp->value.first == key)
+                        return (tmp);
+                    if (__compare(key, tmp) == true)
+                        tmp = tmp->left;
+                    else
+                        tmp = tmp->right;
+                }
             }
 
             node_pointer        minimum (node_pointer node) const
@@ -220,40 +248,163 @@ namespace ft
             }
 
         private:
-            node_pointer        __find_future_parent (const node_pointer & node) const
+            future_parent    __find_future_parent (const node_pointer & node) const
             {
-                ;
+                node_pointer tmp = _root;
+
+                while (1)
+                {
+                    if (__compare(node, tmp) == true)
+                    {
+                        if (tmp->left)
+                            tmp = tmp->left;
+                        else
+                            return (future_parent(tmp, &tmp->left));
+                    }
+                    else
+                    {
+                        if (tmp->right)
+                            tmp = tmp->right;
+                        else
+                            return (future_parent(tmp, &tmp->right));
+                    }
+                }
             }
             void                __right_rotate (node_pointer node)
             {
-                ;
+                if (node == NULL)
+                    return;
+
+                node_pointer left_child = node->left;
+
+                if (node->parent != NULL)
+                {
+                    if (node->parent->left == node)
+                        node->parent->left = left_child;
+                    else
+                        node->parent->right = left_child;
+                }
+                if (left_child)
+                {
+                    left_child->parent = node->parent;
+
+                    if (left_child->right != NULL)
+                        left_child->right->parent = node;
+                    node->left = left_child->right;
+
+                    node->parent = left_child;
+                    left_child->right = node;
+                }
+                    if (node == _root)
+                        _root = left_child;
             }
             void                __left_rotate (node_pointer node)
             {
-                ;
+                if (node == NULL)
+                    return;
+
+                node_pointer right_child = node->right;
+
+                if (node->parent != NULL)
+                {
+                    if (node->parent->right == node)
+                        node->parent->right = right_child;
+                    else
+                        node->parent->left = right_child;
+                }
+                if (right_child)
+                {
+                    right_child->parent = node->parent;
+
+                    if (right_child->left != NULL)
+                        right_child->left->parent = node;
+                    node->right = right_child->left;
+
+                    node->parent = right_child;
+                    right_child->left = node;
+                }
+                if (node == _root)
+                    _root = right_child;
             }
             void                __balance_tree (const node_pointer node)
             {
-                ;
+                if (node == NULL)
+                    return ;
+
+                int depth_node = __get_node_depth_diff(node);
+                if (depth_node >= 2)
+                {
+                    if (__get_node_depth_diff(node->right) == -1)
+                        __right_rotate(node->right);
+                    __left_rotate(node);
+                }
+                else if (depth_node <= -2)
+                {
+                    if (__get_node_depth_diff(node->left) == 1)
+                        __left_rotate(node->left);
+                    __right_rotate(node);
+                }
+                __balance_tree(node->parent);
             }
             int                 __get_node_depth (node_pointer node)
             {
-                ;
+                std::cout << "[ # ] " << node << std::endl;
+                if (node == NULL)
+                    return (0);
+
+                int left_depth = __get_node_depth(node->left);
+                int right_depth = __get_node_depth(node->right);
+                return 1 + ((left_depth > right_depth) ? left_depth : right_depth);
             }
             int                 __get_node_depth_diff (node_pointer node)
             {
-                ;
+                if (node == NULL)
+                    return (0);
+                return (__get_node_depth(node->right) - __get_node_depth(node->left));
             }
-            bool                __value_compare (const value_type & x, const value_type & y)
-            {
-                return (key_compare()(x->first, y->first));
-            }
+            bool                __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool                __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool                __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool                __compare (      node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool                __compare (const node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool                __compare (const node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool                __compare (      node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool                __compare (      node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool                __compare (const node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool                __compare (const node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool                __compare (      node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool                __compare (      node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool                __compare (const value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool                __compare (const value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool                __compare (      value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool                __compare (      value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool                __compare (const value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool                __compare (const value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool                __compare (      value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool                __compare (      value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool                __compare (const value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool                __compare (const value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool                __compare (      value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool                __compare (      value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool                __compare (const key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool                __compare (const key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool                __compare (      key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool                __compare (      key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool                __compare (const key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool                __compare (const key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool                __compare (      key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool                __compare (      key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool                __compare (const key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            bool                __compare (const key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
+            bool                __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            bool                __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
         // DEVTOOLS
         public:
             node_pointer        __content_print(const node_pointer & node)
             {
-                std::cout << node->value.first << " ";
+                if (node)
+                    std::cout << node->value.first << " ";
                 return (NULL);
             }
             void                infix_content_print(void) // call
@@ -288,7 +439,7 @@ namespace ft
                         islegal = false;
                         std::cout << "unreachable node -> " << (*it)->value.first << std::endl;
                     }
-                    int d = get_node_depth_diff(*it);
+                    int d = __get_node_depth_diff(*it);
                          if (d <  -2) depths[0] += 1;
                     else if (d == -2) depths[1] += 1;
                     else if (d == -1) depths[2] += 1;

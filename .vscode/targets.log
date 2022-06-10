@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jun 10 15:13:09 2022
+# Make data base, printed on Fri Jun 10 23:05:26 2022
 
 # Variables
 
@@ -41,13 +41,15 @@ CURDIR := /mnt/nfs/homes/tharchen/Prog/ft_container
 # makefile
 SHELL = /bin/sh
 # environment
+GDM_LANG = en
+# environment
 VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:180571
+JOURNAL_STREAM = 9:466340
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -67,15 +69,15 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/35966/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 39401
+MANAGERPID = 117342
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-97f8ff5b-fc99-435b-816a-2a2990c2f7ed.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-f1dc5d19-5d6d-4b40-8dd4-42c1c242c354.sock
 # environment
 VSCODE_CWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session2
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_35966_Sy7rdD
+KRB5CCNAME = FILE:/tmp/krb5cc_35966_4oJ5di
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -85,7 +87,7 @@ GPG_AGENT_INFO = /run/user/35966/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r8p14.42.fr:@/tmp/.ICE-unix/39870,unix/e1r8p14.42.fr:/tmp/.ICE-unix/39870
+SESSION_MANAGER = local/e1r13p9.42.fr:@/tmp/.ICE-unix/117778,unix/e1r13p9.42.fr:/tmp/.ICE-unix/117778
 # environment
 XDG_RUNTIME_DIR = /run/user/35966
 # environment
@@ -95,7 +97,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 6ec8311b54c44829afa1cc69120f26af
+INVOCATION_ID = 74fce0874c9d4c0783e280678dd1e13e
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -119,7 +121,7 @@ PWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 39829
+SSH_AGENT_PID = 117672
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -179,6 +181,8 @@ OLDPWD = /mnt/nfs/homes/tharchen
 # automatic
 *F = $(notdir $*)
 # environment
+LANGUAGE = en
+# environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
 VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.67.2-main.sock
@@ -209,11 +213,11 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/675b757e_08ed_4690_89e3_c5e667a1cbe3
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/67a5d7f6_198b_4905_8c44_6f4165050d61
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.79
+GNOME_TERMINAL_SERVICE = :1.80
 # default
 SUFFIXES := 
 # environment
@@ -231,9 +235,9 @@ TERM = xterm-256color
 # environment
 DOCKER_HOST = unix:///run/user/35966/docker.sock
 # environment
-VSCODE_PID = 40295
+VSCODE_PID = 118764
 # variable set hash-table stats:
-# Load=110/1024=11%, Rehash=0, Collisions=10/132=8%
+# Load=112/1024=11%, Rehash=0, Collisions=10/134=7%
 
 # Pattern-specific Variable Values
 
@@ -241,7 +245,7 @@ VSCODE_PID = 40295
 
 # Directories
 
-# . (device 60, inode 307364756): 9 files, no impossibilities.
+# . (device 59, inode 307364756): 9 files, no impossibilities.
 
 # 9 files, no impossibilities in 1 directories.
 
@@ -275,6 +279,7 @@ makefile:
 # Not a target:
 .DEFAULT:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -286,7 +291,6 @@ GNUmakefile:
 #  Failed to be updated.
 
 # files hash-table stats:
- 
 # Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
 # VPATH Search Paths
 
@@ -300,6 +304,6 @@ GNUmakefile:
 # strcache performance: lookups = 20 / hit rate = 15%
 # hash-table stats:
 # Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Fri Jun 10 15:13:09 2022
+# Finished Make data base on Fri Jun 10 23:05:26 2022
 
  

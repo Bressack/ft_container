@@ -12,6 +12,8 @@
 # include <functional>
 # include <stdio.h>
 
+# define TTEST(X) {std::cout << _TEST_ << "  " << X << std::endl;}
+
 namespace ft
 {
     template <class T>
@@ -102,6 +104,40 @@ namespace ft
 // 'ft::tree<int, int>::node_pointer (ft::tree<int, int>::*)(const ft::tree<int, int>::node_pointer &)'
 
         public:
+            node_pointer        lower_bound(const key_type & key)
+            {
+                node_pointer    tmp = _root;
+                node_pointer    kandida = NULL;
+
+                while (1)
+                {
+                    if (tmp == NULL)
+                        return (kandida);
+                    if (tmp->value.first > key)
+                        kandida = tmp;
+                    if (__compare(key, tmp) == true)
+                        tmp = tmp->left;
+                    else
+                        tmp = tmp->right;
+                }
+            }
+            node_pointer        upper_bound(const key_type & key)
+            {
+                node_pointer    tmp = _root;
+                node_pointer    kandida = NULL;
+
+                while (1)
+                {
+                    if (tmp == NULL)
+                        return (kandida);
+                    if (tmp->value.first >= key)
+                        kandida = tmp;
+                    if (__compare(key, tmp) == true)
+                        tmp = tmp->left;
+                    else
+                        tmp = tmp->right;
+                }
+            }
             // capacity
             bool                empty(void)
             {
@@ -157,25 +193,82 @@ namespace ft
                 return (insert(value_type(key, value)));
             }
 
-            node_pointer        remove(node_pointer & node) // METHODS NOT OPTI :) pas ouf
+            // node_pointer        remove(node_pointer & node) // METHODS NOT OPTI :) pas ouf
+            // {
+            //     if (node == NULL)
+            //         return (NULL);
+
+            //     node_pointer left_save = node->left;
+            //     node_pointer right_save = node->right;
+
+            //     // detach the node of the tree
+            //     if (node->parent->left == node)
+            //         node->parent->left = NULL;
+            //     else
+            //         node->parent->right = NULL;
+            //     _size -= 1;
+            //     __deallocate_node(node);
+
+            //     // reinsert left and right childs
+            //     infix_apply(left_save, &tree::insert);
+            //     infix_apply(right_save, &tree::insert);
+            //     return (NULL);
+            // }
+            node_pointer        remove(node_pointer & node)
             {
                 if (node == NULL)
                     return (NULL);
 
-                node_pointer left_save = node->left;
-                node_pointer right_save = node->right;
+                else if (node->left == NULL && node->right == NULL)
+                {
+                    // detach the node of the tree
+                    if (node->parent->left == node)
+                        node->parent->left = NULL;
+                    else
+                        node->parent->right = NULL;
+                    _size -= 1;
+                    __deallocate_node(node);
+                }
 
-                // detach the node of the tree
-                if (node->parent->left == node)
-                    node->parent->left = NULL;
-                else
-                    node->parent->right = NULL;
-                _size -= 1;
-                __deallocate_node(node);
+                else if (node->left && !node->right)
+                {
+                    if (node->parent->left == node)
+                        node->parent->left = node->left;
+                    else
+                        node->parent->right = node->left;
+                    _size -= 1;
+                    __deallocate_node(node);
+                }
 
-                // reinsert left and right childs
-                infix_apply(left_save, &tree::insert);
-                infix_apply(right_save, &tree::insert);
+                else if (node->right && !node->left)
+                {
+                    if (node->parent->left == node)
+                        node->parent->left = node->right;
+                    else
+                        node->parent->right = node->right;
+                    _size -= 1;
+                    __deallocate_node(node);
+                }
+
+                else if (node->right && node->left)
+                {
+                    int depth = __get_node_depth(node);
+
+                    if (depth < 0)
+                    {
+                        node_pointer prev = prev_value(node);
+                        swap(node, prev);
+                        _size -= 1;
+                        __deallocate_node(node);
+                    }
+                    else
+                    {
+                        node_pointer next = next_value(node);
+                        swap(node, next);
+                        _size -= 1;
+                        __deallocate_node(node);
+                    }
+                }
                 return (NULL);
             }
             node_pointer        remove(value_type & value)
@@ -186,8 +279,16 @@ namespace ft
             node_pointer        remove(key_type & key)
             {
                 node_pointer tmp = search(key);
-                std::cout << tmp << std::endl;
                 return (remove(tmp));
+            }
+
+            void                swap(node_pointer & a, node_pointer & b)
+            {
+                node_type   tmp;
+
+                tmp = *a;
+                *a = *b;
+                *b = tmp;
             }
 
             void                clear_node(node_pointer & node)
@@ -219,13 +320,13 @@ namespace ft
                 while (1)
                 {
                     if (tmp == NULL)
-                        return (NULL);
+                        {TTEST("return (NULL)");return (NULL);}
                     if (tmp->value.first == key)
-                        return (tmp);
+                        {TTEST("return (tmp)");return (tmp);}
                     if (__compare(key, tmp) == true)
-                        tmp = tmp->left;
+                        {TTEST("tmp = tmp->left");tmp = tmp->left;}
                     else
-                        tmp = tmp->right;
+                        {TTEST("tmp = tmp->right");tmp = tmp->right;}
                 }
             }
 
@@ -240,11 +341,23 @@ namespace ft
 
             node_pointer        prev_value (node_pointer node) const
             {
-                ;
+                if (node == NULL)
+                    return (NULL);
+                // first left then full right
+                node = node->left;
+                while (node->right)
+                    node = node->right;
+                return (node);
             }
             node_pointer        next_value (node_pointer node) const
             {
-                ;
+                if (node == NULL)
+                    return (NULL);
+                // first right then full left
+                node = node->right;
+                while (node->left)
+                    node = node->left;
+                return (node);
             }
 
         private:
@@ -348,7 +461,6 @@ namespace ft
             }
             int                 __get_node_depth (node_pointer node)
             {
-                std::cout << "[ # ] " << node << std::endl;
                 if (node == NULL)
                     return (0);
 

@@ -16,7 +16,7 @@ namespace ft
 
             // (1) default
             node()
-            : parent(NULL), left(NULL), right(NULL), value(NULL)
+            : parent(NULL), left(NULL), right(NULL)
             {};
             // (2) fill
             node(const T & _value)
@@ -26,5 +26,12 @@ namespace ft
             node(const T & _value, node<T> * _parent)
             : parent(_parent), left(NULL), right(NULL), value(_value)
             {};
+            node &operator=(const node* & other)
+            {
+                parent = other->parent;
+                left = other->left;
+                right = other->right;
+                return (*this);
+            };
     };
 }

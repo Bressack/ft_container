@@ -19,18 +19,16 @@ void    info(ft::tree<int,int> & t)
     std::cout << "\nmax_size: " << t.max_size() << std::endl;
 }
 
+
+typedef ft::tree<int,int> tree_type;
 int main(void)
 {
     srand(time(NULL));
 
-    ft::tree<int,int>    t;
+    tree_type    t;
 
     info(t);
-    // int a[] = { 1,33,17,21,47,25,29,10,7,35,14,50,19,18,37,6,8,9,12,39,24,16,28,13,11,49,41,22,44,30,27,48,34,15,43,46,20,42,40,23,31,4,45,3,38,32,26,2,5,36 };
-    // int a[] = { 1,3,6,2,8,5,7,9,4,0 };
-    // int a[] = { 1,2,3 };
 
-    std::cout << "debug: " << __LINE__ << std::endl;
     # define LEN 40
 
     int a[LEN] = { 0 };
@@ -46,7 +44,11 @@ int main(void)
         t.insert(a[i], 0);
     }
     info(t);
-    int key = 1;
+    // int key = 19;
+    // tree_type::node_pointer kandida = t.lower_bound(key);
+    // std::cout << kandida->value.first << std::endl;
+
+    int key = 20;
     std::cout << "debug: " << __LINE__ << std::endl;
     t.remove(key);
     info(t);

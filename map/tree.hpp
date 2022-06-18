@@ -168,52 +168,131 @@ namespace ft
                 if (node == NULL)
                     return (NULL);
 
-                else if (node->left == NULL && node->right == NULL)
-                {
+                else if (node->left == NULL && node->right == NULL) {
+                    TTEST("feuille")
+                    /* feuille
+                    |
+                    |   if node is not root:
+                    |       [ ]
+                    |      /   \
+                    |   [X]     [ ]
+                    |
+                    |   if node is root:
+                    |   [X]
+                    */
                     // detach the node of the tree
-                    if (node->parent->left == node)
-                        node->parent->left = NULL;
-                    else
-                        node->parent->right = NULL;
+                    if (node->parent)
+                    {
+                        if (node->parent->left == node)
+                            node->parent->left = NULL;
+                        else
+                            node->parent->right = NULL;
+                    }
+                    else // (_root == node)
+                        _root = NULL;
+                    _size -= 1;
+                    __deallocate_node(node);
+                }
+                else if (node->left && !node->right) {
+                    TTEST("only left child")
+                    /* only left child
+                    |
+                    |   if node is not root:
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [X]
+                    |           /
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [ ]
+                    |
+                    |   if node is root:
+                    |           [X]
+                    |          /
+                    |       [ ]
+                    |      /   \
+                    |   [ ]     [ ]
+                    */
+                    if (node->parent)
+                    {
+                        if (node->parent->left == node)
+                            node->parent->left = node->left;
+                        else
+                            node->parent->right = node->left;
+                    }
+                    else // (_root == node)
+                        _root = node->left;
                     _size -= 1;
                     __deallocate_node(node);
                 }
 
-                else if (node->left && !node->right)
-                {
-                    if (node->parent->left == node)
-                        node->parent->left = node->left;
-                    else
-                        node->parent->right = node->left;
+                else if (node->right && !node->left) {
+                    TTEST("only right child")
+                    /* only right child
+                    |
+                    |   if node is not root:
+                    |        [ ]
+                    |       /   \
+                    |    [X]     [ ]
+                    |       \
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [ ]
+                    |
+                    |   if node is root:
+                    |   [X]
+                    |      \
+                    |       [ ]
+                    |      /   \
+                    |   [ ]     [ ]
+                    */
+                    if (node->parent)
+                    {
+                        if (node->parent->left == node)
+                            node->parent->left = node->right;
+                        else
+                            node->parent->right = node->right;
+                    }
+                    else // (_root == node)
+                        _root = node->right;
                     _size -= 1;
                     __deallocate_node(node);
                 }
 
-                else if (node->right && !node->left)
-                {
-                    if (node->parent->left == node)
-                        node->parent->left = node->right;
-                    else
-                        node->parent->right = node->right;
-                    _size -= 1;
-                    __deallocate_node(node);
-                }
-
-                else if (node->right && node->left)
-                {
+                else if (node->right && node->left) {
+                    TTEST("two child")
+                    /* two child
+                    |
+                    |   if node is not root:
+                    |        [ ]
+                    |       /   \
+                    |    [X]     [ ]
+                    |   /   \
+                    |[ ]     [ ]
+                    |   if node is root:
+                    |        [X]
+                    |       /   \
+                    |    [ ]     [ ]
+                    */
                     int depth = __get_node_depth(node);
 
                     if (depth < 0)
                     {
                         node_pointer prev = prev_value(node);
+                        prev->left = node->left;
+                        prev->right = node->right;
                         swap(node, prev);
+                        _root = prev;
                         _size -= 1;
                         __deallocate_node(node);
                     }
                     else
                     {
                         node_pointer next = next_value(node);
+                        next->left = node->left;
+                        next->right = node->right;
                         swap(node, next);
+                        _root = next;
                         _size -= 1;
                         __deallocate_node(node);
                     }
@@ -235,11 +314,17 @@ namespace ft
 
             void                swap(node_pointer & a, node_pointer & b)
             {
-                node_type   tmp;
+                node_pointer   t_p = a->parent;
+                node_pointer   t_l = a->left;
+                node_pointer   t_r = a->right;
 
-                tmp = *a;
-                *a = *b;
-                *b = tmp;
+                a->parent = b->parent;
+                a->left = b->left;
+                a->right = b->right;
+
+                b->parent = t_p;
+                b->left = t_l;
+                b->right = t_r;
             }
             void                clear_node(node_pointer & node)
             {
@@ -328,8 +413,9 @@ namespace ft
                     return (NULL);
                 // first left then full right
                 node = node->left;
-                while (node->right)
-                    node = node->right;
+                if (node)
+                    while (node->right)
+                        node = node->right;
                 return (node);
             }
             node_pointer        next_value (node_pointer node) const
@@ -338,8 +424,9 @@ namespace ft
                     return (NULL);
                 // first right then full left
                 node = node->right;
-                while (node->left)
-                    node = node->left;
+                if (node)
+                    while (node->left)
+                        node = node->left;
                 return (node);
             }
 

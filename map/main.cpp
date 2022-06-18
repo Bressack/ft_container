@@ -37,21 +37,22 @@ int main(void)
     std::cout << "debug: " << __LINE__ << std::endl;
 
     // int len = sizeof(a) / sizeof(a[0]);
-    bool islegal;
+    // bool islegal;
 
     for (int i = 0 ; i < LEN ; i++)
     {
         t.insert(a[i], 0);
     }
     info(t);
-
+    // t.display();
     int key = 20;
     std::cout << "debug: " << __LINE__ << std::endl;
     t.remove(key);
-    info(t);
-
-    islegal = t.is_tree_legal();
-    std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
+    // info(t);
     t.display();
+
+    // islegal = t.is_tree_legal();
+    // std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;
+    // t.display();
     return (0);
 }

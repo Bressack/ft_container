@@ -281,8 +281,10 @@ namespace ft
                         node_pointer prev = prev_value(node);
                         prev->left = node->left;
                         prev->right = node->right;
-                        swap(node, prev);
-                        _root = prev;
+                        prev->parent = node->parent;
+                        // swap(node, prev);
+                        if (node == _root)
+                            _root = prev;
                         _size -= 1;
                         __deallocate_node(node);
                     }
@@ -291,8 +293,10 @@ namespace ft
                         node_pointer next = next_value(node);
                         next->left = node->left;
                         next->right = node->right;
-                        swap(node, next);
-                        _root = next;
+                        next->parent = node->parent;
+                        // swap(node, next);
+                        if (node == _root)
+                            _root = next;
                         _size -= 1;
                         __deallocate_node(node);
                     }

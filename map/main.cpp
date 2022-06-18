@@ -7,20 +7,20 @@
 #include <bits/stdc++.h>
 
 typedef int* int_arr;
+typedef ft::tree<int,int> tree_type;
+
 
 // Shuffle array
 void shuffle_array(int * arr, int n, unsigned int seed = 0)
 { std::shuffle(arr, arr + n, std::default_random_engine(seed)); }
 
-void    info(ft::tree<int,int> & t)
+void    info(tree_type & t)
 {
     std::cout << "info: emtpy: " << t.empty() << ", size: " << t.size() << ", infix: ";
     t.infix_content_print();
     std::cout << "\nmax_size: " << t.max_size() << std::endl;
 }
 
-
-typedef ft::tree<int,int> tree_type;
 int main(void)
 {
     srand(time(NULL));

@@ -119,15 +119,15 @@ namespace ft
             }
 
             // capacity
-            bool                empty(void)
+            inline bool         empty(void)
             {
                 return (_size == 0);
             }
-            size_type           size(void)
+            inline size_type    size(void)
             {
                 return (_size);
             }
-            size_type           max_size(void)
+            inline size_type    max_size(void)
             {
                 return (_allocator.max_size());
             }
@@ -391,14 +391,25 @@ namespace ft
                 while (1)
                 {
                     if (tmp == NULL)
-                        {TTEST("no match found");return (NULL);}
+                        return (NULL);
                     if (tmp->value.first == key)
-                        {TTEST("node found: {k:%d, v:%d}", tmp->value.first, tmp->value.second);return (tmp);}
+                        return (tmp);
                     if (__compare(key, tmp) == true)
-                        {TTEST("{add:%p, k:%d, v:%d} go left to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->left, tmp->left ? tmp->left->value.first : 0, tmp->left ? tmp->left->value.second : 0);tmp = tmp->left;}
+                        tmp = tmp->left;
                     else
-                        {TTEST("{add:%p, k:%d, v:%d} go right to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->right, tmp->right ? tmp->right->value.first : 0, tmp->right ? tmp->right->value.second : 0);tmp = tmp->right;}
+                        tmp = tmp->right;
                 }
+                // while (1)
+                // {
+                //     if (tmp == NULL)
+                //         {TTEST("no match found");return (NULL);}
+                //     if (tmp->value.first == key)
+                //         {TTEST("node found: {k:%d, v:%d}", tmp->value.first, tmp->value.second);return (tmp);}
+                //     if (__compare(key, tmp) == true)
+                //         {TTEST("{add:%p, k:%d, v:%d} go left to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->left, tmp->left ? tmp->left->value.first : 0, tmp->left ? tmp->left->value.second : 0);tmp = tmp->left;}
+                //     else
+                //         {TTEST("{add:%p, k:%d, v:%d} go right to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->right, tmp->right ? tmp->right->value.first : 0, tmp->right ? tmp->right->value.second : 0);tmp = tmp->right;}
+                // }
             }
 
             // node_pointer        minimum (node_pointer node) const

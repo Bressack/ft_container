@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jun 10 23:05:26 2022
+# Make data base, printed on Sat Jun 18 14:21:50 2022
 
 # Variables
 
@@ -49,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:466340
+JOURNAL_STREAM = 9:1558003
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -69,15 +69,15 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/35966/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 117342
+MANAGERPID = 176899
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-f1dc5d19-5d6d-4b40-8dd4-42c1c242c354.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-a07b797b-2f1e-4b28-9ac3-ace660122561.sock
 # environment
 VSCODE_CWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session2
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session6
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_35966_4oJ5di
+KRB5CCNAME = FILE:/tmp/krb5cc_35966_GOYQIc
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -87,7 +87,7 @@ GPG_AGENT_INFO = /run/user/35966/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r13p9.42.fr:@/tmp/.ICE-unix/117778,unix/e1r13p9.42.fr:/tmp/.ICE-unix/117778
+SESSION_MANAGER = local/e1r8p11.clusters.42paris.fr:@/tmp/.ICE-unix/177347,unix/e1r8p11.clusters.42paris.fr:/tmp/.ICE-unix/177347
 # environment
 XDG_RUNTIME_DIR = /run/user/35966
 # environment
@@ -97,7 +97,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 74fce0874c9d4c0783e280678dd1e13e
+INVOCATION_ID = f544fdf3d1c8420a98713bdecf5209b6
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -121,7 +121,7 @@ PWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 117672
+SSH_AGENT_PID = 177268
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -133,7 +133,7 @@ HOME = /mnt/nfs/homes/tharchen
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/tharchen/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/tharchen/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 LOGNAME = tharchen
 # environment
@@ -185,7 +185,7 @@ LANGUAGE = en
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.67.2-main.sock
+VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.68.1-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -213,11 +213,11 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/67a5d7f6_198b_4905_8c44_6f4165050d61
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/0558c93e_67f9_4014_ab62_2d0ba8b9696f
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.80
+GNOME_TERMINAL_SERVICE = :1.76
 # default
 SUFFIXES := 
 # environment
@@ -235,7 +235,7 @@ TERM = xterm-256color
 # environment
 DOCKER_HOST = unix:///run/user/35966/docker.sock
 # environment
-VSCODE_PID = 118764
+VSCODE_PID = 178406
 # variable set hash-table stats:
 # Load=112/1024=11%, Rehash=0, Collisions=10/134=7%
 
@@ -245,7 +245,7 @@ VSCODE_PID = 118764
 
 # Directories
 
-# . (device 59, inode 307364756): 9 files, no impossibilities.
+# . (device 56, inode 307364756): 9 files, no impossibilities.
 
 # 9 files, no impossibilities in 1 directories.
 
@@ -304,6 +304,6 @@ GNUmakefile:
 # strcache performance: lookups = 20 / hit rate = 15%
 # hash-table stats:
 # Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Fri Jun 10 23:05:26 2022
+# Finished Make data base on Sat Jun 18 14:21:50 2022
 
  

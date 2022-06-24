@@ -29,7 +29,7 @@ namespace ft
                 class T,
                 class Alloc = std::allocator<ft::node<ft::pair<K, T> > >,
                 class Compare = ft::less<K>
-            >
+             >
     class tree
     {
         /* ***************************************************************** *\
@@ -135,10 +135,15 @@ namespace ft
             // modifiers
             node_pointer        insert(const node_pointer & node)
             {
+                printf("enter insert\n");
                 if (empty() == true) // tree is empty
+                {
                     _root = node;
+                    printf("tree empty - %p - %p\n", _root, node);
+                }
                 else // tree is not empty
                 {
+                    printf("tree not empty\n");
                     future_parent parent = __find_future_parent(node);
                     node->parent = parent.first;
                     *parent.second = node;

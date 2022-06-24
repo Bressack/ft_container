@@ -33,7 +33,11 @@ int main(void)
 
     int a[LEN] = { 0 };
     for (int i = 0 ; i < LEN ; i++) { a[i] = i; }
+    for (int i = 0 ; i < LEN ; i++) { std::cout << a[i] << ','; }
+    std::cout << std::endl;
     shuffle_array(a, LEN, 42);
+    for (int i = 0 ; i < LEN ; i++) { std::cout << a[i] << ','; }
+    std::cout << std::endl;
     std::cout << "debug: " << __LINE__ << std::endl;
 
     // int len = sizeof(a) / sizeof(a[0]);
@@ -41,7 +45,11 @@ int main(void)
 
     for (int i = 0 ; i < LEN ; i++)
     {
+        std::cout << "=================================================" << std::endl;
+        info(t);
         t.insert(a[i], 0);
+        info(t);
+        std::cout << "=================================================" << std::endl;
     }
     info(t);
     // t.display();

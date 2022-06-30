@@ -74,28 +74,24 @@ namespace ft
 
         public:
             tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {}
-            virtual ~tree() { /*clear_tree();*/ }
+            virtual ~tree() { clear_tree(); }
 
         /* ***************************************************************** *\
-       |                         METHODS DEFINITION                            |
+        |                        METHODS DEFINITION                           |
         \* ***************************************************************** */
 
         private:
         // allocations
             node_pointer        __allocate_node(const value_type & value, node_pointer parent = NULL)
             {
-                node_pointer node;
-
-                node = _allocator.allocate(1);
-                node->value = value;
-                node->parent = parent;
+                node_pointer node = _allocator.allocate(1);
+                _allocator.construct(node, node_type(value, parent));
                 return (node);
             }
-            void                __deallocate_node(node_pointer & node)
+            void                __deallocate_node(const node_pointer & node)
             {
                 if (node != NULL)
                     _allocator.deallocate(node, sizeof(node_type));
-                node = NULL;
             }
 
 
@@ -107,7 +103,7 @@ namespace ft
 
         public:
             // tools
-            void                infix_apply(const node_pointer & node, node_pointer(tree::*f)(const node_pointer &))
+            void                infix_apply(const node_pointer node, node_pointer(tree::*f)(const node_pointer &))
             {
                 if (node == NULL)
                     return ;
@@ -135,7 +131,7 @@ namespace ft
             // modifiers
             node_pointer        insert(const node_pointer & node)
             {
-                printf("enter insert\n");
+                printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
                 if (empty() == true) // tree is empty
                 {
                     _root = node;
@@ -154,6 +150,7 @@ namespace ft
             }
             node_pointer        insert(const value_type & value)
             {
+                printf(C_G_GREEN "insert (value)\n" C_RES);
                 // check if the tree already contain a node with a key equivalent, if so, return an pointer to the node
                 node_pointer tmp = search(value);
                 if (tmp != NULL)
@@ -161,10 +158,12 @@ namespace ft
                     std::cout << "node already insered" << std::endl;
                     return (tmp);
                 }
-                return (insert(__allocate_node(value)));
+                node_pointer n = __allocate_node(value);
+                return (insert(n));
             }
             node_pointer        insert(const key_type & key, const mapped_type & value)
             {
+                printf(C_G_GREEN "insert (key=%d, val=%d)\n" C_RES, key, value);
                 return (insert(value_type(key, value)));
             }
 
@@ -337,7 +336,13 @@ namespace ft
             }
             void                clear_node(node_pointer & node)
             {
-                infix_apply(node, &__deallocate_node);
+                if (node == NULL)
+                    return ;
+                if (node->left)
+                    clear_node(node->left);
+                __deallocate_node(node);
+                if (node->right)
+                    clear_node(node->right);
                 node = NULL;
             }
             void                clear_tree(void)

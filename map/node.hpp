@@ -25,7 +25,7 @@ namespace ft
             // (3) fill and link to parent
             node(const T & _value, node<T> * _parent)
             : parent(_parent), left(NULL), right(NULL), value(_value)
-            {};
+            {printf(C_G_RED "YES\n" C_RES);};
             node &operator=(const node* & other)
             {
                 parent = other->parent;

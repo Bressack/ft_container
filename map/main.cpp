@@ -16,7 +16,7 @@ void shuffle_array(int * arr, int n, unsigned int seed = 0)
 
 void    info(tree_type & t)
 {
-    std::cout << "info: emtpy: " << t.empty() << ", size: " << t.size() << ", infix: ";
+    std::cout << "info: empty: " << t.empty() << ", size: " << t.size() << ", infix: ";
     t.infix_content_print();
     std::cout << "\nmax_size: " << t.max_size() << std::endl;
 }
@@ -43,19 +43,21 @@ int main(void)
     // int len = sizeof(a) / sizeof(a[0]);
     // bool islegal;
 
+    printf(C_G_GREEN "insert loop begin\n" C_RES);
     for (int i = 0 ; i < LEN ; i++)
     {
-        std::cout << "=================================================" << std::endl;
-        info(t);
+        printf(C_G_GREEN "insert loop -> %d\n" C_RES, a[i]);
+        // std::cout << "=================================================" << std::endl;
+        // info(t);
         t.insert(a[i], 0);
-        info(t);
-        std::cout << "=================================================" << std::endl;
+        // info(t);
+        // std::cout << "=================================================" << std::endl;
     }
-    info(t);
+    // info(t);
     // t.display();
-    int key = 20;
-    std::cout << "debug: " << __LINE__ << std::endl;
-    t.remove(key);
+    // int key = 20;
+    // std::cout << "debug: " << __LINE__ << std::endl;
+    // t.remove(key);
     // info(t);
     t.display();
 

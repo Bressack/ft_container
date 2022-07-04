@@ -167,6 +167,20 @@ namespace ft
                 return (insert(value_type(key, value)));
             }
 
+            node_pointer        detach_node_from_parent(node_pointer node)
+            {
+                if (node->parent)
+                {
+                    if (node->parent->left == node)
+                        node->parent->left = NULL;
+                    else
+                        node->parent->right = NULL;
+                    return (node);
+                }
+                else
+                    return (NULL);
+            }
+
             node_pointer        remove(node_pointer & node)
             {
                 if (node == NULL)
@@ -185,14 +199,7 @@ namespace ft
                     |   [X]
                     */
                     // detach the node of the tree
-                    if (node->parent)
-                    {
-                        if (node->parent->left == node)
-                            node->parent->left = NULL;
-                        else
-                            node->parent->right = NULL;
-                    }
-                    else // (_root == node)
+                    if (detach_node_from_parent(node) == NULL)
                         _root = NULL;
                     _size -= 1;
                     __deallocate_node(node);
@@ -217,14 +224,7 @@ namespace ft
                     |      /   \
                     |   [ ]     [ ]
                     */
-                    if (node->parent)
-                    {
-                        if (node->parent->left == node)
-                            node->parent->left = node->left;
-                        else
-                            node->parent->right = node->left;
-                    }
-                    else // (_root == node)
+                    if (detach_node_from_parent(node) == NULL)
                         _root = node->left;
                     _size -= 1;
                     __deallocate_node(node);
@@ -250,14 +250,7 @@ namespace ft
                     |      /   \
                     |   [ ]     [ ]
                     */
-                    if (node->parent)
-                    {
-                        if (node->parent->left == node)
-                            node->parent->left = node->right;
-                        else
-                            node->parent->right = node->right;
-                    }
-                    else // (_root == node)
+                    if (detach_node_from_parent(node) == NULL)
                         _root = node->right;
                     _size -= 1;
                     __deallocate_node(node);
@@ -283,10 +276,12 @@ namespace ft
                     if (depth < 0)
                     {
                         node_pointer prev = prev_value(node);
+                        if (prev->parent == node)
+                            std::cout << "MAURIAAACC" << std::endl;
+                        detach_node_from_parent(prev);
                         prev->left = node->left;
                         prev->right = node->right;
                         prev->parent = node->parent;
-                        // swap(node, prev);
                         if (node == _root)
                             _root = prev;
                         _size -= 1;
@@ -295,10 +290,12 @@ namespace ft
                     else
                     {
                         node_pointer next = next_value(node);
+                        if (next->parent == node)
+                            std::cout << "MAURIAAACC" << std::endl;
+                        detach_node_from_parent(next);
                         next->left = node->left;
                         next->right = node->right;
                         next->parent = node->parent;
-                        // swap(node, next);
                         if (node == _root)
                             _root = next;
                         _size -= 1;
@@ -409,28 +406,7 @@ namespace ft
                     else
                         tmp = tmp->right;
                 }
-                // while (1)
-                // {
-                //     if (tmp == NULL)
-                //         {TTEST("no match found");return (NULL);}
-                //     if (tmp->value.first == key)
-                //         {TTEST("node found: {k:%d, v:%d}", tmp->value.first, tmp->value.second);return (tmp);}
-                //     if (__compare(key, tmp) == true)
-                //         {TTEST("{add:%p, k:%d, v:%d} go left to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->left, tmp->left ? tmp->left->value.first : 0, tmp->left ? tmp->left->value.second : 0);tmp = tmp->left;}
-                //     else
-                //         {TTEST("{add:%p, k:%d, v:%d} go right to -> {add:%p, k:%d, v:%d} ", tmp, tmp ? tmp->value.first : 0, tmp ? tmp->value.second : 0, tmp->right, tmp->right ? tmp->right->value.first : 0, tmp->right ? tmp->right->value.second : 0);tmp = tmp->right;}
-                // }
             }
-
-            // node_pointer        minimum (node_pointer node) const
-            // {
-            //     ;
-            // }
-
-            // node_pointer        maximum (node_pointer node) const
-            // {
-            //     ;
-            // }
 
             node_pointer        prev_value (node_pointer node) const
             {
@@ -624,6 +600,11 @@ namespace ft
             void                display(void)
             {
                 _dt.tree_draw(_root);
+            }
+            void                display(std::string fname)
+            {
+                ft::displaytree<node_type>  __dt(fname);
+                __dt.tree_draw(_root);
             }
             void                tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
             {

@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun 30 14:53:21 2022
+# Make data base, printed on Mon Jul  4 10:10:01 2022
 
 # Variables
 
@@ -39,15 +41,13 @@ CURDIR := /mnt/nfs/homes/tharchen/Prog/ft_container
 # makefile
 SHELL = /bin/sh
 # environment
-GDM_LANG = en
-# environment
 VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:121094
+JOURNAL_STREAM = 9:59099
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -67,15 +67,15 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/35966/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 21150
+MANAGERPID = 4985
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-e7d76257-d75d-4358-91b8-7c15715b6be5.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-8e72061e-336b-44e8-b5c7-3b26c2998351.sock
 # environment
 VSCODE_CWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_35966_E99Stw
+KRB5CCNAME = FILE:/tmp/krb5cc_35966_65wDfo
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -85,7 +85,7 @@ GPG_AGENT_INFO = /run/user/35966/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r8p10.42.fr:@/tmp/.ICE-unix/21646,unix/e1r8p10.42.fr:/tmp/.ICE-unix/21646
+SESSION_MANAGER = local/e1r13p5.clusters.42paris.fr:@/tmp/.ICE-unix/5508,unix/e1r13p5.clusters.42paris.fr:/tmp/.ICE-unix/5508
 # environment
 XDG_RUNTIME_DIR = /run/user/35966
 # environment
@@ -95,7 +95,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 82aac25288a64fb3bdcb59177f68e287
+INVOCATION_ID = 4fe7582b7e01431c8998b27545562fc4
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -119,7 +119,7 @@ PWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 21610
+SSH_AGENT_PID = 5472
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -155,7 +155,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SHLVL = 1
+SHLVL = 2
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -173,13 +173,11 @@ LESS = -R
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /mnt/nfs/homes/tharchen/Prog/ft_container/map
+OLDPWD = /mnt/nfs/homes/tharchen
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
-# environment
-LANGUAGE = en
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
@@ -211,11 +209,11 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/adcbe4e3_e471_4489_ac17_9f878af752b6
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d6bead71_f812_4d59_99f1_5f2b2a804e80
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.78
+GNOME_TERMINAL_SERVICE = :1.79
 # default
 SUFFIXES := 
 # environment
@@ -233,9 +231,9 @@ TERM = xterm-256color
 # environment
 DOCKER_HOST = unix:///run/user/35966/docker.sock
 # environment
-VSCODE_PID = 31329
+VSCODE_PID = 7227
 # variable set hash-table stats:
-# Load=112/1024=11%, Rehash=0, Collisions=10/134=7%
+# Load=110/1024=11%, Rehash=0, Collisions=10/132=8%
 
 # Pattern-specific Variable Values
 
@@ -243,7 +241,7 @@ VSCODE_PID = 31329
 
 # Directories
 
-# . (device 58, inode 216547372): 9 files, no impossibilities.
+# . (device 58, inode 307364756): 9 files, no impossibilities.
 
 # 9 files, no impossibilities in 1 directories.
 
@@ -277,13 +275,11 @@ makefile:
 # Not a target:
 .DEFAULT:
 #  Implicit rule search has not been done.
- 
-make: *** No rule to make target 'all'.  Stop.
-
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
+ 
 GNUmakefile:
 #  Implicit rule search has been done.
 #  File does not exist.
@@ -304,6 +300,6 @@ GNUmakefile:
 # strcache performance: lookups = 20 / hit rate = 15%
 # hash-table stats:
 # Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Thu Jun 30 14:53:21 2022
+# Finished Make data base on Mon Jul  4 10:10:01 2022
 
  

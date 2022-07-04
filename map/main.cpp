@@ -55,11 +55,18 @@ int main(void)
     }
     // info(t);
     // t.display();
-    // int key = 20;
-    // std::cout << "debug: " << __LINE__ << std::endl;
-    // t.remove(key);
-    // info(t);
-    t.display();
+    int key;
+    t.display("node_20");
+    key = 20; t.remove(key);
+    t.display("node_13"); std::cout << "debug: " << __LINE__ << std::endl;
+    key = 13; t.remove(key);
+    t.display("node_2");  std::cout << "debug: " << __LINE__ << std::endl;
+    key = 2; t.remove(key);
+    t.display("node_33"); std::cout << "debug: " << __LINE__ << std::endl;
+    key = 33; t.remove(key);
+    t.display("node_23"); std::cout << "debug: " << __LINE__ << std::endl;
+    key = 23; t.remove(key);
+    t.display("end"); std::cout << "debug: " << __LINE__ << std::endl;
 
     // islegal = t.is_tree_legal();
     // std::cout << (islegal ? "Tree is legal" : "Tree is illegal (some nodes are not reachable)") << std::endl;

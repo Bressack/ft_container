@@ -11,6 +11,9 @@
 
 # define NULL_STR_DOT "(null)"
 
+# define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
+
+
 namespace ft
 {
     template < class T >
@@ -27,19 +30,18 @@ namespace ft
             ~displaytree() {};
 
         private:
-            int             get_node_depth (node_type *node)
+            int             dt_get_node_depth (node_type *node)
             {
                 if (node == NULL)
                     return (0);
-
-                int left_depth = get_node_depth(node->left);
-                int right_depth = get_node_depth(node->right);
+                int left_depth = dt_get_node_depth(node->left);
+                int right_depth = dt_get_node_depth(node->right);
                 return 1 + ((left_depth > right_depth) ? left_depth : right_depth);
             }
 
             int             get_node_depth_diff (node_type *node)
             {
-                return (get_node_depth(node->right) - get_node_depth(node->left));
+                return (dt_get_node_depth(node->right) - dt_get_node_depth(node->left));
             }
 
             std::string get_value(node_type *n)

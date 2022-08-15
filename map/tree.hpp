@@ -181,6 +181,19 @@ namespace ft
                     return (NULL);
             }
 
+            node_pointer        *get_parent_endpoint(node_pointer node)
+            {
+                if (node && node->parent)
+                {
+                    if (node->parent->left == node)
+                        return (&node->parent->left);
+                    else
+                        return (&node->parent->right);
+                }
+                else
+                    return (NULL);
+            }
+
             node_pointer        remove(node_pointer & node)
             {
                 if (node == NULL)
@@ -224,8 +237,11 @@ namespace ft
                     |      /   \
                     |   [ ]     [ ]
                     */
-                    if (detach_node_from_parent(node) == NULL)
+                    node_pointer *tmp = get_parent_endpoint(node);
+                    if (tmp == NULL)
                         _root = node->left;
+                    else
+                        *tmp = node->left;
                     _size -= 1;
                     __deallocate_node(node);
                 }
@@ -250,8 +266,11 @@ namespace ft
                     |      /   \
                     |   [ ]     [ ]
                     */
-                    if (detach_node_from_parent(node) == NULL)
+                    node_pointer *tmp = get_parent_endpoint(node);
+                    if (tmp == NULL)
                         _root = node->right;
+                    else
+                        *tmp = node->right;
                     _size -= 1;
                     __deallocate_node(node);
                 }
@@ -272,35 +291,39 @@ namespace ft
                     |    [ ]     [ ]
                     */
                     int depth = __get_node_depth(node);
+                    node_pointer *tmp = get_parent_endpoint(node);
 
                     if (depth < 0)
                     {
                         node_pointer prev = prev_value(node);
-                        if (prev->parent == node)
-                            std::cout << "MAURIAAACC" << std::endl;
-                        detach_node_from_parent(prev);
+                        node_pointer *prevparent = get_parent_endpoint(prev);
+
+                        *prevparent = NULL;
                         prev->left = node->left;
                         prev->right = node->right;
                         prev->parent = node->parent;
-                        if (node == _root)
+                        if (tmp == NULL)
                             _root = prev;
-                        _size -= 1;
-                        __deallocate_node(node);
+                        else
+                            *tmp = prev;
                     }
                     else
                     {
                         node_pointer next = next_value(node);
-                        if (next->parent == node)
-                            std::cout << "MAURIAAACC" << std::endl;
-                        detach_node_from_parent(next);
+                        node_pointer *nextparent = get_parent_endpoint(next);
+
+                        *nextparent = NULL;
                         next->left = node->left;
                         next->right = node->right;
                         next->parent = node->parent;
-                        if (node == _root)
+                        if (tmp == NULL)
                             _root = next;
-                        _size -= 1;
-                        __deallocate_node(node);
+                        else
+                            *tmp = next;
                     }
+                    _size -= 1;
+                    __deallocate_node(node);
+
                 }
                 return (NULL);
             }
@@ -640,7 +663,10 @@ namespace ft
                     else if (d >   2) depths[6] += 1;
                     it++;
                 }
+                std::cout << std::string(islegal ? "True" : "False") << std::endl;
+                std::cout << "                   ";
                 std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
+                std::cout << "                   ";
                 std::cout << "["  << std::setw(4) << depths[0]
                           << "][" << std::setw(4) << depths[1]
                           << "][" << std::setw(4) << depths[2]

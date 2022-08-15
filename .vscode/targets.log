@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul  4 10:10:01 2022
+# Make data base, printed on Mon Aug 15 13:45:18 2022
 
 # Variables
 
@@ -24,8 +24,6 @@ DESKTOP_SESSION = ubuntu
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -47,7 +45,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:59099
+JOURNAL_STREAM = 9:28267678
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -65,17 +63,13 @@ XDG_DATA_DIRS = /usr/share/gnome:/usr/share/ubuntu:/mnt/nfs/homes/tharchen/.loca
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/35966/bus
 # environment
-VSCODE_VERBOSE_LOGGING = true
-# environment
-MANAGERPID = 4985
-# environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/35966/vscode-ipc-8e72061e-336b-44e8-b5c7-3b26c2998351.sock
+MANAGERPID = 1523495
 # environment
 VSCODE_CWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session17
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_35966_65wDfo
+KRB5CCNAME = FILE:/tmp/krb5cc_35966_n85ix6
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -85,17 +79,15 @@ GPG_AGENT_INFO = /run/user/35966/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r13p5.clusters.42paris.fr:@/tmp/.ICE-unix/5508,unix/e1r13p5.clusters.42paris.fr:/tmp/.ICE-unix/5508
+SESSION_MANAGER = local/e1r8p13.clusters.42paris.fr:@/tmp/.ICE-unix/1523886,unix/e1r8p13.clusters.42paris.fr:/tmp/.ICE-unix/1523886
 # environment
 XDG_RUNTIME_DIR = /run/user/35966
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 4fe7582b7e01431c8998b27545562fc4
+INVOCATION_ID = c779ba47d9ce4ceca9f5460468bbd04d
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -113,13 +105,11 @@ SSH_AUTH_SOCK = /run/user/35966/keyring/ssh
 # environment
 DISPLAY = :0
 # environment
-VSCODE_PIPE_LOGGING = true
-# environment
 PWD = /mnt/nfs/homes/tharchen/Prog/ft_container
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 5472
+SSH_AGENT_PID = 1523817
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -131,11 +121,11 @@ HOME = /mnt/nfs/homes/tharchen
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/tharchen/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/tharchen/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
 # environment
 LOGNAME = tharchen
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 ZSH = /mnt/nfs/homes/tharchen/.oh-my-zsh
 # environment
@@ -181,7 +171,7 @@ OLDPWD = /mnt/nfs/homes/tharchen
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.69.2-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -209,7 +199,7 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d6bead71_f812_4d59_99f1_5f2b2a804e80
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9af3ab95_1b63_4835_a30d_50566938fbcb
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -231,9 +221,9 @@ TERM = xterm-256color
 # environment
 DOCKER_HOST = unix:///run/user/35966/docker.sock
 # environment
-VSCODE_PID = 7227
+VSCODE_PID = 1524782
 # variable set hash-table stats:
-# Load=110/1024=11%, Rehash=0, Collisions=10/132=8%
+# Load=105/1024=10%, Rehash=0, Collisions=10/127=8%
 
 # Pattern-specific Variable Values
 
@@ -241,7 +231,7 @@ VSCODE_PID = 7227
 
 # Directories
 
-# . (device 58, inode 307364756): 9 files, no impossibilities.
+# . (device 57, inode 307364756): 9 files, no impossibilities.
 
 # 9 files, no impossibilities in 1 directories.
 
@@ -279,7 +269,6 @@ makefile:
 #  File has not been updated.
 
 # Not a target:
- 
 GNUmakefile:
 #  Implicit rule search has been done.
 #  File does not exist.
@@ -292,6 +281,7 @@ GNUmakefile:
 
 # No 'vpath' search paths.
 
+ 
 # No general ('VPATH' variable) search path.
 
 # strcache buffers: 1 (0) / strings = 17 / storage = 141 B / avg = 8 B
@@ -300,6 +290,6 @@ GNUmakefile:
 # strcache performance: lookups = 20 / hit rate = 15%
 # hash-table stats:
 # Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Mon Jul  4 10:10:01 2022
+# Finished Make data base on Mon Aug 15 13:45:18 2022
 
  

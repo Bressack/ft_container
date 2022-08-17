@@ -305,6 +305,8 @@ namespace ft
                         node_pointer prev = prev_value(node);
                         node_pointer *prevparent = get_parent_endpoint(prev);
 
+                        node->left->parent = prev;
+                        node->right->parent = prev;
                         // on met a NULL le lien entre le parent du prev et prev
                         *prevparent = NULL;
                         // on swap les liens entre prev et node (prev prend la place de node)
@@ -323,6 +325,8 @@ namespace ft
                         node_pointer next = next_value(node);
                         node_pointer *nextparent = get_parent_endpoint(next);
 
+                        node->left->parent = next;
+                        node->right->parent = next;
                         // on met a NULL le lien entre le parent du next et next
                         *nextparent = NULL;
                         // on swap les liens entre next et node (next prend la place de node)

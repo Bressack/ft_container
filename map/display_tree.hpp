@@ -49,7 +49,14 @@ namespace ft
                 static const std::string null_str = std::string(NULL_STR_DOT);
 
                 if (n)
-                    return (std::to_string(n->value.first) + std::string(" [") + std::to_string(get_node_depth_diff(n)) + std::string("]"));
+                    return (\
+                            std::string("[ parent:") + std::to_string((unsigned long long)n->parent) +
+                            std::string("]\n[ self:") + std::to_string((unsigned long long)n) +
+                            std::string("]\n") +
+                            std::to_string(n->value.first) +
+                            std::string(" [") +
+                            std::to_string(get_node_depth_diff(n)) +
+                            std::string("]"));
                 return (null_str);
             }
 

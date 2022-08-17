@@ -46,6 +46,9 @@ bool    history_query(std::vector<int> & history, int n)
 
 int    pop_history(std::vector<int> & history)
 {
+    // std::cout << "history.size():" << history.size() << std::endl;
+    if (history.size() == 0)
+        return -1;
     int n = std::rand() % (history.size() - 1);
     std::vector<int>::iterator it = history.begin();
     for (int i = 0 ; i < n ; i++)
@@ -72,7 +75,7 @@ void    siege()
             std::cout << *it << " ";
         std::cout << C_RES << std::endl;
         info(t);
-        if (start > 0 || history.size() == 0 || std::rand() % 2)
+        if (start > 0 || history.size() <= 1 || std::rand() % 2)
         { // INSERT
             while (1)
             {

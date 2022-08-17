@@ -173,8 +173,9 @@ namespace ft
                 {
                     if (node->parent->left == node)
                         node->parent->left = NULL;
-                    else
+                    else if (node->parent->right == node)
                         node->parent->right = NULL;
+                    node->parent = NULL;
                     return (node);
                 }
                 else
@@ -214,8 +215,6 @@ namespace ft
                     // detach the node of the tree
                     if (detach_node_from_parent(node) == NULL)
                         _root = NULL;
-                    _size -= 1;
-                    __deallocate_node(node);
                 }
                 else if (node->left && !node->right) {
                     TTEST("only left child")
@@ -239,11 +238,15 @@ namespace ft
                     */
                     node_pointer *tmp = get_parent_endpoint(node);
                     if (tmp == NULL)
+                    {
                         _root = node->left;
+                        _root->parent = NULL;
+                    }
                     else
-                        *tmp = node->left;
-                    _size -= 1;
-                    __deallocate_node(node);
+                    {
+                        node->left->parent = node->parent;
+                       *tmp = node->left;
+                    }
                 }
 
                 else if (node->right && !node->left) {
@@ -268,11 +271,15 @@ namespace ft
                     */
                     node_pointer *tmp = get_parent_endpoint(node);
                     if (tmp == NULL)
+                    {
                         _root = node->right;
+                        _root->parent = NULL;
+                    }
                     else
-                        *tmp = node->right;
-                    _size -= 1;
-                    __deallocate_node(node);
+                    {
+                        node->right->parent = node->parent;
+                       *tmp = node->right;
+                    }
                 }
 
                 else if (node->right && node->left) {
@@ -298,10 +305,14 @@ namespace ft
                         node_pointer prev = prev_value(node);
                         node_pointer *prevparent = get_parent_endpoint(prev);
 
+                        // on met a NULL le lien entre le parent du prev et prev
                         *prevparent = NULL;
+                        // on swap les liens entre prev et node (prev prend la place de node)
                         prev->left = node->left;
                         prev->right = node->right;
                         prev->parent = node->parent;
+                        // si _root pointait sur node alors _root pointe mtn sur prev
+                        // sinon le parent de node prend comme enfant prev au lieu de node
                         if (tmp == NULL)
                             _root = prev;
                         else
@@ -312,19 +323,23 @@ namespace ft
                         node_pointer next = next_value(node);
                         node_pointer *nextparent = get_parent_endpoint(next);
 
+                        // on met a NULL le lien entre le parent du next et next
                         *nextparent = NULL;
+                        // on swap les liens entre next et node (next prend la place de node)
                         next->left = node->left;
                         next->right = node->right;
                         next->parent = node->parent;
+                        // si _root pointait sur node alors _root pointe mtn sur next
+                        // sinon le parent de node prend comme enfant next au lieu de node
                         if (tmp == NULL)
                             _root = next;
                         else
                             *tmp = next;
                     }
-                    _size -= 1;
-                    __deallocate_node(node);
-
                 }
+                _size -= 1;
+                std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                __deallocate_node(node);
                 return (NULL);
             }
             node_pointer        remove(value_type & value)

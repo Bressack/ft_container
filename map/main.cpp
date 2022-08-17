@@ -55,13 +55,15 @@ int    pop_history(std::vector<int> & history)
     return ret;
 }
 
-void    siege() {
+void    siege()
+{
     std::vector<int>    history;
     tree_type           t;
     int n = 0;
     int start = 10;
 
     std::cout << "tree is now under siege:" << std::endl;
+    int gen = 0;
     while (1)
     {
         std::vector<int>::iterator it = history.begin();
@@ -74,7 +76,7 @@ void    siege() {
         { // INSERT
             while (1)
             {
-                n = std::rand();
+                n = std::rand() % 1000;
                 if (history_query(history, n) == false)
                     break;
             }
@@ -86,9 +88,11 @@ void    siege() {
         else
         { // REMOVE
             n = pop_history(history);
-            std::cout << ORANGE << "[ removing " << CORAIL << n << SKY_BLUE << " ]" << C_RES << std::endl;
+            std::cout << ORANGE << "[ removing " << CORAIL << n << ORANGE << " ]" << C_RES << std::endl;
             t.remove(n);
         }
+        // t.display(std::to_string(gen).c_str());
+        gen++;
     }
 }
 

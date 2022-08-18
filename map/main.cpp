@@ -49,7 +49,8 @@ int    pop_history(std::vector<int> & history)
     // std::cout << "history.size():" << history.size() << std::endl;
     if (history.size() == 0)
         return -1;
-    int n = std::rand() % (history.size() - 1);
+    int n = std::rand() % history.size();
+    std::cout << "n:" << n << " / history.size():" << history.size() << std::endl;
     std::vector<int>::iterator it = history.begin();
     for (int i = 0 ; i < n ; i++)
         it++;
@@ -69,11 +70,16 @@ void    siege()
     int gen = 0;
     while (1)
     {
+        std::cout << C_G_WHITE << "###############################################################" << C_RES << std::endl;
+        std::cout << "gen: " << gen << std::endl;
+
+        // print history
         std::vector<int>::iterator it = history.begin();
         std::cout << C_G_YELLOW << "history: ";
         for (; it != history.end(); ++it)
             std::cout << *it << " ";
         std::cout << C_RES << std::endl;
+
         info(t);
         if (start > 0 || history.size() <= 1 || std::rand() % 2)
         { // INSERT
@@ -101,6 +107,7 @@ void    siege()
 
 int main(void)
 {
+    std::cout << "MAIN START" << std::endl;
     srand(time(NULL));
 
     tree_type    t;

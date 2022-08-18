@@ -299,47 +299,28 @@ namespace ft
                     */
                     int depth = __get_node_depth(node);
                     node_pointer *tmp = get_parent_endpoint(node);
+                    node_pointer kandida;
 
                     if (depth < 0)
-                    {
-                        node_pointer prev = prev_value(node);
-                        node_pointer *prevparent = get_parent_endpoint(prev);
-
-                        node->left->parent = prev;
-                        node->right->parent = prev;
-                        // on met a NULL le lien entre le parent du prev et prev
-                        *prevparent = NULL;
-                        // on swap les liens entre prev et node (prev prend la place de node)
-                        prev->left = node->left;
-                        prev->right = node->right;
-                        prev->parent = node->parent;
-                        // si _root pointait sur node alors _root pointe mtn sur prev
-                        // sinon le parent de node prend comme enfant prev au lieu de node
-                        if (tmp == NULL)
-                            _root = prev;
-                        else
-                            *tmp = prev;
-                    }
+                        kandida = prev_value(node);
                     else
-                    {
-                        node_pointer next = next_value(node);
-                        node_pointer *nextparent = get_parent_endpoint(next);
+                        kandida = next_value(node);
 
-                        node->left->parent = next;
-                        node->right->parent = next;
-                        // on met a NULL le lien entre le parent du next et next
-                        *nextparent = NULL;
-                        // on swap les liens entre next et node (next prend la place de node)
-                        next->left = node->left;
-                        next->right = node->right;
-                        next->parent = node->parent;
-                        // si _root pointait sur node alors _root pointe mtn sur next
-                        // sinon le parent de node prend comme enfant next au lieu de node
-                        if (tmp == NULL)
-                            _root = next;
-                        else
-                            *tmp = next;
-                    }
+                    node_pointer *parentendpoint = get_parent_endpoint(kandida);
+                    node->left->parent = kandida;
+                    node->right->parent = kandida;
+                    // on met a NULL le lien entre le parent du kandida et kandida
+                    *parentendpoint = NULL;
+                    // on swap les liens entre kandida et node (kandida prend la place de node)
+                    kandida->left = node->left;
+                    kandida->right = node->right;
+                    kandida->parent = node->parent;
+                    // si _root pointait sur node alors _root pointe mtn sur kandida
+                    // sinon le parent de node prend comme enfant kandida au lieu de node
+                    if (tmp == NULL)
+                        _root = kandida;
+                    else
+                        *tmp = kandida;
                 }
                 _size -= 1;
                 std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
@@ -588,42 +569,42 @@ namespace ft
                 return (__get_node_depth(node->right) - __get_node_depth(node->left));
             }
 
-            bool                __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool                __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool                __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool                __compare (      node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool                __compare (const node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool                __compare (const node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool                __compare (      node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool                __compare (      node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool                __compare (const node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool                __compare (const node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool                __compare (      node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool                __compare (      node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool                __compare (const value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool                __compare (const value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool                __compare (      value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool                __compare (      value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool                __compare (const value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool                __compare (const value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool                __compare (      value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool                __compare (      value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool                __compare (const value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool                __compare (const value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool                __compare (      value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool                __compare (      value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool                __compare (const key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool                __compare (const key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool                __compare (      key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool                __compare (      key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool                __compare (const key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool                __compare (const key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool                __compare (      key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool                __compare (      key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool                __compare (const key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
-            bool                __compare (const key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
-            bool                __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
-            bool                __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
+            bool __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool __compare (      node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            bool __compare (const node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool __compare (const node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool __compare (      node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool __compare (      node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            bool __compare (const node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool __compare (const node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool __compare (      node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool __compare (      node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            bool __compare (const value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool __compare (const value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool __compare (      value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool __compare (      value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            bool __compare (const value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool __compare (const value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool __compare (      value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool __compare (      value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            bool __compare (const value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool __compare (const value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool __compare (      value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool __compare (      value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            bool __compare (const key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool __compare (const key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool __compare (      key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool __compare (      key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            bool __compare (const key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool __compare (const key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool __compare (      key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool __compare (      key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            bool __compare (const key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            bool __compare (const key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
+            bool __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
         // DEVTOOLS
         private:
@@ -682,7 +663,9 @@ namespace ft
                     else if (d >   2) depths[6] += 1;
                     it++;
                 }
-                std::cout << std::string(islegal ? "True" : "False") << std::endl;
+                if (this->size() != v.size())
+                    islegal = false;
+                std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
                 std::cout << "                   ";
                 std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
                 std::cout << "                   ";

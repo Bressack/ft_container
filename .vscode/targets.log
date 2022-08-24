@@ -1,14 +1,13 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
 
-# GNU Make 4.2.1
-# Built for x86_64-pc-linux-gnu
-# Copyright (C) 1988-2016 Free Software Foundation, Inc.
-# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-# This is free software: you are free to change and redistribute it.
-# There is NO WARRANTY, to the extent permitted by law.
+# This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Mon Aug 15 13:45:18 2022
+# Make data base, printed on Tue Aug 23 14:43:56 2022
 
 # Variables
 
@@ -16,214 +15,168 @@ make: *** No rule to make target 'all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# environment
-DESKTOP_SESSION = ubuntu
-# default
-.SHELLFLAGS := -c
-# environment
-XDG_SESSION_CLASS = user
-# environment
-XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
-# environment
-XAUTHORITY = /mnt/nfs/homes/tharchen/.Xauthority
-# environment
-GDMSESSION = ubuntu
-# environment
-XMODIFIERS = @im=ibus
+# automatic
+@F = $(notdir $@)
 # makefile
-CURDIR := /mnt/nfs/homes/tharchen/Prog/ft_container
+CURDIR := /Users/tharchen/Prog/42/projects/circle_6/ft_containers
 # makefile
 SHELL = /bin/sh
 # environment
-VTE_VERSION = 6003
-# environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/bin/code
-# environment
-JOURNAL_STREAM = 9:28267678
-# environment
-XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+_ = /usr/bin/make
 # makefile
 MAKEFILE_LIST := 
-# automatic
-@F = $(notdir $@)
 # environment
-IM_CONFIG_PHASE = 1
-# 'override' directive
-GNUMAKEFLAGS := 
+__CFBundleIdentifier = com.microsoft.VSCode
 # environment
-MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
+VSCODE_CWD = /
 # environment
-XDG_DATA_DIRS = /usr/share/gnome:/usr/share/ubuntu:/mnt/nfs/homes/tharchen/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
-# environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/35966/bus
-# environment
-MANAGERPID = 1523495
-# environment
-VSCODE_CWD = /mnt/nfs/homes/tharchen/Prog/ft_container
-# environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session17
-# environment
-KRB5CCNAME = FILE:/tmp/krb5cc_35966_n85ix6
-# default
-MAKE_HOST := x86_64-pc-linux-gnu
-# environment
-PATH = /mnt/nfs/homes/tharchen/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-# environment
-GPG_AGENT_INFO = /run/user/35966/gnupg/S.gpg-agent:0:1
+PATH = /Users/tharchen/opt/anaconda3/bin:~/opt/anaconda3/bin:/Users/tharchen/Prog/libraries/minilibx/man/:/Users/tharchen/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/tharchen/opt/anaconda3/envs/myenv/bin:/Users/tharchen/opt/anaconda3/bin:/Users/tharchen/opt/anaconda3/condabin:~/opt/anaconda3/bin:/Users/tharchen/Prog/libraries/minilibx/man:/Users/tharchen/.cargo/bin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r8p13.clusters.42paris.fr:@/tmp/.ICE-unix/1523886,unix/e1r8p13.clusters.42paris.fr:/tmp/.ICE-unix/1523886
-# environment
-XDG_RUNTIME_DIR = /run/user/35966
-# environment
-XDG_MENU_PREFIX = gnome-
-# environment
 ELECTRON_RUN_AS_NODE = 1
-# environment
-INVOCATION_ID = c779ba47d9ce4ceca9f5460468bbd04d
 # default
-.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-ELECTRON_NO_ATTACH_CONSOLE = 1
-# environment
-XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/tharchen
-# environment
-LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
-# environment
-XDG_SESSION_DESKTOP = ubuntu
-# environment
-SSH_AUTH_SOCK = /run/user/35966/keyring/ssh
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.duvHDltfLt/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = :0
+DISPLAY = /private/tmp/com.apple.launchd.YfSQ39DM4Q/org.macosforge.xquartz:0
 # environment
-PWD = /mnt/nfs/homes/tharchen/Prog/ft_container
-# default
-.LOADED := 
+CONDA_EXE = /Users/tharchen/opt/anaconda3/bin/conda
 # environment
-SSH_AGENT_PID = 1523817
+PWD = /Users/tharchen/Prog/42/projects/circle_6/ft_containers
 # environment
-ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
-# environment
-GTK_MODULES = gail:atk-bridge
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /mnt/nfs/homes/tharchen
+HOME = /Users/tharchen
+# default
+MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # environment
-VSCODE_CLI = 1
-# environment
-VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/tharchen/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
+VSCODE_CODE_CACHE_PATH = /Users/tharchen/Library/Application Support/Code/CachedData/da76f93349a72022ca4670c1b84860304616aaa2
 # environment
 LOGNAME = tharchen
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
-ZSH = /mnt/nfs/homes/tharchen/.oh-my-zsh
+CONDA_PROMPT_MODIFIER = (myenv) 
+# environment
+ZSH = /Users/tharchen/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
-# environment
-GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
-MAKELEVEL := 0
+CONDA_DEFAULT_ENV = myenv
+# environment
+XPC_FLAGS = 0x0
 # environment
 COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
 # environment
-QT_IM_MODULE = ibus
+LC_TERMINAL = iTerm2
 # environment
 SHLVL = 2
 # default
-MAKE_VERSION := 4.2.1
+MAKE_VERSION := 3.81
 # environment
 USER = tharchen
 # makefile
 .DEFAULT_GOAL := 
+# default
+MAKECMDGOALS := all
 # environment
-XDG_CURRENT_DESKTOP = Unity
-# environment
-LIBVIRT_DEFAULT_URI = qemu:///system
+TERM_SESSION_ID = w0t4p0:20345F3C-C391-4CB9-AAB9-02B9BEB6C6DE
 # environment
 LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
-# default
-MAKE_COMMAND := make
 # environment
-OLDPWD = /mnt/nfs/homes/tharchen
+CONDA_SHLVL = 1
+# default
+MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
+# environment
+TMPDIR = /var/folders/54/gxcqhbv93fn0_k10by0b7ddw0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+VSCODE_IPC_HOOK = /Users/tharchen/Library/Application Support/Code/1.70.0-main.sock
 # environment
-VSCODE_IPC_HOOK = /run/user/35966/vscode-f87fdc4b-1.69.2-main.sock
+MallocNanoZone = 0
 # makefile
-MAKEFLAGS = pqrR
+MAKEFLAGS = Rrqp
 # environment
-MFLAGS = -pqrR
+MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
+# environment
+TERM_PROGRAM_VERSION = 3.4.15
+# environment
+NVM_DIR = /Users/tharchen/.nvm
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.46064305.46064311
+# environment
+LC_TERMINAL_VERSION = 3.4.15
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
-# environment
-GDK_BACKEND = x11
 # automatic
 +F = $(notdir $+)
 # environment
-QT_ACCESSIBILITY = 1
+ITERM_SESSION_ID = w0t4p0:20345F3C-C391-4CB9-AAB9-02B9BEB6C6DE
 # environment
-DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
+COLORFGBG = 15;0
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
 # environment
-PAGER = less
+ITERM_PROFILE = Default
+# environment
+PAGER = most
 # environment
 LC_ALL = C
 # environment
-GJS_DEBUG_TOPICS = JS ERROR;JS LOG
-# environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9af3ab95_1b63_4835_a30d_50566938fbcb
+CONDA_PYTHON_EXE = /Users/tharchen/opt/anaconda3/bin/python
 # automatic
 ^F = $(notdir $^)
-# environment
-GNOME_TERMINAL_SERVICE = :1.79
 # default
 SUFFIXES := 
 # environment
-CHROME_DESKTOP = code-url-handler.desktop
+_CE_M = 
 # default
-.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+.INCLUDE_DIRS = /usr/local/include
 # environment
-GJS_DEBUG_OUTPUT = stderr
-# default
-.RECIPEPREFIX := 
+MAKELEVEL := 0
 # environment
-LANG = C
+CONDA_PREFIX = /Users/tharchen/opt/anaconda3/envs/myenv
 # environment
 TERM = xterm-256color
 # environment
-DOCKER_HOST = unix:///run/user/35966/docker.sock
+VSCODE_PID = 62063
 # environment
-VSCODE_PID = 1524782
+_CE_CONDA = 
+# environment
+LANG = C
 # variable set hash-table stats:
-# Load=105/1024=10%, Rehash=0, Collisions=10/127=8%
+# Load=82/1024=8%, Rehash=0, Collisions=5/103=5%
 
 # Pattern-specific Variable Values
 
@@ -231,9 +184,9 @@ VSCODE_PID = 1524782
 
 # Directories
 
-# . (device 57, inode 307364756): 9 files, no impossibilities.
+# . (device 16777222, inode 22260977): 10 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 10 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -243,24 +196,38 @@ VSCODE_PID = 1524782
 
 # Not a target:
 all:
-#  Command line target.
+#  Command-line target.
 #  Implicit rule search has been done.
 #  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
 Makefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 makefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 .DEFAULT:
@@ -270,26 +237,29 @@ makefile:
 
 # Not a target:
 GNUmakefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# Load=6/1024=1%, Rehash=0, Collisions=0/17=0%
 # VPATH Search Paths
 
-# No 'vpath' search paths.
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 0
+# # of strcache buffers: 0
+# strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
+# strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
+
+# Finished Make data base on Tue Aug 23 14:43:56 2022
 
  
-# No general ('VPATH' variable) search path.
+make: *** No rule to make target `all'.  Stop.
 
-# strcache buffers: 1 (0) / strings = 17 / storage = 141 B / avg = 8 B
-# current buf: size = 8162 B / used = 141 B / count = 17 / avg = 8 B
-
-# strcache performance: lookups = 20 / hit rate = 15%
-# hash-table stats:
-# Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Mon Aug 15 13:45:18 2022
-
- 

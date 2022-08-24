@@ -1,6 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/mnt/nfs/homes/tharchen/Prog/ft_container'
-make: Leaving directory '/mnt/nfs/homes/tharchen/Prog/ft_container'
+make: Entering directory `/Users/tharchen/Prog/42/projects/circle_6/ft_containers'
+make: Leaving directory `/Users/tharchen/Prog/42/projects/circle_6/ft_containers'
  
 make: *** No targets specified and no makefile found.  Stop.
 

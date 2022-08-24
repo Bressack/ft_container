@@ -1,0 +1,6 @@
+digraph BST {
+    node [fontname="Arial"];
+    "[ [ parent:0]
+[ self:105553147462256]
+398 [0] ]_(0)";
+}

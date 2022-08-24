@@ -94,13 +94,6 @@ namespace ft
                     _allocator.deallocate(node, sizeof(node_type));
             }
 
-
-// cannot initialize a parameter of type
-// 'ft::tree<int, int>::node_pointer (*)(const ft::tree<int, int>::node_pointer &)'
-// (aka 'node<pair<int, int>> *(*)(node<pair<int, int>> *const &)')
-// with an rvalue of type
-// 'ft::tree<int, int>::node_pointer (ft::tree<int, int>::*)(const ft::tree<int, int>::node_pointer &)'
-
         public:
             // tools
             void                infix_apply(const node_pointer node, node_pointer(tree::*f)(const node_pointer &))
@@ -129,6 +122,13 @@ namespace ft
             }
 
             // modifiers
+            inline void         unlink_node(node_pointer node)
+            {
+                node->left = NULL;
+                node->right = NULL;
+                node->parent = NULL;
+            }
+
             node_pointer        insert(const node_pointer & node)
             {
                 printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
@@ -195,12 +195,75 @@ namespace ft
                     return (NULL);
             }
 
-            node_pointer        remove(node_pointer & node)
+            node_pointer        find_kandida(node_pointer & node)
             {
                 if (node == NULL)
                     return (NULL);
 
-                else if (node->left == NULL && node->right == NULL) {
+                node_pointer kandida;
+
+                // on commence par calculer la depth de la node
+                int depth = __get_node_depth(node);
+
+                // deux cas: si la depth est negative on cherche le precedent le plus proche
+                // sinon le suivant le plus proche
+                if (depth < 0)
+                    kandida = prev_value(node);
+                else
+                    kandida = next_value(node);
+                return (kandida);
+            }
+
+            node_pointer        detach_node_with_two_child(node_pointer & node)
+            {
+                std::cout << __FUNCTION__ << "()" << std::endl;
+                if (node == NULL)
+                    return (NULL);
+                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+
+                std::cout << "finding kandida" << std::endl;
+                node_pointer kandida = find_kandida(node);
+                std::cout << "> kandida      : " << kandida << LIGHT_BLUE << "(" << kandida->value.first << ")" << C_RES << std::endl;
+                std::cout << "> kandida left : " << kandida->left;  if (kandida->left)  std::cout << LIGHT_BLUE << "(" << kandida->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> kandida right: " << kandida->right; if (kandida->right) std::cout << LIGHT_BLUE << "(" << kandida->right->value.first << ")" << C_RES; std::cout << std::endl;
+                if (kandida->left && kandida->right) // kandida is not a leave
+                    detach_node_with_two_child(kandida);
+                else
+                    detach_node_with_one_or_no_child(kandida); // detach and unlink kandida
+                std::cout << "swap node and kandida" << std::endl;
+                swap(node, kandida);
+                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> kandida      : " << kandida << LIGHT_BLUE << "(" << kandida->value.first << ")" << C_RES << std::endl;
+                std::cout << "> kandida left : " << kandida->left;  if (kandida->left)  std::cout << LIGHT_BLUE << "(" << kandida->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> kandida right: " << kandida->right; if (kandida->right) std::cout << LIGHT_BLUE << "(" << kandida->right->value.first << ")" << C_RES; std::cout << std::endl;
+
+                std::cout << "unlink node" << std::endl;
+                unlink_node(node);
+                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                if (_root == node)
+                    _root = kandida;
+                std::cout << "> _root         : " << _root << LIGHT_BLUE << "(" << _root->value.first << ")" << C_RES << std::endl;
+                std::cout << "> _root left    : " << _root->left;  if (_root->left)  std::cout << LIGHT_BLUE << "(" << _root->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> _root right   : " << _root->right; if (_root->right) std::cout << LIGHT_BLUE << "(" << _root->right->value.first << ")" << C_RES; std::cout << std::endl;
+                return (kandida);
+            }
+
+            node_pointer        detach_node_with_one_or_no_child(node_pointer & node)
+            {
+                std::cout << __FUNCTION__ << "()" << std::endl;
+                if (node == NULL)
+                    return (NULL);
+                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> node left    : "  << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+
+                if (node->left == NULL && node->right == NULL) {
                     TTEST("feuille")
                     /* feuille
                     |
@@ -248,7 +311,6 @@ namespace ft
                        *tmp = node->left;
                     }
                 }
-
                 else if (node->right && !node->left) {
                     TTEST("only right child")
                     /* only right child
@@ -281,49 +343,25 @@ namespace ft
                        *tmp = node->right;
                     }
                 }
+                unlink_node(node);
+                return (node);
+            }
 
-                else if (node->right && node->left) {
-                    TTEST("two child")
-                    /* two child
-                    |
-                    |   if node is not root:
-                    |        [ ]
-                    |       /   \
-                    |    [X]     [ ]
-                    |   /   \
-                    |[ ]     [ ]
-                    |   if node is root:
-                    |        [X]
-                    |       /   \
-                    |    [ ]     [ ]
-                    */
-                    int depth = __get_node_depth(node);
-                    node_pointer *tmp = get_parent_endpoint(node);
-                    node_pointer kandida;
+            node_pointer        remove(node_pointer & node)
+            {
+                std::cout << __FUNCTION__ << "()" << std::endl;
+                if (node == NULL)
+                    return (NULL);
+                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                if (node->right && node->left)
+                    detach_node_with_two_child(node);
+                else
+                    detach_node_with_one_or_no_child(node);
 
-                    if (depth < 0)
-                        kandida = prev_value(node);
-                    else
-                        kandida = next_value(node);
-
-                    node_pointer *parentendpoint = get_parent_endpoint(kandida);
-                    node->left->parent = kandida;
-                    node->right->parent = kandida;
-                    // on met a NULL le lien entre le parent du kandida et kandida
-                    *parentendpoint = NULL;
-                    // on swap les liens entre kandida et node (kandida prend la place de node)
-                    kandida->left = node->left;
-                    kandida->right = node->right;
-                    kandida->parent = node->parent;
-                    // si _root pointait sur node alors _root pointe mtn sur kandida
-                    // sinon le parent de node prend comme enfant kandida au lieu de node
-                    if (tmp == NULL)
-                        _root = kandida;
-                    else
-                        *tmp = kandida;
-                }
                 _size -= 1;
-                std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << C_RES << std::endl;
                 __deallocate_node(node);
                 return (NULL);
             }
@@ -637,7 +675,7 @@ namespace ft
                 tree_to_vector(v, node->left);
                 tree_to_vector(v, node->right);
             }
-            bool                is_tree_legal(void)
+            bool                is_tree_legal(bool verboze = true)
             {
                 bool islegal = true;
                 std::vector<node_pointer> v;
@@ -665,19 +703,24 @@ namespace ft
                 }
                 if (this->size() != v.size())
                     islegal = false;
-                std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
-                std::cout << "                   ";
-                std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
-                std::cout << "                   ";
-                std::cout << "["  << std::setw(4) << depths[0]
-                          << "][" << std::setw(4) << depths[1]
-                          << "][" << std::setw(4) << depths[2]
-                          << "][" << std::setw(4) << depths[3]
-                          << "][" << std::setw(4) << depths[4]
-                          << "][" << std::setw(4) << depths[5]
-                          << "][" << std::setw(4) << depths[6]
-                          << "]" << std::endl;
+                if (verboze == true)
+                {
+                    std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
+                    std::cout << "                   ";
+                    std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
+                    std::cout << "                   ";
+                    std::cout << "["  << std::setw(4) << depths[0]
+                            << "][" << std::setw(4) << depths[1]
+                            << "][" << std::setw(4) << depths[2]
+                            << "][" << std::setw(4) << depths[3]
+                            << "][" << std::setw(4) << depths[4]
+                            << "][" << std::setw(4) << depths[5]
+                            << "][" << std::setw(4) << depths[6]
+                            << "]" << std::endl;
+                }
                 return (islegal);
             }
     };
 }
+
+

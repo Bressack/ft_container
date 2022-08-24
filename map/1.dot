@@ -1,0 +1,20 @@
+digraph BST {
+    node [fontname="Arial"];
+    "[ parent:0]
+[ self:105553147462256]
+398 [-1]" -> "[ parent:105553147462256]
+[ self:105553147478016]
+169 [0]";
+    null1 [shape=point];
+    "[ parent:0]
+[ self:105553147462256]
+398 [-1]" -> "null1"
+    null2 [shape=point];
+    "[ parent:105553147462256]
+[ self:105553147478016]
+169 [0]" -> "null2"
+    null3 [shape=point];
+    "[ parent:105553147462256]
+[ self:105553147478016]
+169 [0]" -> "null3"
+}

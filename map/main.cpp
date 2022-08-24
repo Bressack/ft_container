@@ -5,7 +5,8 @@
 # include <vector>
 # include <iostream>
 
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <random>
 
 typedef int* int_arr;
 typedef ft::tree<int,int> tree_type;
@@ -25,9 +26,11 @@ void    info(tree_type & t)
     t.infix_content_print();
     std::cout << std::endl;
     std::cout << "    " << "is_tree_legal: ";
-    t.is_tree_legal();
+    int islegal = t.is_tree_legal();
     std::cout << std::endl;
     std::cout << "}" << std::endl;
+    if (islegal == false)
+        exit(1);
     // std::cout << "info: empty: " << std::string(t.empty() ? "True" : "False") << ", size: " << t.size() << ", infix: ";
     // t.infix_content_print();
     // std::cout << "\nmax_size: " << t.max_size() << std::endl;
@@ -100,8 +103,10 @@ void    siege()
             std::cout << ORANGE << "[ removing " << CORAIL << n << ORANGE << " ]" << C_RES << std::endl;
             t.remove(n);
         }
-        // t.display(std::to_string(gen).c_str());
+        t.display(std::to_string(gen).c_str());
         gen++;
+        if (gen >= 20)
+            exit(0);
     }
 }
 

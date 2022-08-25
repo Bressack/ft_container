@@ -1,6 +1,6 @@
 all:
 	@ rm -f *.dot
-	@ clang++ -Wall -Wextra -Werror -O0 -I . main.cpp
+	@ clang++ -Wall -Wextra -Werror -O3 -I . main.cpp
 	@ # dot -Tpng tree.dot -o tree.png
 	@ ./a.out
 

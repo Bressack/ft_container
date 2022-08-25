@@ -4,8 +4,9 @@
 # include <cstdlib>
 # include <vector>
 # include <iostream>
-
-// #include <bits/stdc++.h>
+# ifdef __unix__
+# include <bits/stdc++.h>
+# endif
 #include <random>
 
 typedef int* int_arr;
@@ -22,9 +23,9 @@ void    info(tree_type & t)
     std::cout << "    " << "empty        : " << std::string(t.empty() ? "True" : "False") << std::endl;
     std::cout << "    " << "size         : " << t.size() << std::endl;
     std::cout << "    " << "max_size     : " << t.max_size() << std::endl;
-    std::cout << "    " << "infix content: ";
-    t.infix_content_print();
-    std::cout << std::endl;
+    // std::cout << "    " << "infix content: ";
+    // t.infix_content_print();
+    // std::cout << std::endl;
     std::cout << "    " << "is_tree_legal: ";
     int islegal = t.is_tree_legal();
     std::cout << std::endl;
@@ -66,35 +67,38 @@ void    siege()
 {
     std::vector<int>    history;
     tree_type           t;
+    std::map<int, int> st;
     int n = 0;
     int start = 10;
 
     std::cout << "tree is now under siege:" << std::endl;
     int gen = 0;
+    int roll = 0;
     while (1)
     {
         std::cout << C_G_WHITE << "###############################################################" << C_RES << std::endl;
-        std::cout << "gen: " << gen << std::endl;
+        std::cout << "gen: " << gen << " | roll: " << roll << std::endl;
 
         // print history
-        std::vector<int>::iterator it = history.begin();
-        std::cout << C_G_YELLOW << "history: ";
-        for (; it != history.end(); ++it)
-            std::cout << *it << " ";
-        std::cout << C_RES << std::endl;
+        // std::vector<int>::iterator it = history.begin();
+        // std::cout << C_G_YELLOW << "history: ";
+        // for (; it != history.end(); ++it)
+        //     std::cout << *it << " ";
+        // std::cout << C_RES << std::endl;
 
-        info(t);
+        // info(t);
         if (start > 0 || history.size() <= 1 || std::rand() % 2)
         { // INSERT
             while (1)
             {
-                n = std::rand() % 1000;
+                n = std::rand() % 10000;
                 if (history_query(history, n) == false)
                     break;
             }
             history.push_back(n);
             std::cout << SKY_BLUE << "[ inserting " << CORAIL << n << SKY_BLUE << " ]" << C_RES << std::endl;
             t.insert(n, 0);
+            // st.insert(std::pair<int,int>(n, 0));
             start--;
         }
         else
@@ -102,11 +106,18 @@ void    siege()
             n = pop_history(history);
             std::cout << ORANGE << "[ removing " << CORAIL << n << ORANGE << " ]" << C_RES << std::endl;
             t.remove(n);
+            // st.erase(n);
         }
-        t.display(std::to_string(gen).c_str());
+        t.display(std::to_string(roll).c_str());
         gen++;
-        if (gen >= 20)
-            exit(0);
+        roll++;
+        // int islegal = t.is_tree_legal();
+        // if (islegal == false)
+        //     exit(1);
+        if (roll > 5)
+            roll = 0;
+        // if (gen >= 20)
+        //     exit(0);
     }
 }
 

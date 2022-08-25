@@ -128,14 +128,22 @@ namespace ft
                 node->right = NULL;
                 node->parent = NULL;
             }
+            void    display_node_links(node_pointer node, std::string nname)
+            {
+                std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+
+            }
 
             node_pointer        insert(const node_pointer & node)
             {
-                printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
+                // printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
                 if (empty() == true) // tree is empty
                 {
                     _root = node;
-                    printf("tree empty - %p - %p\n", _root, node);
+                    printf("trdisplay_node_linksee empty - %p - %p\n", _root, node);
                 }
                 else // tree is not empty
                 {
@@ -150,7 +158,7 @@ namespace ft
             }
             node_pointer        insert(const value_type & value)
             {
-                printf(C_G_GREEN "insert (value)\n" C_RES);
+                // printf(C_G_GREEN "insert (value)\n" C_RES);
                 // check if the tree already contain a node with a key equivalent, if so, return an pointer to the node
                 node_pointer tmp = search(value);
                 if (tmp != NULL)
@@ -163,7 +171,7 @@ namespace ft
             }
             node_pointer        insert(const key_type & key, const mapped_type & value)
             {
-                printf(C_G_GREEN "insert (key=%d, val=%d)\n" C_RES, key, value);
+                // printf(C_G_GREEN "insert (key=%d, val=%d)\n" C_RES, key, value);
                 return (insert(value_type(key, value)));
             }
 
@@ -216,55 +224,41 @@ namespace ft
 
             node_pointer        detach_node_with_two_child(node_pointer & node)
             {
-                std::cout << __FUNCTION__ << "()" << std::endl;
+                // std::cout << __FUNCTION__ << "()" << std::endl;
                 if (node == NULL)
                     return (NULL);
-                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
-
-                std::cout << "finding kandida" << std::endl;
+                                                                                                // display_node_links(node, "node");
+                // std::cout << "finding kandida" << std::endl;
                 node_pointer kandida = find_kandida(node);
-                std::cout << "> kandida      : " << kandida << LIGHT_BLUE << "(" << kandida->value.first << ")" << C_RES << std::endl;
-                std::cout << "> kandida left : " << kandida->left;  if (kandida->left)  std::cout << LIGHT_BLUE << "(" << kandida->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> kandida right: " << kandida->right; if (kandida->right) std::cout << LIGHT_BLUE << "(" << kandida->right->value.first << ")" << C_RES; std::cout << std::endl;
+                                                                                                // display_node_links(kandida, "kandida");
                 if (kandida->left && kandida->right) // kandida is not a leave
                     detach_node_with_two_child(kandida);
                 else
                     detach_node_with_one_or_no_child(kandida); // detach and unlink kandida
-                std::cout << "swap node and kandida" << std::endl;
+                // std::cout << "swap node and kandida" << std::endl;
                 swap(node, kandida);
-                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> kandida      : " << kandida << LIGHT_BLUE << "(" << kandida->value.first << ")" << C_RES << std::endl;
-                std::cout << "> kandida left : " << kandida->left;  if (kandida->left)  std::cout << LIGHT_BLUE << "(" << kandida->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> kandida right: " << kandida->right; if (kandida->right) std::cout << LIGHT_BLUE << "(" << kandida->right->value.first << ")" << C_RES; std::cout << std::endl;
+                                                                                                // display_node_links(node, "node");
+                                                                                                // display_node_links(kandida, "kandida");
+                if (kandida->left && kandida->right) // kandida is not a leave
 
-                std::cout << "unlink node" << std::endl;
+                // std::cout << "unlink node" << std::endl;
                 unlink_node(node);
-                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                                                                                                // display_node_links(node, "node");
                 if (_root == node)
                     _root = kandida;
-                std::cout << "> _root         : " << _root << LIGHT_BLUE << "(" << _root->value.first << ")" << C_RES << std::endl;
-                std::cout << "> _root left    : " << _root->left;  if (_root->left)  std::cout << LIGHT_BLUE << "(" << _root->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> _root right   : " << _root->right; if (_root->right) std::cout << LIGHT_BLUE << "(" << _root->right->value.first << ")" << C_RES; std::cout << std::endl;
+                                                                                                // display_node_links(_root, "_root");
                 return (kandida);
             }
 
             node_pointer        detach_node_with_one_or_no_child(node_pointer & node)
             {
-                std::cout << __FUNCTION__ << "()" << std::endl;
+                // std::cout << __FUNCTION__ << "()" << std::endl;
                 if (node == NULL)
                     return (NULL);
-                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> node left    : "  << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                // display_node_links(node, "node");
 
                 if (node->left == NULL && node->right == NULL) {
-                    TTEST("feuille")
+                    // TTEST("feuille")
                     /* feuille
                     |
                     |   if node is not root:
@@ -280,7 +274,7 @@ namespace ft
                         _root = NULL;
                 }
                 else if (node->left && !node->right) {
-                    TTEST("only left child")
+                    // TTEST("only left child")
                     /* only left child
                     |
                     |   if node is not root:
@@ -312,7 +306,7 @@ namespace ft
                     }
                 }
                 else if (node->right && !node->left) {
-                    TTEST("only right child")
+                    // TTEST("only right child")
                     /* only right child
                     |
                     |   if node is not root:
@@ -349,12 +343,10 @@ namespace ft
 
             node_pointer        remove(node_pointer & node)
             {
-                std::cout << __FUNCTION__ << "()" << std::endl;
+                // std::cout << __FUNCTION__ << "()" << std::endl;
                 if (node == NULL)
                     return (NULL);
-                std::cout << "> node         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> node left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> node right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+                // display_node_links(node, "node");
                 if (node->right && node->left)
                     detach_node_with_two_child(node);
                 else
@@ -368,30 +360,66 @@ namespace ft
             node_pointer        remove(value_type & value)
             {
                 node_pointer tmp = search(value);
-                TTEST("remove value {k:%d, v:%d}", value.first, value.second);
+                // TTEST("remove value {k:%d, v:%d}", value.first, value.second);
                 return (remove(tmp));
             }
             node_pointer        remove(key_type & key)
             {
                 node_pointer tmp = search(key);
-                TTEST("remove key %d", key);
+                // TTEST("remove key %d", key);
                 return (remove(tmp));
             }
-
-            void                swap(node_pointer & a, node_pointer & b)
+            void                _pswap(node_pointer *a, node_pointer *b)
             {
-                node_pointer   t_p = a->parent;
-                node_pointer   t_l = a->left;
-                node_pointer   t_r = a->right;
-
-                a->parent = b->parent;
-                a->left = b->left;
-                a->right = b->right;
-
-                b->parent = t_p;
-                b->left = t_l;
-                b->right = t_r;
+                node_pointer tmp = *a;
+                *a = *b;
+                *b = tmp;
             }
+
+            void                swap(node_pointer a, node_pointer b)
+            {
+                // display_node_links(a, "a");
+                // display_node_links(b, "b");
+                // swap parents endpoint
+                node_pointer *ap = get_parent_endpoint(a);
+                node_pointer *bp = get_parent_endpoint(b);
+
+                if (ap) *ap = b;
+                if (bp) *bp = a;
+
+                // _pswap(ap, bp);
+
+                // swap children endpoint
+                if (a->left)  a->left->parent = b;
+                if (a->right) a->right->parent = b;
+                if (b->left)  b->left->parent = a;
+                if (b->right) b->right->parent = a;
+
+                // swap inner links
+                _pswap(&a->parent, &b->parent);
+                _pswap(&a->left, &b->left);
+                _pswap(&a->right, &b->right);
+            }
+
+            // void                swap(node_pointer a, node_pointer b)
+            // {
+            //     node_pointer   t_p = a->parent;
+            //     node_pointer   t_l = a->left;
+            //     node_pointer   t_r = a->right;
+
+            //     a->parent = b->parent;
+            //     a->left = b->left;
+            //     a->right = b->right;
+
+            //     b->parent = t_p;
+            //     b->left = t_l;
+            //     b->right = t_r;
+
+            //     node_pointer ap = get_parent_endpoint(a);
+            //     node_pointer bp = get_parent_endpoint(b);
+            // }
+
+
             void                clear_node(node_pointer & node)
             {
                 if (node == NULL)

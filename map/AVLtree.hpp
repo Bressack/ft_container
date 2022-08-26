@@ -2,10 +2,10 @@
 
 # include "../others/color.hpp"
 # include "../others/utils.hpp"
-# include "../others/reverse_iterator.hpp"
 # include "../others/pair.hpp"
 # include "display_tree.hpp"
 # include "node.hpp"
+# include "tree_iterator.hpp"
 # include <iostream>
 # include <vector>
 # include <memory>
@@ -27,8 +27,8 @@ namespace ft
 
     template <  class K,
                 class T,
-                class Alloc = std::allocator<ft::node<ft::pair<K, T> > >,
-                class Compare = ft::less<K>
+                class Allocator = std::allocator<ft::node<ft::pair<K, T> > >,
+                class Compare = std::less<K>
              >
     class tree
     {
@@ -45,7 +45,7 @@ namespace ft
             typedef ft::pair<node_pointer, node_pointer*>       future_parent;
 
             // ALLOCATOR
-            typedef Alloc                                       allocator_type;
+            typedef Allocator                                   allocator_type;
             typedef typename allocator_type::reference          reference;
             typedef typename allocator_type::const_reference    const_reference;
             typedef typename allocator_type::pointer            pointer;
@@ -55,6 +55,12 @@ namespace ft
 
             // COMPARE
             typedef Compare                                     key_compare;
+
+            // ITERATORS
+            typedef ft::tree_iterator<value_type>               iterator;
+            typedef ft::const_tree_iterator<value_type>         const_iterator;
+            typedef ft::reverse_iterator<iterator>              reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>        const_reverse_iterator;
 
         /* ***************************************************************** *\
         |                     INNER ATTRIBUTES DEFINITION                     |
@@ -66,14 +72,16 @@ namespace ft
             node_pointer                _end;
             node_pointer                _root;
             size_type                   _size;
-            Alloc                       _allocator;
+            Allocator                   _allocator;
 
         /* ***************************************************************** *\
         |                      CONSTRUCTOR / DESTRUCTOR                       |
         \* ***************************************************************** */
 
         public:
-            tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {}
+            tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {
+                _end = __allocate_node(value_type(0,0));
+            }
             virtual ~tree() { clear_tree(); }
 
         /* ***************************************************************** *\
@@ -82,19 +90,73 @@ namespace ft
 
         private:
         // allocations
-            node_pointer        __allocate_node(const value_type & value, node_pointer parent = NULL)
+            node_pointer            __allocate_node(const value_type & value, node_pointer parent = NULL)
             {
                 node_pointer node = _allocator.allocate(1);
                 _allocator.construct(node, node_type(value, parent));
                 return (node);
             }
-            void                __deallocate_node(const node_pointer & node)
+            void                    __deallocate_node(const node_pointer & node)
             {
                 if (node != NULL)
                     _allocator.deallocate(node, sizeof(node_type));
             }
 
         public:
+            mapped_type&            operator[] (const key_type& k)
+            {
+                node_pointer node = search(k);
+                if (node != NULL)
+                    return (node->value.second);
+                ft::pair<iterator,bool> insert_ret = insert(ft::make_pair(k, mapped_type()));
+                return ((*insert_ret.first).second);
+            };
+            // iterators
+            iterator                begin ()
+            {
+                if (size() == 0)
+                    return (end());
+                return (iterator(minimum(_root)));
+            };
+
+            const_iterator          begin () const
+            {
+                if (size() == 0)
+                    return (end());
+                return (const_iterator(minimum(_root)));
+            };
+
+            iterator                end ()
+            {
+                return (iterator(_end));
+            };
+
+            const_iterator          end () const
+            {
+                return (const_iterator(_end));
+            };
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            reverse_iterator        rbegin ()
+            {
+                return (reverse_iterator(_end));
+            };
+
+            const_reverse_iterator  rbegin () const
+            {
+                return (const_reverse_iterator(_end));
+            };
+
+            reverse_iterator        rend ()
+            {
+                return (reverse_iterator(begin()));
+            };
+
+            const_reverse_iterator  rend () const
+            {
+                return (const_reverse_iterator(begin()));
+            };
             // tools
             void                infix_apply(const node_pointer node, node_pointer(tree::*f)(const node_pointer &))
             {
@@ -106,6 +168,11 @@ namespace ft
                 if (node->right)
                     infix_apply(node->right, f);
             }
+            size_type           count (const key_type& k) const
+            {
+                const_iterator it = search(k);
+                return (it != _end);
+            };
 
             // capacity
             inline bool         empty(void)
@@ -122,13 +189,25 @@ namespace ft
             }
 
             // modifiers
+            void                update_end(void)
+            {
+                if (_root)
+                {
+                    if (_end)
+                    {
+                        _end->left = _root;
+                        _end->right = _root;
+                    }
+                    _root->parent = _end;
+                }
+            }
             inline void         unlink_node(node_pointer node)
             {
                 node->left = NULL;
                 node->right = NULL;
                 node->parent = NULL;
             }
-            void    display_node_links(node_pointer node, std::string nname)
+            void                display_node_links(node_pointer node, std::string nname)
             {
                 std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
                 std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
@@ -137,13 +216,22 @@ namespace ft
 
             }
 
+            template <class InputIterator>
+            void                insert (InputIterator first, InputIterator last)
+            {
+                while (first != last)
+                {
+                    insert(*first);
+                    ++first;
+                }
+            };
             node_pointer        insert(const node_pointer & node)
             {
                 // printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
                 if (empty() == true) // tree is empty
                 {
                     _root = node;
-                    printf("trdisplay_node_linksee empty - %p - %p\n", _root, node);
+                    printf("tree empty - %p - %p\n", _root, node);
                 }
                 else // tree is not empty
                 {
@@ -154,6 +242,7 @@ namespace ft
                     __balance_tree(node);
                 }
                 _size += 1;
+                update_end();
                 return (node);
             }
             node_pointer        insert(const value_type & value)
@@ -340,6 +429,13 @@ namespace ft
                 unlink_node(node);
                 return (node);
             }
+            void                remove(iterator first, iterator last)
+            {
+                while (first != last)
+                {
+                    remove(first++);
+                }
+            };
 
             node_pointer        remove(node_pointer & node)
             {
@@ -355,6 +451,7 @@ namespace ft
                 _size -= 1;
                 std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << C_RES << std::endl;
                 __deallocate_node(node);
+                update_end();
                 return (NULL);
             }
             node_pointer        remove(value_type & value)
@@ -400,25 +497,6 @@ namespace ft
                 _pswap(&a->left, &b->left);
                 _pswap(&a->right, &b->right);
             }
-
-            // void                swap(node_pointer a, node_pointer b)
-            // {
-            //     node_pointer   t_p = a->parent;
-            //     node_pointer   t_l = a->left;
-            //     node_pointer   t_r = a->right;
-
-            //     a->parent = b->parent;
-            //     a->left = b->left;
-            //     a->right = b->right;
-
-            //     b->parent = t_p;
-            //     b->left = t_l;
-            //     b->right = t_r;
-
-            //     node_pointer ap = get_parent_endpoint(a);
-            //     node_pointer bp = get_parent_endpoint(b);
-            // }
-
 
             void                clear_node(node_pointer & node)
             {
@@ -495,6 +573,21 @@ namespace ft
                     else
                         tmp = tmp->right;
                 }
+            }
+            const_iterator      search(const key_type & key) const
+            {
+                node_pointer n = search(key);
+                if (n == NULL)
+                    return (_end);
+                return (const_iterator(n));
+            }
+
+            iterator            search(const key_type & key) const
+            {
+                node_pointer n = search(key);
+                if (n == NULL)
+                    return (_end);
+                return (iterator(n));
             }
 
             node_pointer        prev_value (node_pointer node) const
@@ -750,5 +843,3 @@ namespace ft
             }
     };
 }
-
-

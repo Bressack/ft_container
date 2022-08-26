@@ -1,7 +1,8 @@
 #ifndef ITERATOR_TRAITS_HPP_
-#define ITERATOR_TRAITS_HPP_
+# define ITERATOR_TRAITS_HPP_
 
-#include <iterator>
+# include <iterator>
+# include <cstddef>
 
 namespace ft
 {
@@ -16,7 +17,8 @@ namespace ft
 			typedef Category	iterator_category;
 	};
 
-	struct random_access_iterator_tag {};
+	// struct bidirectional_iterator_tag {};
+	// struct random_access_iterator_tag {};
 
 	template <class IT>
 	class iterator_traits

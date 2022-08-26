@@ -8,7 +8,7 @@ namespace ft
 {
 	// iterator herite de la class ft::iterator de iterator_traits
 	template < typename IT > // IT is a pointer
-	class iterator : public ft::iterator_core<ft::random_access_iterator_tag, IT>
+	class iterator : public ft::iterator_core<std::random_access_iterator_tag, IT>
 	{
 		protected:
 			// on utilise aussi ft::iterator_traits comme ptr pour les attributs public de iterator

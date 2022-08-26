@@ -1,10 +1,13 @@
 #ifndef TREE_ITERATOR_HPP
-#define TREE_ITERATOR_HPP
+# define TREE_ITERATOR_HPP
 
-#include <iostream>
-#include "node.hpp"
-#include "../others/iterator_traits.hpp"
-#include "../others/color.hpp"
+# include <iostream>
+# include "node.hpp"
+# include "../others/iterator_traits.hpp"
+# include "../others/iterator.hpp"
+# include "../others/reverse_iterator.hpp"
+
+# include "../others/color.hpp"
 
 namespace ft
 {
@@ -12,20 +15,20 @@ namespace ft
     class const_tree_iterator;
 
     template <typename T>
-    class tree_iterator : public ft::bidirectional_iterator_tag
+    class tree_iterator : public std::bidirectional_iterator_tag
     {
         protected:
-            typedef ft::node<T> *node_pointer;
-            typedef iterator<ft::bidirectional_iterator_tag, T> iterator_type;
+            typedef ft::node<T>  *node_pointer;
+            typedef iterator_core<std::bidirectional_iterator_tag, T>  iterator_type;
 
             node_pointer _node;
 
         public:
-            typedef typename iterator_traits<iterator_type>::value_type value_type;
-            typedef typename iterator_traits<iterator_type>::difference_type difference_type;
-            typedef typename iterator_traits<iterator_type>::pointer pointer;
-            typedef typename iterator_traits<iterator_type>::reference reference;
-            typedef ft::bidirectional_iterator_tag iterator_category;
+            typedef typename iterator_traits<iterator_type>::value_type         value_type;
+            typedef typename iterator_traits<iterator_type>::difference_type    difference_type;
+            typedef typename iterator_traits<iterator_type>::pointer            pointer;
+            typedef typename iterator_traits<iterator_type>::reference          reference;
+            typedef std::bidirectional_iterator_tag                             iterator_category;
 
             inline tree_iterator() : _node(NULL) {};
             inline tree_iterator(const tree_iterator &it) : _node(it.base()) {};
@@ -124,20 +127,20 @@ namespace ft
     }; // tree_iterator
 
     template <typename T>
-    class const_tree_iterator : public ft::bidirectional_iterator_tag
+    class const_tree_iterator : public std::bidirectional_iterator_tag
     {
         protected:
             typedef ft::node<T> *node_pointer;
-            typedef iterator<ft::bidirectional_iterator_tag, const T> iterator_type;
+            typedef iterator<const T> iterator_type;
 
             node_pointer _node;
 
         public:
-            typedef typename iterator_traits<iterator_type>::value_type value_type;
-            typedef typename iterator_traits<iterator_type>::difference_type difference_type;
-            typedef typename iterator_traits<iterator_type>::pointer pointer;
-            typedef typename iterator_traits<iterator_type>::reference reference;
-            typedef ft::bidirectional_iterator_tag iterator_category;
+            typedef typename iterator_traits<iterator_type>::value_type         value_type;
+            typedef typename iterator_traits<iterator_type>::difference_type    difference_type;
+            typedef typename iterator_traits<iterator_type>::pointer            pointer;
+            typedef typename iterator_traits<iterator_type>::reference          reference;
+            typedef std::bidirectional_iterator_tag                             iterator_category;
 
             const_tree_iterator() : _node(NULL) {};
             const_tree_iterator(const const_tree_iterator<T> &it) : _node(it.base()) {};

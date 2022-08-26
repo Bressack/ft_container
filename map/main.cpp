@@ -1,5 +1,5 @@
 # include "../others/color.hpp"
-# include "tree.hpp"
+# include "AVLtree.hpp"
 # include <ctime>
 # include <cstdlib>
 # include <vector>
@@ -19,6 +19,7 @@ void shuffle_array(int * arr, int n, unsigned int seed = 0)
 
 void    info(tree_type & t)
 {
+    // std::map<int,int>:: difference_type
     std::cout << "info: {" << std::endl;
     std::cout << "    " << "empty        : " << std::string(t.empty() ? "True" : "False") << std::endl;
     std::cout << "    " << "size         : " << t.size() << std::endl;
@@ -67,7 +68,7 @@ void    siege()
 {
     std::vector<int>    history;
     tree_type           t;
-    std::map<int, int> st;
+    std::map<int, int>  st;
     int n = 0;
     int start = 10;
 
@@ -116,8 +117,8 @@ void    siege()
         //     exit(1);
         if (roll > 5)
             roll = 0;
-        // if (gen >= 20)
-        //     exit(0);
+        if (gen >= 3)
+            exit(0);
     }
 }
 

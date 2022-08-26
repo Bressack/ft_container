@@ -32,9 +32,9 @@ namespace ft
             typedef ft::reverse_iterator<const_tree_iterator<value_type> > const_reverse_iterator;
 
         private:
-            tree_type _tree;
-            allocator_type _alloc;
-            key_compare _comp;
+            tree_type       _tree;node_pointer											_node;
+            allocator_type  _alloc;
+            key_compare     _comp;
 
         public:
             explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : _tree(), _alloc(alloc), _comp(comp){};

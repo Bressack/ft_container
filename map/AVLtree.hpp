@@ -27,8 +27,9 @@ namespace ft
 
     template <  class K,
                 class T,
-                class Allocator = std::allocator<ft::node<ft::pair<K, T> > >,
-                class Compare = std::less<K>
+                class Compare = std::less<K>,
+                class ValueAllocator = std::allocator<ft::pair<const K, T> >,
+                class NodeAllocator = std::allocator<ft::node<ft::pair<const K, T> > >
              >
     class tree
     {
@@ -45,7 +46,7 @@ namespace ft
             typedef ft::pair<node_pointer, node_pointer*>       future_parent;
 
             // ALLOCATOR
-            typedef Allocator                                   allocator_type;
+            typedef ValueAllocator                              allocator_type;
             typedef typename allocator_type::reference          reference;
             typedef typename allocator_type::const_reference    const_reference;
             typedef typename allocator_type::pointer            pointer;
@@ -62,6 +63,19 @@ namespace ft
             typedef ft::reverse_iterator<iterator>              reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>        const_reverse_iterator;
 
+            class value_compare : public std::binary_function<value_type, value_type, bool>
+            {
+                protected:
+                    Compare comp;
+                public:
+                    value_compare (Compare c) : comp(c) {}
+                    typedef bool result_type;
+                    typedef value_type first_argument_type;
+                    typedef value_type second_argument_type;
+                    bool operator() (const value_type& x, const value_type& y) const
+                    { return comp(x.first, y.first); }
+            };
+
         /* ***************************************************************** *\
         |                     INNER ATTRIBUTES DEFINITION                     |
         \* ***************************************************************** */
@@ -72,7 +86,8 @@ namespace ft
             node_pointer                _end;
             node_pointer                _root;
             size_type                   _size;
-            Allocator                   _allocator;
+            ValueAllocator              _value_allocator;
+            NodeAllocator               _node_allocator;
 
         /* ***************************************************************** *\
         |                      CONSTRUCTOR / DESTRUCTOR                       |
@@ -88,93 +103,72 @@ namespace ft
         |                        METHODS DEFINITION                           |
         \* ***************************************************************** */
 
+        /* **************************************** *\
+        |                ALLOCATION                  |
+        \* **************************************** */
+
         private:
-        // allocations
-            node_pointer            __allocate_node(const value_type & value, node_pointer parent = NULL)
+            inline node_pointer            __allocate_node(const value_type & value, node_pointer parent = NULL)
             {
                 node_pointer node = _allocator.allocate(1);
                 _allocator.construct(node, node_type(value, parent));
                 return (node);
+
+                node_pointer node = _node_allocator.allocate(1);
+                _allocator.construct(node, node_type(value, parent));
+                return (node);
             }
-            void                    __deallocate_node(const node_pointer & node)
+            inline void                    __deallocate_node(const node_pointer & node)
             {
                 if (node != NULL)
                     _allocator.deallocate(node, sizeof(node_type));
             }
 
+        /* **************************************** *\
+        |                 ITERATOR                   |
+        \* **************************************** */
         public:
-            mapped_type&            operator[] (const key_type& k)
-            {
-                node_pointer node = search(k);
-                if (node != NULL)
-                    return (node->value.second);
-                ft::pair<iterator,bool> insert_ret = insert(ft::make_pair(k, mapped_type()));
-                return ((*insert_ret.first).second);
-            };
-            // iterators
-            iterator                begin ()
+            inline iterator                begin ()
             {
                 if (size() == 0)
                     return (end());
                 return (iterator(minimum(_root)));
             };
-
-            const_iterator          begin () const
+            inline const_iterator          begin () const
             {
                 if (size() == 0)
                     return (end());
                 return (const_iterator(minimum(_root)));
             };
-
-            iterator                end ()
+            inline iterator                end ()
             {
                 return (iterator(_end));
             };
-
-            const_iterator          end () const
+            inline const_iterator          end () const
             {
                 return (const_iterator(_end));
             };
-
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-            reverse_iterator        rbegin ()
+            inline reverse_iterator        rbegin ()
             {
                 return (reverse_iterator(_end));
             };
-
-            const_reverse_iterator  rbegin () const
+            inline const_reverse_iterator  rbegin () const
             {
                 return (const_reverse_iterator(_end));
             };
-
-            reverse_iterator        rend ()
+            inline reverse_iterator        rend ()
             {
                 return (reverse_iterator(begin()));
             };
-
-            const_reverse_iterator  rend () const
+            inline const_reverse_iterator  rend () const
             {
                 return (const_reverse_iterator(begin()));
             };
-            // tools
-            void                infix_apply(const node_pointer node, node_pointer(tree::*f)(const node_pointer &))
-            {
-                if (node == NULL)
-                    return ;
-                if (node->left)
-                    infix_apply(node->left, f);
-                (this->*f)(node);
-                if (node->right)
-                    infix_apply(node->right, f);
-            }
-            size_type           count (const key_type& k) const
-            {
-                const_iterator it = search(k);
-                return (it != _end);
-            };
 
-            // capacity
+        /* **************************************** *\
+        |                 CAPACITY                   |
+        \* **************************************** */
+        public:
             inline bool         empty(void)
             {
                 return (_size == 0);
@@ -189,33 +183,11 @@ namespace ft
             }
 
             // modifiers
-            void                update_end(void)
-            {
-                if (_root)
-                {
-                    if (_end)
-                    {
-                        _end->left = _root;
-                        _end->right = _root;
-                    }
-                    _root->parent = _end;
-                }
-            }
-            inline void         unlink_node(node_pointer node)
-            {
-                node->left = NULL;
-                node->right = NULL;
-                node->parent = NULL;
-            }
-            void                display_node_links(node_pointer node, std::string nname)
-            {
-                std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
 
-            }
-
+        /* **************************************** *\
+        |                 INSERTING                  |
+        \* **************************************** */
+        public:
             template <class InputIterator>
             void                insert (InputIterator first, InputIterator last)
             {
@@ -264,171 +236,10 @@ namespace ft
                 return (insert(value_type(key, value)));
             }
 
-            node_pointer        detach_node_from_parent(node_pointer node)
-            {
-                if (node->parent)
-                {
-                    if (node->parent->left == node)
-                        node->parent->left = NULL;
-                    else if (node->parent->right == node)
-                        node->parent->right = NULL;
-                    node->parent = NULL;
-                    return (node);
-                }
-                else
-                    return (NULL);
-            }
-
-            node_pointer        *get_parent_endpoint(node_pointer node)
-            {
-                if (node && node->parent)
-                {
-                    if (node->parent->left == node)
-                        return (&node->parent->left);
-                    else
-                        return (&node->parent->right);
-                }
-                else
-                    return (NULL);
-            }
-
-            node_pointer        find_kandida(node_pointer & node)
-            {
-                if (node == NULL)
-                    return (NULL);
-
-                node_pointer kandida;
-
-                // on commence par calculer la depth de la node
-                int depth = __get_node_depth(node);
-
-                // deux cas: si la depth est negative on cherche le precedent le plus proche
-                // sinon le suivant le plus proche
-                if (depth < 0)
-                    kandida = prev_value(node);
-                else
-                    kandida = next_value(node);
-                return (kandida);
-            }
-
-            node_pointer        detach_node_with_two_child(node_pointer & node)
-            {
-                // std::cout << __FUNCTION__ << "()" << std::endl;
-                if (node == NULL)
-                    return (NULL);
-                                                                                                // display_node_links(node, "node");
-                // std::cout << "finding kandida" << std::endl;
-                node_pointer kandida = find_kandida(node);
-                                                                                                // display_node_links(kandida, "kandida");
-                if (kandida->left && kandida->right) // kandida is not a leave
-                    detach_node_with_two_child(kandida);
-                else
-                    detach_node_with_one_or_no_child(kandida); // detach and unlink kandida
-                // std::cout << "swap node and kandida" << std::endl;
-                swap(node, kandida);
-                                                                                                // display_node_links(node, "node");
-                                                                                                // display_node_links(kandida, "kandida");
-                if (kandida->left && kandida->right) // kandida is not a leave
-
-                // std::cout << "unlink node" << std::endl;
-                unlink_node(node);
-                                                                                                // display_node_links(node, "node");
-                if (_root == node)
-                    _root = kandida;
-                                                                                                // display_node_links(_root, "_root");
-                return (kandida);
-            }
-
-            node_pointer        detach_node_with_one_or_no_child(node_pointer & node)
-            {
-                // std::cout << __FUNCTION__ << "()" << std::endl;
-                if (node == NULL)
-                    return (NULL);
-                // display_node_links(node, "node");
-
-                if (node->left == NULL && node->right == NULL) {
-                    // TTEST("feuille")
-                    /* feuille
-                    |
-                    |   if node is not root:
-                    |       [ ]
-                    |      /   \
-                    |   [X]     [ ]
-                    |
-                    |   if node is root:
-                    |   [X]
-                    */
-                    // detach the node of the tree
-                    if (detach_node_from_parent(node) == NULL)
-                        _root = NULL;
-                }
-                else if (node->left && !node->right) {
-                    // TTEST("only left child")
-                    /* only left child
-                    |
-                    |   if node is not root:
-                    |        [ ]
-                    |       /   \
-                    |    [ ]     [X]
-                    |           /
-                    |        [ ]
-                    |       /   \
-                    |    [ ]     [ ]
-                    |
-                    |   if node is root:
-                    |           [X]
-                    |          /
-                    |       [ ]
-                    |      /   \
-                    |   [ ]     [ ]
-                    */
-                    node_pointer *tmp = get_parent_endpoint(node);
-                    if (tmp == NULL)
-                    {
-                        _root = node->left;
-                        _root->parent = NULL;
-                    }
-                    else
-                    {
-                        node->left->parent = node->parent;
-                       *tmp = node->left;
-                    }
-                }
-                else if (node->right && !node->left) {
-                    // TTEST("only right child")
-                    /* only right child
-                    |
-                    |   if node is not root:
-                    |        [ ]
-                    |       /   \
-                    |    [X]     [ ]
-                    |       \
-                    |        [ ]
-                    |       /   \
-                    |    [ ]     [ ]
-                    |
-                    |   if node is root:
-                    |   [X]
-                    |      \
-                    |       [ ]
-                    |      /   \
-                    |   [ ]     [ ]
-                    */
-                    node_pointer *tmp = get_parent_endpoint(node);
-                    if (tmp == NULL)
-                    {
-                        _root = node->right;
-                        _root->parent = NULL;
-                    }
-                    else
-                    {
-                        node->right->parent = node->parent;
-                       *tmp = node->right;
-                    }
-                }
-                unlink_node(node);
-                return (node);
-            }
+        /* **************************************** *\
+        |                 DELETING                   |
+        \* **************************************** */
+        public:
             void                remove(iterator first, iterator last)
             {
                 while (first != last)
@@ -436,10 +247,9 @@ namespace ft
                     remove(first++);
                 }
             };
-
             node_pointer        remove(node_pointer & node)
             {
-                // std::cout << __FUNCTION__ << "()" << std::endl;
+                // std::cout << __FUNCTION__ << "(root:" << _root << ")" << std::endl;
                 if (node == NULL)
                     return (NULL);
                 // display_node_links(node, "node");
@@ -466,37 +276,6 @@ namespace ft
                 // TTEST("remove key %d", key);
                 return (remove(tmp));
             }
-            void                _pswap(node_pointer *a, node_pointer *b)
-            {
-                node_pointer tmp = *a;
-                *a = *b;
-                *b = tmp;
-            }
-
-            void                swap(node_pointer a, node_pointer b)
-            {
-                // display_node_links(a, "a");
-                // display_node_links(b, "b");
-                // swap parents endpoint
-                node_pointer *ap = get_parent_endpoint(a);
-                node_pointer *bp = get_parent_endpoint(b);
-
-                if (ap) *ap = b;
-                if (bp) *bp = a;
-
-                // _pswap(ap, bp);
-
-                // swap children endpoint
-                if (a->left)  a->left->parent = b;
-                if (a->right) a->right->parent = b;
-                if (b->left)  b->left->parent = a;
-                if (b->right) b->right->parent = a;
-
-                // swap inner links
-                _pswap(&a->parent, &b->parent);
-                _pswap(&a->left, &b->left);
-                _pswap(&a->right, &b->right);
-            }
 
             void                clear_node(node_pointer & node)
             {
@@ -514,7 +293,24 @@ namespace ft
                 clear_node(_root);
             }
 
-            // accessors
+        /* **************************************** *\
+        |                 ACCESSORS                  |
+        \* **************************************** */
+        public:
+            mapped_type&        operator[] (const key_type& k)
+            {
+                node_pointer node = search(k);
+                if (node != NULL)
+                    return (node->value.second);
+                ft::pair<iterator,bool> insert_ret = insert(ft::make_pair(k, mapped_type()));
+                return ((*insert_ret.first).second);
+            };
+
+            size_type           count (const key_type& k) const
+            {
+                const_iterator it = search(k);
+                return (it != _end);
+            };
             node_pointer        lower_bound(const key_type & key)
             {
                 node_pointer    tmp = _root;
@@ -574,21 +370,6 @@ namespace ft
                         tmp = tmp->right;
                 }
             }
-            const_iterator      search(const key_type & key) const
-            {
-                node_pointer n = search(key);
-                if (n == NULL)
-                    return (_end);
-                return (const_iterator(n));
-            }
-
-            iterator            search(const key_type & key) const
-            {
-                node_pointer n = search(key);
-                if (n == NULL)
-                    return (_end);
-                return (iterator(n));
-            }
 
             node_pointer        prev_value (node_pointer node) const
             {
@@ -613,7 +394,232 @@ namespace ft
                 return (node);
             }
 
+        /* **************************************** *\
+        |                INNER TOOLS                 |
+        \* **************************************** */
         private:
+            void                infix_apply(const node_pointer node, node_pointer(tree::*f)(const node_pointer &))
+            {
+                if (node == NULL)
+                    return ;
+                if (node->left)
+                    infix_apply(node->left, f);
+                (this->*f)(node);
+                if (node->right)
+                    infix_apply(node->right, f);
+            }
+            node_pointer        detach_node_from_parent(node_pointer node)
+            {
+                if (node->parent)
+                {
+                    if (node->parent == _end)
+                        return (NULL);
+                    if (node->parent->left == node)
+                        node->parent->left = NULL;
+                    else if (node->parent->right == node)
+                        node->parent->right = NULL;
+                    node->parent = NULL;
+                    return (node);
+                }
+                else
+                    return (NULL);
+            }
+            node_pointer        *get_parent_endpoint(node_pointer node)
+            {
+                if (node && node->parent)
+                {
+                    if (node->parent == _end)
+                        return (NULL);
+                    if (node->parent->left == node)
+                        return (&node->parent->left);
+                    else
+                        return (&node->parent->right);
+                }
+                else
+                    return (NULL);
+            }
+            node_pointer        find_kandida(node_pointer & node)
+            {
+                if (node == NULL)
+                    return (NULL);
+
+                node_pointer kandida;
+
+                // on commence par calculer la depth de la node
+                int depth = __get_node_depth(node);
+
+                // deux cas: si la depth est negative on cherche le precedent le plus proche
+                // sinon le suivant le plus proche
+                if (depth < 0)
+                    kandida = prev_value(node);
+                else
+                    kandida = next_value(node);
+                return (kandida);
+            }
+            node_pointer        detach_node_with_two_child(node_pointer & node)
+            {
+                // std::cout << __FUNCTION__ << "()" << std::endl;
+                if (node == NULL)
+                    return (NULL);
+                                                                                                // display_node_links(node, "node");
+                // std::cout << "finding kandida" << std::endl;
+                node_pointer kandida = find_kandida(node);
+                                                                                                // display_node_links(kandida, "kandida");
+                if (kandida->left && kandida->right) // kandida is not a leave
+                    detach_node_with_two_child(kandida);
+                else
+                    detach_node_with_one_or_no_child(kandida); // detach and unlink kandida
+                // std::cout << "swap node and kandida" << std::endl;
+                swap(node, kandida);
+                                                                                                // display_node_links(node, "node");
+                                                                                                // display_node_links(kandida, "kandida");
+                if (kandida->left && kandida->right) // kandida is not a leave
+
+                // std::cout << "unlink node" << std::endl;
+                unlink_node(node);
+                                                                                                // display_node_links(node, "node");
+                if (_root == node)
+                    _root = kandida;
+                                                                                                // display_node_links(_root, "_root");
+                return (kandida);
+            }
+            node_pointer        detach_node_with_one_or_no_child(node_pointer & node)
+            {
+                // std::cout << __FUNCTION__ << "()" << std::endl;
+                if (node == NULL)
+                    return (NULL);
+                // display_node_links(node, "node");
+
+                if (node->left == NULL && node->right == NULL) {
+                    // TTEST("feuille")
+                    /* feuille
+                    |
+                    |   if node is not root:
+                    |       [ ]
+                    |      /   \
+                    |   [X]     [ ]
+                    |
+                    |   if node is root:
+                    |   [X]
+                    */
+                    // detach the node of the tree
+                    if (detach_node_from_parent(node) == NULL)
+                        _root = NULL;
+                }
+                else if (node->left && !node->right) {
+                    // TTEST("only left child")
+                    /* only left child
+                    |
+                    |   if node is not root:
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [X]
+                    |           /
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [ ]
+                    |
+                    |   if node is root:
+                    |           [X]
+                    |          /
+                    |       [ ]
+                    |      /   \
+                    |   [ ]     [ ]
+                    */
+                    node_pointer *tmp = get_parent_endpoint(node);
+                    if (tmp == NULL)
+                    {
+                        // TTEST("root")
+                        _root = node->left;
+                        _root->parent = NULL;
+                    }
+                    else
+                    {
+                        // TTEST("no root")
+                        node->left->parent = node->parent;
+                       *tmp = node->left;
+                    }
+                }
+                else if (node->right && !node->left) {
+                    // TTEST("only right child")
+                    /* only right child
+                    |
+                    |   if node is not root:
+                    |        [ ]
+                    |       /   \
+                    |    [X]     [ ]
+                    |       \
+                    |        [ ]
+                    |       /   \
+                    |    [ ]     [ ]
+                    |
+                    |   if node is root:
+                    |   [X]
+                    |      \
+                    |       [ ]
+                    |      /   \
+                    |   [ ]     [ ]
+                    */
+                    node_pointer *tmp = get_parent_endpoint(node);
+                    if (tmp == NULL)
+                    {
+                        _root = node->right;
+                        _root->parent = NULL;
+                    }
+                    else
+                    {
+                        node->right->parent = node->parent;
+                       *tmp = node->right;
+                    }
+                }
+                unlink_node(node);
+                return (node);
+            }
+
+            void                _pswap(node_pointer *a, node_pointer *b)
+            {
+                node_pointer tmp = *a;
+                *a = *b;
+                *b = tmp;
+            }
+            void                swap(node_pointer a, node_pointer b)
+            {
+                // display_node_links(a, "a");
+                // display_node_links(b, "b");
+                // swap parents endpoint
+                node_pointer *ap = get_parent_endpoint(a);
+                node_pointer *bp = get_parent_endpoint(b);
+
+                if (ap) *ap = b;
+                if (bp) *bp = a;
+
+                // _pswap(ap, bp);
+
+                // swap children endpoint
+                if (a->left)  a->left->parent = b;
+                if (a->right) a->right->parent = b;
+                if (b->left)  b->left->parent = a;
+                if (b->right) b->right->parent = a;
+
+                // swap inner links
+                _pswap(&a->parent, &b->parent);
+                _pswap(&a->left, &b->left);
+                _pswap(&a->right, &b->right);
+            }
+            void                update_end(void)
+            {
+                std::cout << _root << std::endl;
+                if (_root)
+                {
+                    if (_end)
+                    {
+                        _end->left = _root;
+                        _end->right = _root;
+                    }
+                    _root->parent = _end;
+                }
+            }
+
             future_parent       __find_future_parent (const node_pointer & node) const
             {
                 node_pointer tmp = _root;
@@ -714,7 +720,7 @@ namespace ft
             }
             int                 __get_node_depth (node_pointer node)
             {
-                if (node == NULL)
+                if (node == NULL || node == _end)
                     return (0);
 
                 int left_depth = __get_node_depth(node->left);
@@ -727,43 +733,53 @@ namespace ft
                     return (0);
                 return (__get_node_depth(node->right) - __get_node_depth(node->left));
             }
+            inline void         unlink_node(node_pointer node)
+            {
+                node->left = NULL;
+                node->right = NULL;
+                node->parent = NULL;
+            }
 
-            bool __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool __compare (      node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
-            bool __compare (const node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool __compare (const node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool __compare (      node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool __compare (      node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
-            bool __compare (const node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool __compare (const node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool __compare (      node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool __compare (      node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
-            bool __compare (const value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool __compare (const value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool __compare (      value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool __compare (      value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
-            bool __compare (const value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool __compare (const value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool __compare (      value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool __compare (      value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
-            bool __compare (const value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool __compare (const value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool __compare (      value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool __compare (      value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
-            bool __compare (const key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool __compare (const key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool __compare (      key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool __compare (      key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
-            bool __compare (const key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool __compare (const key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool __compare (      key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool __compare (      key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
-            bool __compare (const key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
-            bool __compare (const key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
-            bool __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
-            bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
+        /* **************************************** *\
+        |               KEY COMPARE                  |
+        \* **************************************** */
+        private:
+            inline bool __compare (const node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            inline bool __compare (const node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            inline bool __compare (      node_pointer & x, const node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            inline bool __compare (      node_pointer & x,       node_pointer & y) const { return (key_compare()(x->value.first, y->value.first)); }
+            inline bool __compare (const node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            inline bool __compare (const node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            inline bool __compare (      node_pointer & x, const value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            inline bool __compare (      node_pointer & x,       value_type   & y) const { return (key_compare()(x->value.first, y.first)); }
+            inline bool __compare (const node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            inline bool __compare (const node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            inline bool __compare (      node_pointer & x, const key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            inline bool __compare (      node_pointer & x,       key_type     & y) const { return (key_compare()(x->value.first, y)); }
+            inline bool __compare (const value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            inline bool __compare (const value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            inline bool __compare (      value_type   & x, const node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            inline bool __compare (      value_type   & x,       node_pointer & y) const { return (key_compare()(x.first, y->value.first)); }
+            inline bool __compare (const value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            inline bool __compare (const value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            inline bool __compare (      value_type   & x, const value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            inline bool __compare (      value_type   & x,       value_type   & y) const { return (key_compare()(x.first, y.first)); }
+            inline bool __compare (const value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            inline bool __compare (const value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            inline bool __compare (      value_type   & x, const key_type     & y) const { return (key_compare()(x.first, y)); }
+            inline bool __compare (      value_type   & x,       key_type     & y) const { return (key_compare()(x.first, y)); }
+            inline bool __compare (const key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            inline bool __compare (const key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            inline bool __compare (      key_type     & x, const node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            inline bool __compare (      key_type     & x,       node_pointer & y) const { return (key_compare()(x, y->value.first)); }
+            inline bool __compare (const key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            inline bool __compare (const key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            inline bool __compare (      key_type     & x, const value_type   & y) const { return (key_compare()(x, y.first)); }
+            inline bool __compare (      key_type     & x,       value_type   & y) const { return (key_compare()(x, y.first)); }
+            inline bool __compare (const key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            inline bool __compare (const key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
+            inline bool __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
+            inline bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
         // DEVTOOLS
         private:
@@ -840,6 +856,13 @@ namespace ft
                             << "]" << std::endl;
                 }
                 return (islegal);
+            }
+            void                display_node_links(node_pointer node, std::string nname)
+            {
+                std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+                std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+                std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
             }
     };
 }

@@ -6,7 +6,6 @@
 # include "../others/iterator_traits.hpp"
 # include "../others/iterator.hpp"
 # include "../others/reverse_iterator.hpp"
-
 # include "../others/color.hpp"
 
 namespace ft
@@ -30,11 +29,11 @@ namespace ft
             typedef typename iterator_traits<iterator_type>::reference          reference;
             typedef std::bidirectional_iterator_tag                             iterator_category;
 
-            inline tree_iterator() : _node(NULL) {};
-            inline tree_iterator(const tree_iterator &it) : _node(it.base()) {};
-            inline tree_iterator(node_pointer node) : _node(node) {};
-            inline virtual ~tree_iterator() {};
-            tree_iterator &operator=(const tree_iterator &it)
+            explicit inline tree_iterator() : _node(NULL) {};
+            explicit inline tree_iterator(const tree_iterator &it) : _node(it.base()) {};
+            explicit inline tree_iterator(node_pointer node) : _node(node) {};
+            inline virtual  ~tree_iterator() {};
+            tree_iterator   &operator=(const tree_iterator &it)
             {
                 if (this != &it)
                     _node = it._node;
@@ -42,7 +41,7 @@ namespace ft
             };
 
         protected:
-            node_pointer minimum(node_pointer node)
+            node_pointer    minimum(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -50,8 +49,7 @@ namespace ft
                     node = node->left;
                 return (node);
             };
-
-            node_pointer maximum(node_pointer node)
+            node_pointer    maximum(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -60,7 +58,7 @@ namespace ft
                 return (node);
             };
 
-            node_pointer next(node_pointer node)
+            node_pointer    next(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -75,8 +73,7 @@ namespace ft
                     node = node->_parent;
                 return (node);
             }
-
-            node_pointer prev(node_pointer node)
+            node_pointer    prev(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -93,36 +90,36 @@ namespace ft
             }
 
         public:
-            node_pointer base() const { return (_node); };
+            node_pointer    base() const { return (_node); };
 
-            tree_iterator &operator++()
+            tree_iterator   &operator++()
             {
                 _node = next(_node);
                 return (*this);
             }
-            tree_iterator operator++(int)
+            tree_iterator   operator++(int)
             {
                 tree_iterator tmp = (*this);
                 ++(*this);
                 return (tmp);
             };
-            tree_iterator &operator--()
+            tree_iterator   &operator--()
             {
                 _node = prev(_node);
                 return (*this);
             }
-            tree_iterator operator--(int)
+            tree_iterator   operator--(int)
             {
                 tree_iterator tmp = (*this);
                 --(*this);
                 return (tmp);
             };
-            reference operator*() const { return (_node->_value); };
-            pointer operator->() const { return (&(_node->_value)); };
-            bool operator==(const tree_iterator &lhs) { return (_node == lhs.base()); };
-            bool operator==(const const_tree_iterator<T> &lhs) { return (_node == lhs.base()); };
-            bool operator!=(const tree_iterator &lhs) { return (_node != lhs.base()); };
-            bool operator!=(const const_tree_iterator<T> &lhs) { return (_node != lhs.base()); };
+            reference       operator*() const { return (_node->_value); };
+            pointer         operator->() const { return (&(_node->_value)); };
+            bool            operator==(const tree_iterator &lhs) { return (_node == lhs.base()); };
+            bool            operator==(const const_tree_iterator<T> &lhs) { return (_node == lhs.base()); };
+            bool            operator!=(const tree_iterator &lhs) { return (_node != lhs.base()); };
+            bool            operator!=(const const_tree_iterator<T> &lhs) { return (_node != lhs.base()); };
 
     }; // tree_iterator
 
@@ -142,10 +139,10 @@ namespace ft
             typedef typename iterator_traits<iterator_type>::reference          reference;
             typedef std::bidirectional_iterator_tag                             iterator_category;
 
-            const_tree_iterator() : _node(NULL) {};
-            const_tree_iterator(const const_tree_iterator<T> &it) : _node(it.base()) {};
-            const_tree_iterator(const tree_iterator<T> &it) : _node(it.base()) {};
-            const_tree_iterator(node_pointer node) : _node(node) {};
+            explicit inline const_tree_iterator() : _node(NULL) {};
+            explicit inline const_tree_iterator(const const_tree_iterator<T> &it) : _node(it.base()) {};
+            explicit inline const_tree_iterator(const tree_iterator<T> &it) : _node(it.base()) {};
+            explicit inline const_tree_iterator(node_pointer node) : _node(node) {};
             virtual ~const_tree_iterator() {};
             const_tree_iterator &operator=(const const_tree_iterator &it)
             {
@@ -155,7 +152,7 @@ namespace ft
             };
 
         protected:
-            node_pointer minimum(node_pointer node)
+            node_pointer        minimum(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -163,8 +160,7 @@ namespace ft
                     node = node->left;
                 return (node);
             };
-
-            node_pointer maximum(node_pointer node)
+            node_pointer        maximum(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -173,7 +169,7 @@ namespace ft
                 return (node);
             };
 
-            node_pointer next(node_pointer node)
+            node_pointer        next(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -188,8 +184,7 @@ namespace ft
                     node = node->_parent;
                 return (node);
             }
-
-            node_pointer prev(node_pointer node)
+            node_pointer        prev(node_pointer node)
             {
                 if (node == NULL)
                     return (node);
@@ -206,7 +201,7 @@ namespace ft
             }
 
         public:
-            node_pointer base() const { return (_node); };
+            node_pointer        base() const { return (_node); };
 
             const_tree_iterator &operator++()
             {
@@ -230,12 +225,12 @@ namespace ft
                 --(*this);
                 return (tmp);
             };
-            reference operator*() const { return (_node->_value); };
-            pointer operator->() const { return (&(_node->_value)); };
-            bool operator==(const_tree_iterator &lhs) { return (_node == lhs.base()); };
-            bool operator!=(const_tree_iterator &lhs) { return (_node != lhs.base()); };
-            bool operator==(const tree_iterator<T> &lhs) { return (_node == lhs.base()); };
-            bool operator!=(const tree_iterator<T> &lhs) { return (_node != lhs.base()); };
+            reference           operator*() const { return (_node->_value); };
+            pointer             operator->() const { return (&(_node->_value)); };
+            bool                operator==(const_tree_iterator &lhs) { return (_node == lhs.base()); };
+            bool                operator!=(const_tree_iterator &lhs) { return (_node != lhs.base()); };
+            bool                operator==(const tree_iterator<T> &lhs) { return (_node == lhs.base()); };
+            bool                operator!=(const tree_iterator<T> &lhs) { return (_node != lhs.base()); };
 
     }; // const_tree_iterator
 

@@ -1,5 +1,6 @@
 # include "../others/color.hpp"
 # include "AVLtree.hpp"
+# include "map.hpp"
 # include <ctime>
 # include <cstdlib>
 # include <vector>
@@ -68,7 +69,8 @@ void    siege()
 {
     std::vector<int>    history;
     tree_type           t;
-    std::map<int, int>  st;
+    ft::map<int, int>  st;
+    // std::map<int, int>  st;
     int n = 0;
     int start = 10;
 
@@ -80,36 +82,29 @@ void    siege()
         std::cout << C_G_WHITE << "###############################################################" << C_RES << std::endl;
         std::cout << "gen: " << gen << " | roll: " << roll << std::endl;
 
-        // print history
-        // std::vector<int>::iterator it = history.begin();
-        // std::cout << C_G_YELLOW << "history: ";
-        // for (; it != history.end(); ++it)
-        //     std::cout << *it << " ";
-        // std::cout << C_RES << std::endl;
-
         // info(t);
         if (start > 0 || history.size() <= 1 || std::rand() % 2)
         { // INSERT
             while (1)
             {
-                n = std::rand() % 10000;
+                n = std::rand();
                 if (history_query(history, n) == false)
                     break;
             }
             history.push_back(n);
             std::cout << SKY_BLUE << "[ inserting " << CORAIL << n << SKY_BLUE << " ]" << C_RES << std::endl;
-            t.insert(n, 0);
-            // st.insert(std::pair<int,int>(n, 0));
+            // t.insert(n, 0);
+            st.insert(ft::pair<int,int>(n, 0));
             start--;
         }
         else
         { // REMOVE
             n = pop_history(history);
             std::cout << ORANGE << "[ removing " << CORAIL << n << ORANGE << " ]" << C_RES << std::endl;
-            t.remove(n);
-            // st.erase(n);
+            // t.remove(n);
+            st.erase(n);
         }
-        t.display(std::to_string(roll).c_str());
+        // t.display(std::to_string(roll).c_str());
         gen++;
         roll++;
         // int islegal = t.is_tree_legal();
@@ -117,8 +112,8 @@ void    siege()
         //     exit(1);
         if (roll > 5)
             roll = 0;
-        if (gen >= 3)
-            exit(0);
+        // if (gen >= 3)
+        //     exit(0);
     }
 }
 

@@ -13,6 +13,9 @@
 
 # define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
 
+#include <sstream>
+
+#define sstring( x ) static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str()
 
 namespace ft
 {
@@ -49,14 +52,23 @@ namespace ft
                 static const std::string null_str = std::string(NULL_STR_DOT);
 
                 if (n)
-                    return (\
-                            std::string("[ parent:") + std::to_string((unsigned long long)n->parent) +
-                            std::string("]\n[ self:") + std::to_string((unsigned long long)n) +
-                            std::string("]\n") +
-                            std::to_string(n->value.first) +
-                            std::string(" [") +
-                            std::to_string(get_node_depth_diff(n)) +
-                            std::string("]"));
+                    return sstring( "[ parent:"
+                    << (unsigned long long)n->parent
+                    << "]\n[ self:"
+                    << (unsigned long long)n
+                    << "]\n"
+                    << n->value.first
+                    << " ["
+                    << get_node_depth_diff(n)
+                    << "]");
+                    // return (\
+                    //         std::string("[ parent:") + std::to_string((unsigned long long)n->parent) +
+                    //         std::string("]\n[ self:") + std::to_string((unsigned long long)n) +
+                    //         std::string("]\n") +
+                    //         std::to_string(n->value.first) +
+                    //         std::string(" [") +
+                    //         std::to_string(get_node_depth_diff(n)) +
+                    //         std::string("]"));
                 return (null_str);
             }
 
@@ -73,9 +85,9 @@ namespace ft
                 else
                 {
                     i++;
-                    stream  << std::string("    null" + std::to_string(i) + " [shape=point];\n")
+                    stream  << std::string("    null" + sstring(i) + " [shape=point];\n")
                             << std::string("    \"") << get_value(node).c_str()
-                            << std::string("\" -> \"") << std::string("null" + std::to_string(i)) << "\"\n";
+                            << std::string("\" -> \"") << std::string("null" + sstring(i)) << "\"\n";
                 }
 
                 if (node->right)
@@ -87,9 +99,9 @@ namespace ft
                 else
                 {
                     i++;
-                    stream  << std::string("    null" + std::to_string(i) + " [shape=point];\n")
+                    stream  << std::string("    null" + sstring(i) + " [shape=point];\n")
                             << std::string("    \"") << get_value(node).c_str()
-                            << std::string("\" -> \"") << std::string("null" + std::to_string(i)) << "\"\n";
+                            << std::string("\" -> \"") << std::string("null" + sstring(i)) << "\"\n";
                 }
 
                 if (node->left)

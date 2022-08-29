@@ -13,18 +13,20 @@ namespace ft
     class map
     {
         public:
-            typedef tree<Key, T, Compare, Alloc>         tree_type;
+            typedef ft::tree<Key, T, Compare, Alloc>     tree_type;
+
             typedef Key                                  key_type;
             typedef T                                    mapped_type;
             typedef Compare                              key_compare;
             typedef Alloc                                allocator_type;
+
             typedef ft::pair<key_type, mapped_type>      value_type;
             typedef size_t                               size_type;
             typedef ptrdiff_t                            difference_type;
             typedef typename tree_type::value_compare    value_compare;
 
             typedef ft::node<value_type>                 node_type;
-            typedef ft::node<value_type>                 *node_pointer;
+            typedef ft::node<value_type> *               node_pointer;
 
             typedef ft::tree_iterator<value_type>                          iterator;
             typedef ft::const_tree_iterator<value_type>                    const_iterator;
@@ -93,7 +95,7 @@ namespace ft
             void erase(iterator position) // "If an invalid position or range is specified, it causes undefined behavior."
             { return (_tree.remove(position)); };
 
-            size_type erase(const key_type &k)
+            size_type erase(const key_type & k)
             { return (_tree.remove(k)); };
 
             void erase(iterator first, iterator last) // "If an invalid position or range is specified, it causes undefined behavior."

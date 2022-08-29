@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory '/mnt/nfs/homes/tharchen/Prog/ft_container/map'
 rm -f *.dot
 clang++ -Wall -Wextra -Werror -O3 -I . main.cpp

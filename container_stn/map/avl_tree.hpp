@@ -8,7 +8,11 @@
 # include "../shared/reverse_iterator.hpp"
 # include "../shared/pair.hpp"
 
-template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
+template <  class Key,
+            class T,
+            class Compare = std::less<Key>,
+            class Alloc = std::allocator<ft::pair<const Key,T> >
+         >
 class avl_tree
 {
   public:
@@ -18,6 +22,7 @@ class avl_tree
     typedef Compare                                 key_compare;
     typedef Alloc                                   allocator_type;
     typedef ft::pair<key_type, mapped_type>         value_type;
+
     typedef ft::tree_iterator<value_type>           iterator;
     typedef ft::const_tree_iterator<value_type>     const_iterator;
     typedef ft::reverse_iterator<iterator>          reverse_iterator;

@@ -69,7 +69,7 @@ namespace ft
             const_reverse_iterator rend() const { return (_tree.rend()); };
 
             // 3 CAPACITY (size, max_size, empty)
-            size_type size() const { return (_tree.size()); };
+            size_type size() const { return (_tree.size()); }
             size_type max_size() const { return (_tree.max_size()); }
             bool empty() const { return (_tree.empty()); };
 
@@ -79,33 +79,35 @@ namespace ft
 
             // 4 MODIFIERS : 3 insert, 3 erase, swap, clear
 
+
             ft::pair<iterator, bool> insert(const value_type &val) // single element
             { return (_tree.insert(val)); };
 
             iterator insert(iterator position, const value_type &val) // with hint
             {
-                (void)position;
-                return (iterator(_tree.insert(val)));
+                return (_tree.insert(position, val));
             };
 
             template <class InputIterator>
             void insert(InputIterator first, InputIterator last) // range
             { return (_tree.insert(first, last)); };
 
+
             void erase(iterator position) // "If an invalid position or range is specified, it causes undefined behavior."
-            { return (_tree.remove(position)); };
+            { _tree.remove(*position); };
 
             size_type erase(const key_type & k)
             { return (_tree.remove(k)); };
 
             void erase(iterator first, iterator last) // "If an invalid position or range is specified, it causes undefined behavior."
-            { return (_tree.remove(first, last)); };
+            { _tree.remove(first, last); };
+
 
             void swap(map &x)
-            { return (_tree.swap(x._tree)); };
+            { _tree.swap(x._tree); };
 
             void clear()
-            { return (_tree.clear()); };
+            { _tree.clear_tree(); };
 
             // 2 OBSERVERS (key_comp et value_comp)
             key_compare key_comp() const

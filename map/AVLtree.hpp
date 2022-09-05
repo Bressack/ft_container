@@ -3,7 +3,7 @@
 # include "../others/color.hpp"
 # include "../others/utils.hpp"
 # include "../others/pair.hpp"
-# include "display_tree.hpp"
+// # include "display_tree.hpp"
 # include "node.hpp"
 # include "tree_iterator.hpp"
 # include <iostream>
@@ -28,8 +28,7 @@ namespace ft
     template <  class K,
                 class T,
                 class Compare = std::less<K>,
-                class ValueAllocator = std::allocator<ft::pair<const K, T> >,
-                class NodeAllocator = std::allocator<ft::node<ft::pair<const K, T> > >
+                class Allocator = std::allocator<ft::pair<const K, T> >
              >
     class tree
     {
@@ -46,13 +45,15 @@ namespace ft
             typedef ft::pair<node_pointer, node_pointer*>       future_parent;
 
             // ALLOCATOR
-            typedef ValueAllocator                              allocator_type;
+            typedef Allocator                                   allocator_type;
             typedef typename allocator_type::reference          reference;
             typedef typename allocator_type::const_reference    const_reference;
             typedef typename allocator_type::pointer            pointer;
             typedef typename allocator_type::const_pointer      const_pointer;
             typedef typename allocator_type::size_type          size_type;
             typedef typename allocator_type::difference_type    difference_type;
+
+            typedef typename allocator_type::template rebind<node_type>::other	node_alloc_type;
 
             // COMPARE
             typedef Compare                                     key_compare;
@@ -81,13 +82,12 @@ namespace ft
         \* ***************************************************************** */
         private:
             // DEVTOOL - display_tree.hpp
-            ft::displaytree<node_type>  _dt;
+            // ft::displaytree<node_type>  _dt;
 
             node_pointer                _end;
             node_pointer                _root;
             size_type                   _size;
-            ValueAllocator              _value_allocator;
-            NodeAllocator               _node_allocator;
+            node_alloc_type             _allocator;
 
         /* ***************************************************************** *\
         |                      CONSTRUCTOR / DESTRUCTOR                       |
@@ -113,10 +113,6 @@ namespace ft
                 node_pointer node = _allocator.allocate(1);
                 _allocator.construct(node, node_type(value, parent));
                 return (node);
-
-                node_pointer node = _node_allocator.allocate(1);
-                _allocator.construct(node, node_type(value, parent));
-                return (node);
             }
             inline void                    __deallocate_node(const node_pointer & node)
             {
@@ -128,6 +124,22 @@ namespace ft
         |                 ITERATOR                   |
         \* **************************************** */
         public:
+            node_pointer    minimum(node_pointer node) const
+            {
+                if (node == NULL)
+                    return (node);
+                while (node->left != NULL)
+                    node = node->left;
+                return (node);
+            };
+            node_pointer    maximum(node_pointer node) const
+            {
+                if (node == NULL)
+                    return (node);
+                while (node->right != NULL)
+                    node = node->right;
+                return (node);
+            };
             inline iterator                begin ()
             {
                 if (size() == 0)
@@ -169,15 +181,15 @@ namespace ft
         |                 CAPACITY                   |
         \* **************************************** */
         public:
-            inline bool         empty(void)
+            inline bool         empty(void) const
             {
                 return (_size == 0);
             }
-            inline size_type    size(void)
+            inline size_type    size(void) const
             {
                 return (_size);
             }
-            inline size_type    max_size(void)
+            inline size_type    max_size(void) const
             {
                 return (_allocator.max_size());
             }
@@ -197,17 +209,27 @@ namespace ft
                     ++first;
                 }
             };
-            node_pointer        insert(const node_pointer & node)
+
+            ft::pair<iterator, bool> insert(const value_type &val) // single element
             {
-                // printf(C_G_ORANGE "insert (node=%p)\n" C_RES, node);
+                node_pointer tmp = search(val);
+                if (tmp == NULL)
+                    return (ft::make_pair(__insert(val), true));
+                return (ft::make_pair(tmp, false));
+            };
+
+            iterator insert(iterator position, const value_type &val) // with hint
+            {
+                (void)position;
+                return (iterator(__insert(val)));
+            };
+
+            node_pointer        __insert(const node_pointer & node)
+            {
                 if (empty() == true) // tree is empty
-                {
                     _root = node;
-                    printf("tree empty - %p - %p\n", _root, node);
-                }
                 else // tree is not empty
                 {
-                    printf("tree not empty\n");
                     future_parent parent = __find_future_parent(node);
                     node->parent = parent.first;
                     *parent.second = node;
@@ -217,23 +239,13 @@ namespace ft
                 update_end();
                 return (node);
             }
-            node_pointer        insert(const value_type & value)
+            node_pointer        __insert(const value_type & value)
             {
-                // printf(C_G_GREEN "insert (value)\n" C_RES);
-                // check if the tree already contain a node with a key equivalent, if so, return an pointer to the node
                 node_pointer tmp = search(value);
                 if (tmp != NULL)
-                {
-                    std::cout << "node already insered" << std::endl;
                     return (tmp);
-                }
                 node_pointer n = __allocate_node(value);
-                return (insert(n));
-            }
-            node_pointer        insert(const key_type & key, const mapped_type & value)
-            {
-                // printf(C_G_GREEN "insert (key=%d, val=%d)\n" C_RES, key, value);
-                return (insert(value_type(key, value)));
+                return (__insert(n));
             }
 
         /* **************************************** *\
@@ -244,14 +256,15 @@ namespace ft
             {
                 while (first != last)
                 {
-                    remove(first++);
+                    remove(*first);
+                    first++;
                 }
             };
-            node_pointer        remove(node_pointer & node)
+            size_type        remove(node_pointer & node)
             {
                 // std::cout << __FUNCTION__ << "(root:" << _root << ")" << std::endl;
                 if (node == NULL)
-                    return (NULL);
+                    return (0);
                 // display_node_links(node, "node");
                 if (node->right && node->left)
                     detach_node_with_two_child(node);
@@ -262,15 +275,15 @@ namespace ft
                 std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << C_RES << std::endl;
                 __deallocate_node(node);
                 update_end();
-                return (NULL);
+                return (1);
             }
-            node_pointer        remove(value_type & value)
+            size_type        remove(const value_type & value)
             {
                 node_pointer tmp = search(value);
                 // TTEST("remove value {k:%d, v:%d}", value.first, value.second);
                 return (remove(tmp));
             }
-            node_pointer        remove(key_type & key)
+            size_type        remove(const key_type & key)
             {
                 node_pointer tmp = search(key);
                 // TTEST("remove key %d", key);
@@ -311,7 +324,7 @@ namespace ft
                 const_iterator it = search(k);
                 return (it != _end);
             };
-            node_pointer        lower_bound(const key_type & key)
+            node_pointer        lower_bound(const key_type & key) const
             {
                 node_pointer    tmp = _root;
                 node_pointer    kandida = NULL;
@@ -328,7 +341,7 @@ namespace ft
                         tmp = tmp->right;
                 }
             }
-            node_pointer        upper_bound(const key_type & key)
+            node_pointer        upper_bound(const key_type & key) const
             {
                 node_pointer    tmp = _root;
                 node_pointer    kandida = NULL;
@@ -345,6 +358,24 @@ namespace ft
                         tmp = tmp->right;
                 }
             }
+            key_compare key_comp() const
+            {
+                return (key_compare());
+            };
+
+            value_compare value_comp() const
+            {
+                return (value_compare(key_compare()));
+            };
+            ft::pair<iterator,iterator> equal_range (const key_type& k) // in between
+            {
+                return (ft::make_pair(lower_bound(k), upper_bound(k)));
+            };
+
+            ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+            {
+                return (ft::make_pair(lower_bound(k), upper_bound(k)));
+            };
 
             node_pointer        search(const node_pointer & node) const
             {
@@ -782,87 +813,86 @@ namespace ft
             inline bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
         // DEVTOOLS
-        private:
-            node_pointer        __content_print(const node_pointer & node)
-            {
-                if (node)
-                    std::cout << node->value.first << " ";
-                return (NULL);
-            }
+        // private:
+        //     node_pointer        __content_print(const node_pointer & node)
+        //     {
+        //         if (node)
+        //             std::cout << node->value.first << " ";
+        //         return (NULL);
+        //     }
 
-        public:
-            void                infix_content_print(void) // call
-            {
-                infix_apply(_root, &tree::__content_print);
-            }
-            void                display(void)
-            {
-                _dt.tree_draw(_root);
-            }
-            void                display(std::string fname)
-            {
-                ft::displaytree<node_type>  __dt(fname);
-                __dt.tree_draw(_root);
-            }
-            void                tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
-            {
-                if (!node)
-                    return ;
-                v.push_back(node);
-                tree_to_vector(v, node->left);
-                tree_to_vector(v, node->right);
-            }
-            bool                is_tree_legal(bool verboze = true)
-            {
-                bool islegal = true;
-                std::vector<node_pointer> v;
-                typename std::vector<node_pointer>::iterator it;
-                int     depths[7] = { 0 };
-
-                tree_to_vector(v, _root);
-                it = v.begin();
-                while (it != v.end())
-                {
-                    if (search((*it)->value) == NULL)
-                    {
-                        islegal = false;
-                        std::cout << "unreachable node -> " << (*it)->value.first << std::endl;
-                    }
-                    int d = __get_node_depth_diff(*it);
-                         if (d <  -2) depths[0] += 1;
-                    else if (d == -2) depths[1] += 1;
-                    else if (d == -1) depths[2] += 1;
-                    else if (d ==  0) depths[3] += 1;
-                    else if (d ==  1) depths[4] += 1;
-                    else if (d ==  2) depths[5] += 1;
-                    else if (d >   2) depths[6] += 1;
-                    it++;
-                }
-                if (this->size() != v.size())
-                    islegal = false;
-                if (verboze == true)
-                {
-                    std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
-                    std::cout << "                   ";
-                    std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
-                    std::cout << "                   ";
-                    std::cout << "["  << std::setw(4) << depths[0]
-                            << "][" << std::setw(4) << depths[1]
-                            << "][" << std::setw(4) << depths[2]
-                            << "][" << std::setw(4) << depths[3]
-                            << "][" << std::setw(4) << depths[4]
-                            << "][" << std::setw(4) << depths[5]
-                            << "][" << std::setw(4) << depths[6]
-                            << "]" << std::endl;
-                }
-                return (islegal);
-            }
-            void                display_node_links(node_pointer node, std::string nname)
-            {
-                std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-                std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-                std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
-            }
+        // public:
+            // void                infix_content_print(void) // call
+            // {
+            //     infix_apply(_root, &tree::__content_print);
+            // }
+            // void                display(void)
+            // {
+            //     _dt.tree_draw(_root);
+            // }
+            // void                display(std::string fname)
+            // {
+            //     ft::displaytree<node_type>  __dt(fname);
+            //     __dt.tree_draw(_root);
+            // }
+            // void                tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
+            // {
+            //     if (!node)
+            //         return ;
+            //     v.push_back(node);
+            //     tree_to_vector(v, node->left);
+            //     tree_to_vector(v, node->right);
+            // }
+            // bool                is_tree_legal(bool verboze = true)
+            // {
+            //     bool islegal = true;
+            //     std::vector<node_pointer> v;
+            //     typename std::vector<node_pointer>::iterator it;
+            //     int     depths[7] = { 0 };
+            //     tree_to_vector(v, _root);
+            //     it = v.begin();
+            //     while (it != v.end())
+            //     {
+            //         if (search((*it)->value) == NULL)
+            //         {
+            //             islegal = false;
+            //             std::cout << "unreachable node -> " << (*it)->value.first << std::endl;
+            //         }
+            //         int d = __get_node_depth_diff(*it);
+            //              if (d <  -2) depths[0] += 1;
+            //         else if (d == -2) depths[1] += 1;
+            //         else if (d == -1) depths[2] += 1;
+            //         else if (d ==  0) depths[3] += 1;
+            //         else if (d ==  1) depths[4] += 1;
+            //         else if (d ==  2) depths[5] += 1;
+            //         else if (d >   2) depths[6] += 1;
+            //         it++;
+            //     }
+            //     if (this->size() != v.size())
+            //         islegal = false;
+            //     if (verboze == true)
+            //     {
+            //         std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
+            //         std::cout << "                   ";
+            //         std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
+            //         std::cout << "                   ";
+            //         std::cout << "["  << std::setw(4) << depths[0]
+            //                 << "][" << std::setw(4) << depths[1]
+            //                 << "][" << std::setw(4) << depths[2]
+            //                 << "][" << std::setw(4) << depths[3]
+            //                 << "][" << std::setw(4) << depths[4]
+            //                 << "][" << std::setw(4) << depths[5]
+            //                 << "][" << std::setw(4) << depths[6]
+            //                 << "]" << std::endl;
+            //     }
+            //     return (islegal);
+            // }
+            // void                display_node_links(node_pointer node, std::string nname)
+            // {
+            //     std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
+            //     std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
+            //     std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
+            //     std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
+            // }
     };
 }

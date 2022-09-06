@@ -28,14 +28,10 @@ namespace ft
 				typedef	typename iterator_traits<iterator_type>::reference			reference;
 				typedef	ft::bidirectional_iterator_tag								iterator_category;
 
-				tree_iterator() : _node(NULL)
-				{};
-				tree_iterator(const tree_iterator &it) : _node(it.base())
-				{};
-				tree_iterator(node_pointer node) : _node(node)
-				{};
-				virtual ~tree_iterator()
-				{};
+				tree_iterator() : _node(NULL) {};
+				tree_iterator(const tree_iterator &it) : _node(it.base()) {};
+				tree_iterator(node_pointer node) : _node(node) {};
+				virtual ~tree_iterator() {};
 				tree_iterator& operator=(const tree_iterator& it)
 				{
 					if (this != &it)
@@ -90,6 +86,7 @@ namespace ft
 					}
 					while (node->_parent && node->_parent->_right != node)
 						node = node->_parent;
+					if (node->_parent) // _end is _root->_parent
 						node = node->_parent;
 					return (node);
 				}

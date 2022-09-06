@@ -31,20 +31,15 @@ int		main(void)
 		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 	printSize(mp);
-
 	ft_erase(mp, ++mp.begin());
-
 	ft_erase(mp, mp.begin());
 	ft_erase(mp, --mp.end());
-
 	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
 	ft_erase(mp, --(--(--mp.end())), --mp.end());
-
 	mp[10] = "Hello";
 	mp[11] = "Hi there";
 	printSize(mp);
 	ft_erase(mp, --(--(--mp.end())), mp.end());
-
 	mp[12] = "ONE";
 	mp[13] = "TWO";
 	mp[14] = "THREE";

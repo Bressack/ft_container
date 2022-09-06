@@ -3,6 +3,7 @@
 # include "../others/color.hpp"
 # include "../others/utils.hpp"
 # include "../others/pair.hpp"
+# include "../others/reverse_iterator.hpp"
 // # include "display_tree.hpp"
 # include "node.hpp"
 # include "tree_iterator.hpp"
@@ -14,6 +15,7 @@
 # include <stdlib.h>
 # include <stdarg.h>
 
+# define DEBUG printf("\033[37;01m%s:%d:0: \033[36;01mdebug: \033[37;01m  \033[0m\n", (char *)__FILE__, (int)__LINE__);
 # define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
 
 namespace ft
@@ -95,7 +97,10 @@ namespace ft
 
         public:
             tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {
-                _end = __allocate_node(value_type(0,0));
+                // _end = __allocate_node(value_type(key_type(0),mapped_type(0)));
+                _end = _allocator.allocate(1);
+                update_end();
+                // _end = __allocate_node(NULL);
             }
             virtual ~tree() { clear_tree(); }
 
@@ -204,10 +209,7 @@ namespace ft
             void                insert (InputIterator first, InputIterator last)
             {
                 while (first != last)
-                {
-                    insert(*first);
-                    ++first;
-                }
+                    insert(*(first++));
             };
 
             ft::pair<iterator, bool> insert(const value_type &val) // single element
@@ -230,6 +232,7 @@ namespace ft
                     _root = node;
                 else // tree is not empty
                 {
+                    _root->parent = NULL; // detach _end
                     future_parent parent = __find_future_parent(node);
                     node->parent = parent.first;
                     *parent.second = node;
@@ -255,16 +258,14 @@ namespace ft
             void                remove(iterator first, iterator last)
             {
                 while (first != last)
-                {
-                    remove(*first);
-                    first++;
-                }
+                    remove(*(first++));
             };
             size_type        remove(node_pointer & node)
             {
                 // std::cout << __FUNCTION__ << "(root:" << _root << ")" << std::endl;
                 if (node == NULL)
                     return (0);
+                _root->parent = NULL; // detach _end
                 // display_node_links(node, "node");
                 if (node->right && node->left)
                     detach_node_with_two_child(node);
@@ -423,6 +424,42 @@ namespace ft
                     while (node->left)
                         node = node->left;
                 return (node);
+            }
+            void                swap (tree& x)
+            {
+                swap(_end, x._end);
+                swap(_root, x._root);
+                swap(_size, x._size);
+            }
+            void                swap(node_pointer a, node_pointer b)
+            {
+                // display_node_links(a, "a");
+                // display_node_links(b, "b");
+                // swap parents endpoint
+                node_pointer *ap = get_parent_endpoint(a);
+                node_pointer *bp = get_parent_endpoint(b);
+
+                if (ap) *ap = b;
+                if (bp) *bp = a;
+
+                // _pswap(ap, bp);
+
+                // swap children endpoint
+                if (a->left)  a->left->parent = b;
+                if (a->right) a->right->parent = b;
+                if (b->left)  b->left->parent = a;
+                if (b->right) b->right->parent = a;
+
+                // swap inner links
+                _pswap(&a->parent, &b->parent);
+                _pswap(&a->left, &b->left);
+                _pswap(&a->right, &b->right);
+            }
+            void                swap(size_type s1, size_type s2)
+            {
+                size_type tmp = s1;
+                s1 = s2;
+                s2 = tmp;
             }
 
         /* **************************************** *\
@@ -612,30 +649,6 @@ namespace ft
                 node_pointer tmp = *a;
                 *a = *b;
                 *b = tmp;
-            }
-            void                swap(node_pointer a, node_pointer b)
-            {
-                // display_node_links(a, "a");
-                // display_node_links(b, "b");
-                // swap parents endpoint
-                node_pointer *ap = get_parent_endpoint(a);
-                node_pointer *bp = get_parent_endpoint(b);
-
-                if (ap) *ap = b;
-                if (bp) *bp = a;
-
-                // _pswap(ap, bp);
-
-                // swap children endpoint
-                if (a->left)  a->left->parent = b;
-                if (a->right) a->right->parent = b;
-                if (b->left)  b->left->parent = a;
-                if (b->right) b->right->parent = a;
-
-                // swap inner links
-                _pswap(&a->parent, &b->parent);
-                _pswap(&a->left, &b->left);
-                _pswap(&a->right, &b->right);
             }
             void                update_end(void)
             {

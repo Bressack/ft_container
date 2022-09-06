@@ -36,6 +36,17 @@ printf "${EOC}${BOLD}${DBLUE}\
 ${EOC}"
 }
 
+dcompile () {
+	# 1=file 2=define used {ft/std} 3=output_file 4?=compile_log
+	macro_name=$(echo "USING_${2}" | awk '{ print toupper($0) }')
+	compile_cmd="$CC $CFLAGS -o ${3} -I./$include_path -I./$include_path/map -I./$include_path/vector -I./$include_path/stack -I./$include_path/others  -D ${macro_name} ${1} -g3 -fsanitize=address"
+	if [ -n "$4" ]; then
+		compile_cmd+=" &>${4}"
+	fi
+	eval "${compile_cmd}"
+	return $?
+}
+
 compile () {
 	# 1=file 2=define used {ft/std} 3=output_file 4?=compile_log
 	macro_name=$(echo "USING_${2}" | awk '{ print toupper($0) }')

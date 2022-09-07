@@ -15,8 +15,8 @@
 # include <stdlib.h>
 # include <stdarg.h>
 
-# define DEBUG printf("\033[37;01m%s:%d:0: \033[36;01mdebug: \033[37;01m  \033[0m\n", (char *)__FILE__, (int)__LINE__);
-# define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
+// # define DEBUG printf("\033[37;01m%s:%d:0: \033[36;01mdebug: \033[37;01m  \033[0m\n", (char *)__FILE__, (int)__LINE__);
+// # define TTEST(...) {char *debugs;asprintf(&debugs, __VA_ARGS__);std::cout << _TEST_ << "  " << debugs << std::endl;free(debugs);}
 
 namespace ft
 {
@@ -99,10 +99,16 @@ namespace ft
             tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {
                 // _end = __allocate_node(value_type(key_type(0),mapped_type(0)));
                 _end = _allocator.allocate(1);
+                _end->parent = NULL;
+                // std::cout << "_end: " << _end << std::endl;
                 update_end();
                 // _end = __allocate_node(NULL);
             }
-            virtual ~tree() { clear_tree(); }
+            virtual ~tree()
+            {
+                clear_tree();
+                __deallocate_node(_end);
+            }
 
         /* ***************************************************************** *\
         |                        METHODS DEFINITION                           |
@@ -240,6 +246,7 @@ namespace ft
                 }
                 _size += 1;
                 update_end();
+                // disptree();
                 return (node);
             }
             node_pointer        __insert(const value_type & value)
@@ -273,8 +280,9 @@ namespace ft
                     detach_node_with_one_or_no_child(node);
 
                 _size -= 1;
-                std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << C_RES << std::endl;
+                // std::cout << GREEN_TREE << "DELETE NODE " << C_G_PINK << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << C_RES << std::endl;
                 __deallocate_node(node);
+                // disptree();
                 update_end();
                 return (1);
             }
@@ -293,18 +301,22 @@ namespace ft
 
             void                clear_node(node_pointer & node)
             {
+                // std::cout << "debug: " << node << std::endl;
                 if (node == NULL)
                     return ;
                 if (node->left)
                     clear_node(node->left);
-                __deallocate_node(node);
                 if (node->right)
                     clear_node(node->right);
+                __deallocate_node(node);
                 node = NULL;
             }
             void                clear_tree(void)
             {
+                // std::cout << "debug: " << _root << std::endl;
+                _root->parent = NULL;
                 clear_node(_root);
+                _root = NULL;
             }
 
         /* **************************************** *\
@@ -325,45 +337,96 @@ namespace ft
                 const_iterator it = search(k);
                 return (it != _end);
             };
-            node_pointer        lower_bound(const key_type & key) const
+            iterator lower_bound (const key_type& k) // 1st not to go before
             {
-                node_pointer    tmp = _root;
-                node_pointer    kandida = NULL;
+                iterator  it = begin();
+                iterator  it_end = end();
 
-                while (1)
+                for (; it != it_end; it++)
                 {
-                    if (tmp == NULL)
-                        return (kandida);
-                    if (tmp->value.first > key)
-                        kandida = tmp;
-                    if (__compare(key, tmp) == true)
-                        tmp = tmp->left;
-                    else
-                        tmp = tmp->right;
+                    if (key_comp()(it->first, k) == false)
+                    return (it);
                 }
-            }
-            node_pointer        upper_bound(const key_type & key) const
+                return (it);
+            };
+
+            const_iterator lower_bound (const key_type& k) const
             {
-                node_pointer    tmp = _root;
-                node_pointer    kandida = NULL;
+                const_iterator  it = begin();
+                const_iterator  it_end = end();
 
-                while (1)
+                for (; it != it_end; it++)
                 {
-                    if (tmp == NULL)
-                        return (kandida);
-                    if (tmp->value.first >= key)
-                        kandida = tmp;
-                    if (__compare(key, tmp) == true)
-                        tmp = tmp->left;
-                    else
-                        tmp = tmp->right;
+                    if (key_comp()(it->first, k) == false)
+                    return (it);
                 }
-            }
+                return (it);
+            };
+
+            iterator upper_bound (const key_type& k) // 1st to go after
+            {
+                iterator  it = begin();
+                iterator  it_end = end();
+
+                for (; it != it_end; it++)
+                {
+                    if (key_comp()(k, it->first) == true)
+                    return (it);
+                }
+                return (it);
+            };
+
+            const_iterator upper_bound (const key_type& k) const
+            {
+                const_iterator  it = begin();
+                const_iterator  it_end = end();
+
+                for (; it != it_end; it++)
+                {
+                    if (key_comp()(k, it->first) == true)
+                    return (it);
+                }
+                return (it);
+            };
+            // node_pointer        lower_bound(const key_type & key) const
+            // {
+            //     node_pointer    tmp = _root;
+            //     node_pointer    kandida = _end;
+
+            //     while (1)
+            //     {
+            //         if (tmp == NULL || tmp == _end)
+            //             return (kandida);
+            //         if (tmp->value.first > key)
+            //             kandida = tmp;
+            //         if (__compare(key, tmp) == true)
+            //             tmp = tmp->left;
+            //         else
+            //             tmp = tmp->right;
+            //     }
+            // }
+            // node_pointer        upper_bound(const key_type & key) const
+            // {
+            //     node_pointer    tmp = _root;
+            //     node_pointer    kandida = _end;
+
+            //     while (1)
+            //     {
+            //         if (tmp == NULL || tmp == _end)
+            //             return (kandida);
+            //         if (tmp->value.first >= key)
+            //             kandida = tmp;
+            //         if (__compare(key, tmp) == true)
+            //             tmp = tmp->left;
+            //         else
+            //             tmp = tmp->right;
+            //     }
+            // }
+
             key_compare key_comp() const
             {
                 return (key_compare());
             };
-
             value_compare value_comp() const
             {
                 return (value_compare(key_compare()));
@@ -652,7 +715,7 @@ namespace ft
             }
             void                update_end(void)
             {
-                std::cout << _root << std::endl;
+                // std::cout << _root << std::endl;
                 if (_root)
                 {
                     if (_end)
@@ -825,6 +888,22 @@ namespace ft
             inline bool __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
             inline bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
+        public:
+            void disptree(void) const
+            {
+                printf("/--------------------------------------------\\\n");
+                disptree(_root);
+                printf("\\--------------------------------------------/\n");
+            }
+            void disptree(node_pointer node, int depth = 0, char lr = '~') const
+            {
+                if (node)
+                {
+                    printf("%*s["C_G_098"%c"C_RES"]["C_G_006"%p"C_RES"]["C_G_134"%d"C_RES"]\n", depth * 4, "", lr, node, node->value.first);
+                    disptree(node->left, depth + 1, 'L');
+                    disptree(node->right, depth + 1, 'R');
+                }
+            }
         // DEVTOOLS
         // private:
         //     node_pointer        __content_print(const node_pointer & node)

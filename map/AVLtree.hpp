@@ -96,13 +96,27 @@ namespace ft
         \* ***************************************************************** */
 
         public:
-            tree(const allocator_type &alloc = allocator_type()) : _end(NULL), _root(NULL), _size(0), _allocator(alloc) {
-                // _end = __allocate_node(value_type(key_type(0),mapped_type(0)));
+            tree(const allocator_type &alloc = allocator_type())
+            : _end(NULL), _root(NULL), _size(0), _allocator(alloc)
+            {
                 _end = _allocator.allocate(1);
                 _end->parent = NULL;
-                // std::cout << "_end: " << _end << std::endl;
                 update_end();
-                // _end = __allocate_node(NULL);
+            }
+            tree(const tree &x, const allocator_type &alloc = allocator_type())
+            : _end(NULL), _root(NULL), _size(0), _allocator(alloc)
+            {
+                _end = _allocator.allocate(1);
+                _end->parent = NULL;
+
+                const_iterator it = x.begin();
+                const_iterator ite = x.end();
+                while (it != ite)
+                {
+                    insert(*it);
+                    it++;
+                }
+                update_end();
             }
             virtual ~tree()
             {
@@ -206,6 +220,15 @@ namespace ft
             }
 
             // modifiers
+            node_pointer    node_deepcopy(void)
+            {
+                node_pointer new_root;
+
+                if (empty())
+                    return (NULL);
+
+
+            }
 
         /* **************************************** *\
         |                 INSERTING                  |

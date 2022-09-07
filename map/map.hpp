@@ -45,7 +45,10 @@ namespace ft
             map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : _tree(), _alloc(alloc), _comp(comp)
             { insert(first, last); };
 
-            map(const map &x) : _tree(x._tree), _alloc(x._alloc), _comp(x._comp){};
+            map(const map &x) : _tree(x._tree), _alloc(x._alloc), _comp(x._comp)
+            {
+                
+            };
 
             map &operator=(const map &x)
             {

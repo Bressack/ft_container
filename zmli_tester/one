@@ -9,5 +9,8 @@ source fct.sh
 testedNamespace=$([[ -z "$2" ]] && echo "ft" || echo "$2")
 output_file="a.out"
 
-dcompile "$1" "${testedNamespace}" "${output_file}" && \
-	lldb ./${output_file}
+# dcompile "$1" "${testedNamespace}" "${output_file}" && \
+# 	lldb ./${output_file}
+
+compile "$1" "${testedNamespace}" "${output_file}" && \
+	./${output_file}

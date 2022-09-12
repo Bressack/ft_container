@@ -4,11 +4,10 @@
 # include "../others/utils.hpp"
 # include "../others/pair.hpp"
 # include "../others/reverse_iterator.hpp"
-// # include "display_tree.hpp"
 # include "node.hpp"
 # include "tree_iterator.hpp"
 # include <iostream>
-# include <vector>
+// # include <vector>
 # include <memory>
 # include <functional>
 # include <stdio.h>
@@ -83,9 +82,6 @@ namespace ft
         |                     INNER ATTRIBUTES DEFINITION                     |
         \* ***************************************************************** */
         private:
-            // DEVTOOL - display_tree.hpp
-            // ft::displaytree<node_type>  _dt;
-
             node_pointer                _end;
             node_pointer                _root;
             size_type                   _size;
@@ -111,7 +107,6 @@ namespace ft
 
                 insert(x.begin(), x.end());
                 update_end();
-                // disptree();
             }
             virtual ~tree()
             {
@@ -483,22 +478,14 @@ namespace ft
                 ft::ft_swap(_end, x._end);
                 ft::ft_swap(_root, x._root);
                 ft::ft_swap(_size, x._size);
-                // swap(_end, x._end);
-                // swap(_root, x._root);
-                // swap(_size, x._size);
             }
             void                swap(node_pointer a, node_pointer b)
             {
-                // display_node_links(a, "a");
-                // display_node_links(b, "b");
-                // swap parents endpoint
                 node_pointer *ap = get_parent_endpoint(a);
                 node_pointer *bp = get_parent_endpoint(b);
 
                 if (ap) *ap = b;
                 if (bp) *bp = a;
-
-                // _pswap(ap, bp);
 
                 // swap children endpoint
                 if (a->left)  a->left->parent = b;
@@ -584,23 +571,17 @@ namespace ft
             {
                 if (node == NULL)
                     return (NULL);
-                                                                                                // display_node_links(node, "node");
                 node_pointer kandida = find_kandida(node);
-                                                                                                // display_node_links(kandida, "kandida");
                 if (kandida->left && kandida->right) // kandida is not a leave
                     detach_node_with_two_child(kandida);
                 else
                     detach_node_with_one_or_no_child(kandida); // detach and unlink kandida
                 swap(node, kandida);
-                                                                                                // display_node_links(node, "node");
-                                                                                                // display_node_links(kandida, "kandida");
                 if (kandida->left && kandida->right) // kandida is not a leave
 
                 unlink_node(node);
-                                                                                                // display_node_links(node, "node");
                 if (_root == node)
                     _root = kandida;
-                                                                                                // display_node_links(_root, "_root");
                 return (kandida);
             }
             node_pointer        detach_node_with_one_or_no_child(node_pointer & node)
@@ -703,7 +684,6 @@ namespace ft
             }
             void                update_end(void)
             {
-                // std::cout << _root << std::endl;
                 if (_root)
                 {
                     if (_end)
@@ -876,103 +856,5 @@ namespace ft
             inline bool __compare (      key_type     & x, const key_type     & y) const { return (key_compare()(x, y)); }
             inline bool __compare (      key_type     & x,       key_type     & y) const { return (key_compare()(x, y)); }
 
-        public:
-            void disptree(void) const
-            {
-                printf("/--------------------------------------------\\\n");
-                disptree(_root);
-                printf("\\--------------------------------------------/\n");
-            }
-            void disptree(node_pointer node, int depth = 0, char lr = '~') const
-            {
-                if (node)
-                {
-                    printf("%*s["C_G_098"%c"C_RES"]["C_G_006"%p"C_RES"]["C_G_134"%d"C_RES"]\n", depth * 4, "", lr, node, node->value.first);
-                    disptree(node->left, depth + 1, 'L');
-                    disptree(node->right, depth + 1, 'R');
-                }
-            }
-        // DEVTOOLS
-        // private:
-        //     node_pointer        __content_print(const node_pointer & node)
-        //     {
-        //         if (node)
-        //             std::cout << node->value.first << " ";
-        //         return (NULL);
-        //     }
-
-        // public:
-            // void                infix_content_print(void) // call
-            // {
-            //     infix_apply(_root, &tree::__content_print);
-            // }
-            // void                display(void)
-            // {
-            //     _dt.tree_draw(_root);
-            // }
-            // void                display(std::string fname)
-            // {
-            //     ft::displaytree<node_type>  __dt(fname);
-            //     __dt.tree_draw(_root);
-            // }
-            // void                tree_to_vector(std::vector<node_pointer> & v, node_pointer node)
-            // {
-            //     if (!node)
-            //         return ;
-            //     v.push_back(node);
-            //     tree_to_vector(v, node->left);
-            //     tree_to_vector(v, node->right);
-            // }
-            // bool                is_tree_legal(bool verboze = true)
-            // {
-            //     bool islegal = true;
-            //     std::vector<node_pointer> v;
-            //     typename std::vector<node_pointer>::iterator it;
-            //     int     depths[7] = { 0 };
-            //     tree_to_vector(v, _root);
-            //     it = v.begin();
-            //     while (it != v.end())
-            //     {
-            //         if (search((*it)->value) == NULL)
-            //         {
-            //             islegal = false;
-            //             std::cout << "unreachable node -> " << (*it)->value.first << std::endl;
-            //         }
-            //         int d = __get_node_depth_diff(*it);
-            //              if (d <  -2) depths[0] += 1;
-            //         else if (d == -2) depths[1] += 1;
-            //         else if (d == -1) depths[2] += 1;
-            //         else if (d ==  0) depths[3] += 1;
-            //         else if (d ==  1) depths[4] += 1;
-            //         else if (d ==  2) depths[5] += 1;
-            //         else if (d >   2) depths[6] += 1;
-            //         it++;
-            //     }
-            //     if (this->size() != v.size())
-            //         islegal = false;
-            //     if (verboze == true)
-            //     {
-            //         std::cout << std::string(islegal ? "True" : "False") << " [ " << v.size() << " ]" << std::endl;
-            //         std::cout << "                   ";
-            //         std::cout << "[ <2 ][ -2 ][ -1 ][  0 ][ +1 ][ +2 ][ >2 ]" << std::endl;
-            //         std::cout << "                   ";
-            //         std::cout << "["  << std::setw(4) << depths[0]
-            //                 << "][" << std::setw(4) << depths[1]
-            //                 << "][" << std::setw(4) << depths[2]
-            //                 << "][" << std::setw(4) << depths[3]
-            //                 << "][" << std::setw(4) << depths[4]
-            //                 << "][" << std::setw(4) << depths[5]
-            //                 << "][" << std::setw(4) << depths[6]
-            //                 << "]" << std::endl;
-            //     }
-            //     return (islegal);
-            // }
-            // void                display_node_links(node_pointer node, std::string nname)
-            // {
-            //     std::cout << "> " << nname << "         : " << node << LIGHT_BLUE << "(" << node->value.first << ")" << C_RES << std::endl;
-            //     std::cout << "> " << nname << " parent  : " << node->parent;  if (node->parent)  std::cout << LIGHT_BLUE << "(" << node->parent->value.first << ")" << C_RES; std::cout << std::endl;
-            //     std::cout << "> " << nname << " left    : " << node->left;  if (node->left)  std::cout << LIGHT_BLUE << "(" << node->left->value.first << ")" << C_RES; std::cout << std::endl;
-            //     std::cout << "> " << nname << " right   : " << node->right; if (node->right) std::cout << LIGHT_BLUE << "(" << node->right->value.first << ")" << C_RES; std::cout << std::endl;
-            // }
     };
 }

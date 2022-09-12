@@ -76,9 +76,11 @@ namespace ft
             ~vector()
             {
                 if (_array_ptr)
+                {
                     clear();
-                if (_capacity)
-                    _allocator.deallocate(_array_ptr, _capacity);
+                    if (_capacity)
+                        _allocator.deallocate(_array_ptr, _capacity);
+                }
             };
 
         // Iterators

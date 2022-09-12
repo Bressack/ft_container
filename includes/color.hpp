@@ -577,7 +577,7 @@
 
 # define C_RES          "\033[0m"
 
-# define MINUS_STR "----------------------------------------------------------------------------------------------------"
-# define TEST "\033[36;01m(%s:%d:0) \033[31;01m%s\033[0m %.*s>\033[35;01m%d\033[0m\n", __FILE__, __LINE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) + strlen(__FILE__) + 3)), MINUS_STR, __LINE__
-# define _TEST_ C_G_WHITE "[" CORAIL " DEBUG" C_G_WHITE " ] line: " C_G_GREEN << std::setw(4) << __LINE__ << C_G_WHITE " at " C_G_BLUE << std::setw(15) << std::right << __FUNCTION__ << "()" << C_G_WHITE " in " C_G_MAGENTA << __FILE__ << C_RES
+// # define MINUS_STR "----------------------------------------------------------------------------------------------------"
+// # define TEST "\033[36;01m(%s:%d:0) \033[31;01m%s\033[0m %.*s>\033[35;01m%d\033[0m\n", __FILE__, __LINE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) + strlen(__FILE__) + 3)), MINUS_STR, __LINE__
+// # define _TEST_ C_G_WHITE "[" CORAIL " DEBUG" C_G_WHITE " ] line: " C_G_GREEN << std::setw(4) << __LINE__ << C_G_WHITE " at " C_G_BLUE << std::setw(15) << std::right << __FUNCTION__ << "()" << C_G_WHITE " in " C_G_MAGENTA << __FILE__ << C_RES
 #endif

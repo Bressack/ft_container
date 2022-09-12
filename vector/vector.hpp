@@ -69,17 +69,16 @@ namespace ft
             };
             vector &operator=(const vector &x)
             {
+                clear();
                 assign(x.begin(), x.end());
                 return (*this);
             };
             ~vector()
             {
                 if (_array_ptr)
-                {
                     clear();
+                if (_capacity)
                     _allocator.deallocate(_array_ptr, _capacity);
-                    _array_ptr = NULL;
-                }
             };
 
         // Iterators
@@ -292,7 +291,19 @@ namespace ft
                 ft::ft_swap(_capacity, x._capacity);
                 ft::ft_swap(_allocator, x._allocator);
             };
-            void clear() { erase(begin(), end()); };
+            void clear()
+            {
+                iterator it = begin();
+                iterator ite = end();
+
+                while (it != ite)
+                {
+                    iterator tmp = it;
+                    it++;
+                    _allocator.destroy(&(*tmp));
+                    _size--;
+                }
+            };
         // Allocator
             allocator_type get_allocator() const { return (_allocator); };
     };

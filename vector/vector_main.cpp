@@ -53,7 +53,5 @@ int main(void)
     large_vector_test(10000000);
     std::cout << "large_vector_test - 100000000" << std::endl;
     large_vector_test(100000000);
-    std::cout << "large_vector_test - 1000000000" << std::endl;
-    large_vector_test(1000000000);
     return (0);
 }

@@ -2,13 +2,14 @@
 # define FT_STACK_HPP
 
 #include <deque>
+#include "../vector/vector.hpp"
 #include <cstddef>
 #include <iostream>
 # include "../others/color.hpp"
 
 namespace ft
 {
-    template <class T, class Container = std::deque<T> >
+    template <class T, class Container = ft::vector<T> >
     class stack
     {
         public:
@@ -20,7 +21,7 @@ namespace ft
 
         protected:
             container_type c;
-        
+
         public:
             stack(const container_type& ctnr = container_type()) : c(ctnr){};
             ~stack() {};
@@ -31,7 +32,7 @@ namespace ft
             const value_type& top() const { return c.back(); }
             void push (const value_type& val) { c.push_back(val); }
             void pop() { c.pop_back(); }
-        
+
         // definition with firend keyword to allow operators to use c (like rhs.c)
         template <class U, class C>
         friend bool operator==(const stack<U, C> &lhs, const stack<U, C> &rhs);

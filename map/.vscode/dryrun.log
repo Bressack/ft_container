@@ -1,8 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory '/mnt/nfs/homes/tharchen/Prog/ft_container/map'
-rm -f *.dot
-clang++ -Wall -Wextra -Werror -O3 -I . main.cpp
-# dot -Tpng tree.dot -o tree.png
-./a.out
-make: Leaving directory '/mnt/nfs/homes/tharchen/Prog/ft_container/map'
- 

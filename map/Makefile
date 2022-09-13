@@ -1,18 +1,30 @@
-all:
-	@ rm -f *.dot
-	@ clang++ -Wall -Wextra -Werror -O3 -I . main.cpp
-	@ # dot -Tpng tree.dot -o tree.png
-	@ ./a.out
+NAME = map_tester_bin
+NAMESTD = $(NAME)_std
 
-debug:
-	@ rm -f *.dot
-	@ clang++ -Wall -Wextra -Werror -O0 -g3 -fsanitize=address -I . main.cpp
-	@ # dot -Tpng tree.dot -o tree.png
-	@ lldb ./a.out
+MAIN = map_main.cpp
 
-init:
-	@ (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
-	&& printf "\033[34;01mbrew\033[37;01m correctly installed :)\033[0m\n") \
-	|| printf "\033[34;01mbrew\033[31;01m installation error :(\033[0m\n"
-	@ brew install graphviz ; brew upgrade graphviz
-	@ printf "\033[34;01mgraphviz\033[37;01m correctly installed :)\033[0m\n"
+all: $(NAME)
+
+$(NAME):
+	@ clang++ -Wall -Wextra -Werror -O3 -std=c++98 -I . $(MAIN) -o $(NAME)
+	@ clang++ -Wall -Wextra -Werror -O3 -std=c++98 -I . $(MAIN) -o $(NAMESTD) -D TSTD
+
+clean:
+	@ rm -f outft outstd
+
+fclean: clean
+	@ rm -rf $(NAME)
+	@ rm -rf $(NAMESTD)
+
+re: fclean all
+
+test: fclean all
+	# @ valgrind ./$(NAME)
+	time ./$(NAME)
+	time ./$(NAMESTD)
+
+teststd: fclean all
+	@ ./$(NAMESTD)
+
+testft: fclean all
+	@ ./$(NAME)
